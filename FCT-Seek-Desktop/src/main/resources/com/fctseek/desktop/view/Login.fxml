@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="20.0" 
+      xmlns="http://javafx.com/javafx/21" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.fctseek.desktop.controller.LoginController"
+      style="-fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);">
+    
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+    </padding>
+
+    <!-- Panel central blanco -->
+    <VBox alignment="CENTER" spacing="25.0" 
+          style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);">
+        
+        <padding>
+            <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
+        </padding>
+
+        <!-- Logo/Título -->
+        <VBox alignment="CENTER" spacing="10.0">
+            <Label text="FCT-SEEK">
+                <font>
+                    <Font name="System Bold" size="32.0" />
+                </font>
+                <style>
+                    -fx-text-fill: #667eea;
+                </style>
+            </Label>
+            
+            <Label text="Gestión de Empresas de Prácticas">
+                <font>
+                    <Font size="14.0" />
+                </font>
+                <style>
+                    -fx-text-fill: #666666;
+                </style>
+            </Label>
+        </VBox>
+
+        <!-- Separador -->
+        <Separator prefWidth="300.0" />
+
+        <!-- Formulario -->
+        <VBox spacing="20.0" prefWidth="300.0">
+            
+            <!-- Campo NIF -->
+            <VBox spacing="8.0">
+                <Label text="NIF / DNI">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="txtNif" 
+                          promptText="12345678A" 
+                          prefHeight="40.0"
+                          style="-fx-font-size: 14px; -fx-background-radius: 5; -fx-border-color: #e0e0e0; -fx-border-radius: 5;">
+                </TextField>
+            </VBox>
+
+            <!-- Campo Contraseña -->
+            <VBox spacing="8.0">
+                <Label text="Contraseña">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                </Label>
+                <PasswordField fx:id="txtPassword" 
+                              promptText="Ingrese su contraseña" 
+                              prefHeight="40.0"
+                              style="-fx-font-size: 14px; -fx-background-radius: 5; -fx-border-color: #e0e0e0; -fx-border-radius: 5;">
+                </PasswordField>
+            </VBox>
+
+            <!-- Mensaje de error -->
+            <Label fx:id="lblError" 
+                   textFill="red" 
+                   wrapText="true"
+                   visible="false"
+                   style="-fx-font-size: 13px;">
+            </Label>
+
+            <!-- Botón Login -->
+            <Button text="INICIAR SESIÓN" 
+                    onAction="#handleLogin" 
+                    prefWidth="300.0" 
+                    prefHeight="45.0"
+                    defaultButton="true"
+                    style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;">
+            </Button>
+
+        </VBox>
+
+        <!-- Información adicional -->
+        <Label text="¿Olvidaste tu contraseña? Contacta con administración" 
+               style="-fx-text-fill: #999999; -fx-font-size: 11px;">
+        </Label>
+
+    </VBox>
+
+</VBox>
