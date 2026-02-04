@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * Excepción lanzada cuando una petición tiene datos incorrectos o inválidos.
- * Retorna HTTP 400 Bad Request.
+ * Retorna HTTP 400 Bad Request
  */
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestException extends RuntimeException {

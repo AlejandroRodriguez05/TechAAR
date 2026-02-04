@@ -6,7 +6,7 @@
 package com.fctseek.util;
 
 /**
- * Enum que define los roles de usuario en el sistema FCT-Seek.
+ * Enum que define los roles de usuario en el sistema FCT-Seek
  */
 public enum RolEnum {
     PROFESOR,
