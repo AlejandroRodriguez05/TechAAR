@@ -1,9 +1,0 @@
-com\fctseek\desktop\util\SessionManager.class
-com\fctseek\desktop\controller\LoginController.class
-com\fctseek\desktop\enums\EstadoPlaza.class
-com\fctseek\desktop\App.class
-module-info.class
-com\fctseek\desktop\enums\Cliclo.class
-com\fctseek\desktop\model\Usuario.class
-com\fctseek\desktop\config\AppConfig.class
-com\fctseek\desktop\enums\Rol.class
