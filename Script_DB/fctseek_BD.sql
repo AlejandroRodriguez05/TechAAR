@@ -1,5 +1,13 @@
+-- ============================================================
+-- FCT-SEEK: SCRIPT PARA PGADMIN (v2 - Hash corregido)
+-- ============================================================
+-- INSTRUCCIONES:
+-- 1. En pgAdmin, borra la BD "fctseek" si existe (click derecho → Delete)
+-- 2. Crea una nueva BD llamada "fctseek" (click derecho en Databases → Create)
+-- 3. Click derecho en "fctseek" → Query Tool
+-- 4. Abre este archivo y ejecuta (F5)
+-- ============================================================
 
--- FCT-SEEK
 -- ============================================================
 -- TABLAS
 -- ============================================================
@@ -237,24 +245,24 @@ INSERT INTO cursos (codigo, siglas, nombre, grado, departamento_id, activo, crea
 ('SAN201', 'CAE', 'Cuidados Auxiliares de Enfermería', 'MEDIO', 5, true, NOW(), NOW());
 
 
--- USUARIOS (contraseña: password123)
+-- USUARIOS (contraseña: test123)
 INSERT INTO usuarios (nif, nombre, apellidos, email, password_hash, rol, departamento_id, activo, created_at, updated_at) VALUES
-('12345678A', 'Juan', 'García López', 'juan.garcia@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'PROFESOR', 1, true, NOW(), NOW()),
-('23456789B', 'María', 'Rodríguez Pérez', 'maria.rodriguez@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'PROFESOR', 1, true, NOW(), NOW()),
-('34567890C', 'Carlos', 'Martínez Sánchez', 'carlos.martinez@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'PROFESOR', 1, true, NOW(), NOW()),
-('45678901D', 'Ana', 'Hernández Díaz', 'ana.hernandez@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'PROFESOR', 2, true, NOW(), NOW()),
-('56789012E', 'Pedro', 'López Ruiz', 'pedro.lopez@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'PROFESOR', 2, true, NOW(), NOW()),
-('67890123F', 'Laura', 'González Torres', 'laura.gonzalez@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'PROFESOR', 3, true, NOW(), NOW()),
-('78901234G', 'Miguel', 'Fernández Castro', 'miguel.fernandez@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'PROFESOR', 4, true, NOW(), NOW()),
-('89012345H', 'Elena', 'Sánchez Moreno', 'elena.sanchez@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'PROFESOR', 5, true, NOW(), NOW()),
-('11111111A', 'Pablo', 'Medina Alonso', 'pablo.medina@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'ALUMNO', 1, true, NOW(), NOW()),
-('22222222B', 'Lucía', 'Vega Romero', 'lucia.vega@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'ALUMNO', 1, true, NOW(), NOW()),
-('33333333C', 'Diego', 'Navarro Gil', 'diego.navarro@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'ALUMNO', 1, true, NOW(), NOW()),
-('44444444D', 'Sara', 'Jiménez Luna', 'sara.jimenez@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'ALUMNO', 1, true, NOW(), NOW()),
-('55555555E', 'Adrián', 'Ruiz Herrera', 'adrian.ruiz@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'ALUMNO', 2, true, NOW(), NOW()),
-('66666666F', 'Carmen', 'Morales Vidal', 'carmen.morales@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'ALUMNO', 2, true, NOW(), NOW()),
-('77777777G', 'Marcos', 'Ortega Ramos', 'marcos.ortega@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'ALUMNO', 3, true, NOW(), NOW()),
-('88888888H', 'Alba', 'Castro Vega', 'alba.castro@cifpvillaaguimes.es', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjqQBi.VxGdL.Ew6u7n4u6nPzKw.Ky', 'ALUMNO', 5, true, NOW(), NOW());
+('12345678A', 'Juan', 'García López', 'juan.garcia@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 1, true, NOW(), NOW()),
+('23456789B', 'María', 'Rodríguez Pérez', 'maria.rodriguez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 1, true, NOW(), NOW()),
+('34567890C', 'Carlos', 'Martínez Sánchez', 'carlos.martinez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 1, true, NOW(), NOW()),
+('45678901D', 'Ana', 'Hernández Díaz', 'ana.hernandez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 2, true, NOW(), NOW()),
+('56789012E', 'Pedro', 'López Ruiz', 'pedro.lopez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 2, true, NOW(), NOW()),
+('67890123F', 'Laura', 'González Torres', 'laura.gonzalez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 3, true, NOW(), NOW()),
+('78901234G', 'Miguel', 'Fernández Castro', 'miguel.fernandez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 4, true, NOW(), NOW()),
+('89012345H', 'Elena', 'Sánchez Moreno', 'elena.sanchez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 5, true, NOW(), NOW()),
+('11111111A', 'Pablo', 'Medina Alonso', 'pablo.medina@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'ALUMNO', 1, true, NOW(), NOW()),
+('22222222B', 'Lucía', 'Vega Romero', 'lucia.vega@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'ALUMNO', 1, true, NOW(), NOW()),
+('33333333C', 'Diego', 'Navarro Gil', 'diego.navarro@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'ALUMNO', 1, true, NOW(), NOW()),
+('44444444D', 'Sara', 'Jiménez Luna', 'sara.jimenez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'ALUMNO', 1, true, NOW(), NOW()),
+('55555555E', 'Adrián', 'Ruiz Herrera', 'adrian.ruiz@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'ALUMNO', 2, true, NOW(), NOW()),
+('66666666F', 'Carmen', 'Morales Vidal', 'carmen.morales@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'ALUMNO', 2, true, NOW(), NOW()),
+('77777777G', 'Marcos', 'Ortega Ramos', 'marcos.ortega@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'ALUMNO', 3, true, NOW(), NOW()),
+('88888888H', 'Alba', 'Castro Vega', 'alba.castro@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'ALUMNO', 5, true, NOW(), NOW());
 
 
 -- EMPRESAS
@@ -447,6 +455,25 @@ INSERT INTO reservas (plaza_id, curso_id, profesor_id, cantidad, clase, estado, 
 -- FIN DEL SCRIPT
 -- ============================================================
 -- CREDENCIALES DE PRUEBA:
--- Profesor: juan.garcia@cifpvillaaguimes.es / password123
--- Alumno: pablo.medina@cifpvillaaguimes.es / password123
+-- Todos los usuarios: test123
+--
+-- Profesores:
+--   juan.garcia@cifpvillaaguimes.es
+--   maria.rodriguez@cifpvillaaguimes.es
+--   carlos.martinez@cifpvillaaguimes.es
+--   ana.hernandez@cifpvillaaguimes.es
+--   pedro.lopez@cifpvillaaguimes.es
+--   laura.gonzalez@cifpvillaaguimes.es
+--   miguel.fernandez@cifpvillaaguimes.es
+--   elena.sanchez@cifpvillaaguimes.es
+--
+-- Alumnos:
+--   pablo.medina@cifpvillaaguimes.es
+--   lucia.vega@cifpvillaaguimes.es
+--   diego.navarro@cifpvillaaguimes.es
+--   sara.jimenez@cifpvillaaguimes.es
+--   adrian.ruiz@cifpvillaaguimes.es
+--   carmen.morales@cifpvillaaguimes.es
+--   marcos.ortega@cifpvillaaguimes.es
+--   alba.castro@cifpvillaaguimes.es
 -- ============================================================
