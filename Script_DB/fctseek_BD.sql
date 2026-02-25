@@ -1,13 +1,5 @@
--- ============================================================
--- FCT-SEEK: SCRIPT PARA PGADMIN
--- ============================================================
--- INSTRUCCIONES:
--- 1. En pgAdmin, borra la BD "fctseek" si existe (click derecho → Delete)
--- 2. Crea una nueva BD llamada "fctseek" (click derecho en Databases → Create)
--- 3. Click derecho en "fctseek" → Query Tool
--- 4. Abre este archivo y ejecuta (F5)
--- ============================================================
 
+-- FCT-SEEK
 -- ============================================================
 -- TABLAS
 -- ============================================================
