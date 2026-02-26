@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.practicas.controller.AnadirEmpresaController"
+            prefWidth="1200" prefHeight="800"
+            style="-fx-background-color: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #87CEEB 100%);">
+    
+    <top>
+        <VBox spacing="10" style="-fx-background-color: transparent;">
+            <padding>
+                <Insets top="20" right="20" bottom="15" left="20"/>
+            </padding>
+            
+            <!-- Navegación -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Button text="← Cancelar" onAction="#cancelar"
+                        style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnGuardar" text="💾 Guardar" onAction="#guardarEmpresa"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 15; -fx-padding: 8 20; -fx-cursor: hand;"/>
+            </HBox>
+            
+            <!-- Título -->
+            <Label fx:id="lblTitulo" text="Nueva Empresa" 
+                   style="-fx-font-family: Arial; -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label text="Completa la información de la empresa" 
+                   style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.8);"/>
+        </VBox>
+    </top>
+    
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="20" alignment="TOP_CENTER" style="-fx-background-color: transparent;">
+                <padding>
+                    <Insets top="10" right="50" bottom="30" left="50"/>
+                </padding>
+                
+                <!-- Tarjeta: Información Básica -->
+                <VBox maxWidth="700" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets top="20" right="25" bottom="20" left="25"/>
+                    </padding>
+                    
+                    <Label text="📋 Información Básica" style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                    <Region prefHeight="15"/>
+                    
+                    <!-- Nombre -->
+                    <VBox spacing="5">
+                        <Label text="Nombre de la empresa *" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                        <TextField fx:id="txtNombre" promptText="Ej: TechSolutions Canarias S.L." prefHeight="40"
+                                   style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                    </VBox>
+                    <Region prefHeight="15"/>
+                    
+                    <!-- CIF -->
+                    <VBox spacing="5">
+                        <Label text="CIF" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                        <TextField fx:id="txtCif" promptText="Ej: B12345678" prefHeight="40"
+                                   style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                    </VBox>
+                    <Region prefHeight="15"/>
+                    
+                    <!-- Descripción -->
+                    <VBox spacing="5">
+                        <Label text="Descripción" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                        <TextArea fx:id="txtDescripcion" promptText="Describe la actividad de la empresa..." prefHeight="100" wrapText="true"
+                                  style="-fx-background-color: #F5F5F5; -fx-background-radius: 8;"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- Tarjeta: Ubicación -->
+                <VBox maxWidth="700" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets top="20" right="25" bottom="20" left="25"/>
+                    </padding>
+                    
+                    <Label text="📍 Ubicación" style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                    <Region prefHeight="15"/>
+                    
+                    <!-- Dirección -->
+                    <VBox spacing="5">
+                        <Label text="Dirección" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                        <TextField fx:id="txtDireccion" promptText="Ej: C/ León y Castillo, 45, 2º" prefHeight="40"
+                                   style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                    </VBox>
+                    <Region prefHeight="15"/>
+                    
+                    <!-- Ciudad y CP -->
+                    <HBox spacing="15">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Ciudad *" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <TextField fx:id="txtCiudad" promptText="Ej: Las Palmas de G.C." prefHeight="40"
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                        </VBox>
+                        <VBox spacing="5" prefWidth="150">
+                            <Label text="Código Postal" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <TextField fx:id="txtCodigoPostal" promptText="Ej: 35003" prefHeight="40"
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+                
+                <!-- Tarjeta: Contacto -->
+                <VBox maxWidth="700" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets top="20" right="25" bottom="20" left="25"/>
+                    </padding>
+                    
+                    <Label text="📞 Contacto de la Empresa" style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                    <Region prefHeight="15"/>
+                    
+                    <!-- Teléfono y Email -->
+                    <HBox spacing="15">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Teléfono" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <TextField fx:id="txtTelefono" promptText="Ej: 928 123 456" prefHeight="40"
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Email" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <TextField fx:id="txtEmail" promptText="Ej: info@empresa.com" prefHeight="40"
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                        </VBox>
+                    </HBox>
+                    <Region prefHeight="15"/>
+                    
+                    <!-- Web -->
+                    <VBox spacing="5">
+                        <Label text="Página Web" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                        <TextField fx:id="txtWeb" promptText="Ej: https://www.empresa.com" prefHeight="40"
+                                   style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- Tarjeta: Persona de Contacto -->
+                <VBox maxWidth="700" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets top="20" right="25" bottom="20" left="25"/>
+                    </padding>
+                    
+                    <Label text="👤 Persona de Contacto" style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                    <Region prefHeight="15"/>
+                    
+                    <!-- Nombre contacto -->
+                    <VBox spacing="5">
+                        <Label text="Nombre" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                        <TextField fx:id="txtPersonaContacto" promptText="Ej: María Rodríguez" prefHeight="40"
+                                   style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                    </VBox>
+                    <Region prefHeight="15"/>
+                    
+                    <!-- Teléfono y Email contacto -->
+                    <HBox spacing="15">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Teléfono" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <TextField fx:id="txtTelefonoContacto" promptText="Ej: 666 123 456" prefHeight="40"
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Email" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555555;"/>
+                            <TextField fx:id="txtEmailContacto" promptText="Ej: contacto@empresa.com" prefHeight="40"
+                                       style="-fx-background-color: #F5F5F5; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-size: 14px;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+                
+                <!-- Tarjeta: Cursos relacionados -->
+                <VBox maxWidth="700" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets top="20" right="25" bottom="20" left="25"/>
+                    </padding>
+                    
+                    <Label text="🎓 Cursos Relacionados" style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                    <Label text="Selecciona los ciclos formativos que acepta esta empresa" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;"/>
+                    <Region prefHeight="15"/>
+                    
+                    <VBox fx:id="contenedorCursos" spacing="10">
+                        <!-- Los checkboxes de cursos se cargan dinámicamente -->
+                        <CheckBox fx:id="chkDAM" text="DAM - Desarrollo de Aplicaciones Multiplataforma"/>
+                        <CheckBox fx:id="chkDAW" text="DAW - Desarrollo de Aplicaciones Web"/>
+                        <CheckBox fx:id="chkASIR" text="ASIR - Administración de Sistemas Informáticos"/>
+                        <CheckBox fx:id="chkSMR" text="SMR - Sistemas Microinformáticos y Redes"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- Mensaje de error -->
+                <Label fx:id="lblError" text="" visible="false" managed="false" maxWidth="700"
+                       style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #FF6B6B; -fx-background-color: rgba(255,107,107,0.2); -fx-background-radius: 10; -fx-padding: 15;"/>
+                
+                <!-- Botones -->
+                <HBox alignment="CENTER" spacing="15" maxWidth="700">
+                    <Button text="Cancelar" prefWidth="150" prefHeight="45" onAction="#cancelar"
+                            style="-fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-cursor: hand;"/>
+                    <Button text="Guardar Empresa" prefWidth="200" prefHeight="45" onAction="#guardarEmpresa"
+                            style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-cursor: hand;"/>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

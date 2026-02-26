@@ -20,8 +20,13 @@
             <padding>
                 <Insets top="20" right="20" bottom="15" left="20"/>
             </padding>
-            <Label fx:id="lblNombre" text="Nombre Usuario" style="-fx-font-family: Arial; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-            <Label fx:id="lblRol" text="Alumno" style="-fx-background-color: rgba(255,255,255,0.3); -fx-background-radius: 15; -fx-padding: 5 15; -fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: white;"/>
+            <!-- Avatar -->
+            <VBox alignment="CENTER" prefWidth="80" prefHeight="80"
+                  style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 40; -fx-border-color: rgba(255,255,255,0.4); -fx-border-radius: 40;">
+                <Label text="👤" style="-fx-font-size: 36px;"/>
+            </VBox>
+            <Label fx:id="lblNombreCompleto" text="Nombre Apellidos" style="-fx-font-family: Arial; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label fx:id="lblRol" text="PROFESOR" style="-fx-background-color: rgba(255,255,255,0.3); -fx-background-radius: 15; -fx-padding: 5 15; -fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: white;"/>
         </VBox>
     </top>
     
@@ -32,13 +37,14 @@
                     <Insets top="20" right="50" bottom="20" left="50"/>
                 </padding>
                 
+                <!-- Tarjeta: Información Personal -->
                 <VBox fx:id="tarjetaInfo" maxWidth="600" style="-fx-background-color: #FFFFFF; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 3);">
                     
                     <HBox alignment="CENTER_LEFT">
                         <padding>
                             <Insets top="15" right="20" bottom="15" left="20"/>
                         </padding>
-                        <Label text="Informacion Personal" style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                        <Label text="Información Personal" style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: black;"/>
                         <Region HBox.hgrow="ALWAYS"/>
                         <HBox spacing="10">
                             <Button fx:id="btnEditar" text="Editar" onAction="#activarEdicion"
@@ -52,50 +58,108 @@
                     
                     <Region prefHeight="1" style="-fx-background-color: #EEEEEE;"/>
                     
+                    <!-- Nombre -->
                     <HBox alignment="CENTER_LEFT" spacing="20">
                         <padding>
                             <Insets top="15" right="20" bottom="15" left="20"/>
                         </padding>
-                        <Label text="Gmail" prefWidth="100" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                        <Label text="Nombre" prefWidth="120" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                        <TextField fx:id="txtNombre" prefWidth="350" prefHeight="35" editable="false"
+                                   style="-fx-background-color: #F5F5F5; -fx-border-color: transparent; -fx-background-radius: 5; -fx-padding: 5 10; -fx-text-fill: #333333; -fx-font-size: 14px;"/>
+                    </HBox>
+                    
+                    <Region prefHeight="1" style="-fx-background-color: #EEEEEE;"/>
+                    
+                    <!-- Apellidos -->
+                    <HBox alignment="CENTER_LEFT" spacing="20">
+                        <padding>
+                            <Insets top="15" right="20" bottom="15" left="20"/>
+                        </padding>
+                        <Label text="Apellidos" prefWidth="120" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                        <TextField fx:id="txtApellidos" prefWidth="350" prefHeight="35" editable="false"
+                                   style="-fx-background-color: #F5F5F5; -fx-border-color: transparent; -fx-background-radius: 5; -fx-padding: 5 10; -fx-text-fill: #333333; -fx-font-size: 14px;"/>
+                    </HBox>
+                    
+                    <Region prefHeight="1" style="-fx-background-color: #EEEEEE;"/>
+                    
+                    <!-- Email -->
+                    <HBox alignment="CENTER_LEFT" spacing="20">
+                        <padding>
+                            <Insets top="15" right="20" bottom="15" left="20"/>
+                        </padding>
+                        <Label text="Email" prefWidth="120" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
                         <TextField fx:id="txtEmail" prefWidth="350" prefHeight="35" editable="false"
                                    style="-fx-background-color: #F5F5F5; -fx-border-color: transparent; -fx-background-radius: 5; -fx-padding: 5 10; -fx-text-fill: #333333; -fx-font-size: 14px;"/>
                     </HBox>
                     
                     <Region prefHeight="1" style="-fx-background-color: #EEEEEE;"/>
                     
+                    <!-- NIF -->
                     <HBox alignment="CENTER_LEFT" spacing="20">
                         <padding>
                             <Insets top="15" right="20" bottom="15" left="20"/>
                         </padding>
-                        <Label text="Pais" prefWidth="100" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
-                        <TextField fx:id="txtPais" prefWidth="350" prefHeight="35" editable="false"
+                        <Label text="NIF" prefWidth="120" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                        <TextField fx:id="txtNif" prefWidth="350" prefHeight="35" editable="false"
                                    style="-fx-background-color: #F5F5F5; -fx-border-color: transparent; -fx-background-radius: 5; -fx-padding: 5 10; -fx-text-fill: #333333; -fx-font-size: 14px;"/>
                     </HBox>
                     
                     <Region prefHeight="1" style="-fx-background-color: #EEEEEE;"/>
                     
+                    <!-- Departamento -->
                     <HBox alignment="CENTER_LEFT" spacing="20">
                         <padding>
                             <Insets top="15" right="20" bottom="15" left="20"/>
                         </padding>
-                        <Label text="DNI" prefWidth="100" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
-                        <TextField fx:id="txtDni" prefWidth="350" prefHeight="35" editable="false"
+                        <Label text="Departamento" prefWidth="120" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                        <TextField fx:id="txtDepartamento" prefWidth="350" prefHeight="35" editable="false"
                                    style="-fx-background-color: #F5F5F5; -fx-border-color: transparent; -fx-background-radius: 5; -fx-padding: 5 10; -fx-text-fill: #333333; -fx-font-size: 14px;"/>
                     </HBox>
                     
                     <Region prefHeight="1" style="-fx-background-color: #EEEEEE;"/>
                     
+                    <!-- Rol -->
                     <HBox alignment="CENTER_LEFT" spacing="20">
                         <padding>
                             <Insets top="15" right="20" bottom="15" left="20"/>
                         </padding>
-                        <Label text="Telefono" prefWidth="100" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
-                        <TextField fx:id="txtTelefono" prefWidth="350" prefHeight="35" editable="false"
-                                   style="-fx-background-color: #F5F5F5; -fx-border-color: transparent; -fx-background-radius: 5; -fx-padding: 5 10; -fx-text-fill: #333333; -fx-font-size: 14px;"/>
+                        <Label text="Rol" prefWidth="120" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                        <Label fx:id="lblRolValor" text="PROFESOR" 
+                               style="-fx-background-color: #E3F2FD; -fx-background-radius: 15; -fx-padding: 8 15; -fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #1976D2;"/>
                     </HBox>
                 </VBox>
                 
-                <Button text="Cerrar Sesion" prefWidth="200" prefHeight="45" onAction="#cerrarSesion"
+                <!-- Tarjeta: Estadísticas -->
+                <VBox maxWidth="600" style="-fx-background-color: #FFFFFF; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets top="15" right="20" bottom="15" left="20"/>
+                    </padding>
+                    
+                    <Label text="📊 Estadísticas" style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+                    <Region prefHeight="15"/>
+                    
+                    <HBox alignment="CENTER" spacing="30">
+                        <VBox alignment="CENTER" spacing="5">
+                            <Label fx:id="lblFavoritosCount" text="0" style="-fx-font-family: Arial; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4facfe;"/>
+                            <Label text="Favoritos" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;"/>
+                        </VBox>
+                        <VBox alignment="CENTER" spacing="5">
+                            <Label fx:id="lblListasCount" text="0" style="-fx-font-family: Arial; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4facfe;"/>
+                            <Label text="Listas" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;"/>
+                        </VBox>
+                        <VBox alignment="CENTER" spacing="5">
+                            <Label fx:id="lblComentariosCount" text="0" style="-fx-font-family: Arial; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4facfe;"/>
+                            <Label text="Comentarios" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;"/>
+                        </VBox>
+                        <VBox alignment="CENTER" spacing="5">
+                            <Label fx:id="lblValoracionesCount" text="0" style="-fx-font-family: Arial; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4facfe;"/>
+                            <Label text="Valoraciones" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+                
+                <!-- Botón Cerrar Sesión -->
+                <Button text="Cerrar Sesión" prefWidth="200" prefHeight="45" onAction="#cerrarSesion"
                         style="-fx-background-color: #FF5252; -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 25; -fx-cursor: hand;"/>
             </VBox>
         </ScrollPane>
@@ -112,7 +176,7 @@
             <VBox alignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-cursor: hand;" onMouseClicked="#abrirBusqueda">
                 <Label text="Buscar" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: gray;"/>
             </VBox>
-            <VBox alignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-cursor: hand;">
+            <VBox alignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-cursor: hand;" onMouseClicked="#abrirListas">
                 <Label text="Mis Listas" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: gray;"/>
             </VBox>
             <VBox alignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-cursor: hand;">
