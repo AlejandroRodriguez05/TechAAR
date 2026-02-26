@@ -90,7 +90,6 @@ public class PerfilView {
         // Título
         Label lblTitulo = new Label("Información Personal");
         lblTitulo.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-        lblTitulo.setTextFill(Color.BLACK);
         lblTitulo.setPadding(new Insets(15, 20, 10, 20));
         
         tarjeta.getChildren().add(lblTitulo);
