@@ -3,18 +3,30 @@ package com.practicas.view;
 import com.practicas.model.DataService;
 import com.practicas.model.Empresa;
 import com.practicas.model.Usuario;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Vista principal estilo app móvil - diseño exacto de la referencia
@@ -192,9 +204,12 @@ public class EmpresasView {
         VBox tarjeta = new VBox(10);
         tarjeta.setPadding(new Insets(15));
         tarjeta.setStyle(
-            "-fx-background-color: white;" +
+            "-fx-background-color: #FFFFFF;" +
             "-fx-background-radius: 12;" +
-            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);"
+            "-fx-border-color: #E0E0E0;" +
+            "-fx-border-radius: 12;" +
+            "-fx-border-width: 1;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 3);"
         );
         
         // === FILA 1: Nombre + Valoración ===
@@ -229,12 +244,12 @@ public class EmpresasView {
         HBox valoracion = new HBox(4);
         valoracion.setAlignment(Pos.CENTER);
         valoracion.setPadding(new Insets(5, 10, 5, 10));
-        valoracion.setStyle("-fx-background-color: #FFF8E1; -fx-background-radius: 15;");
+        valoracion.setStyle("-fx-background-color: #FFD54F; -fx-background-radius: 15;");
         
         Label estrella = new Label("⭐");
         Label puntuacion = new Label(String.format("%.1f", 3.5 + Math.random() * 1.5));
         puntuacion.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-        puntuacion.setTextFill(Color.web("#FFA000"));
+        puntuacion.setTextFill(Color.web("#5D4037"));
         
         valoracion.getChildren().addAll(estrella, puntuacion);
         
@@ -297,8 +312,11 @@ public class EmpresasView {
         // Efecto para empresas ocupadas (solo alumnos)
         if (usuario.esAlumno() && empresa.estaOcupada()) {
             tarjeta.setStyle(
-                "-fx-background-color: #FAFAFA;" +
+                "-fx-background-color: #F5F5F5;" +
                 "-fx-background-radius: 12;" +
+                "-fx-border-color: #E0E0E0;" +
+                "-fx-border-radius: 12;" +
+                "-fx-border-width: 1;" +
                 "-fx-opacity: 0.85;"
             );
         }
@@ -308,9 +326,12 @@ public class EmpresasView {
         tarjeta.setOnMouseEntered(e -> {
             if (!(usuario.esAlumno() && empresa.estaOcupada())) {
                 tarjeta.setStyle(
-                    "-fx-background-color: white;" +
+                    "-fx-background-color: #FFFFFF;" +
                     "-fx-background-radius: 12;" +
-                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 4);" +
+                    "-fx-border-color: #BDBDBD;" +
+                    "-fx-border-radius: 12;" +
+                    "-fx-border-width: 1;" +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 5);" +
                     "-fx-cursor: hand;"
                 );
             }
@@ -318,15 +339,21 @@ public class EmpresasView {
         tarjeta.setOnMouseExited(e -> {
             if (usuario.esAlumno() && empresa.estaOcupada()) {
                 tarjeta.setStyle(
-                    "-fx-background-color: #FAFAFA;" +
+                    "-fx-background-color: #F5F5F5;" +
                     "-fx-background-radius: 12;" +
+                    "-fx-border-color: #E0E0E0;" +
+                    "-fx-border-radius: 12;" +
+                    "-fx-border-width: 1;" +
                     "-fx-opacity: 0.85;"
                 );
             } else {
                 tarjeta.setStyle(
-                    "-fx-background-color: white;" +
+                    "-fx-background-color: #FFFFFF;" +
                     "-fx-background-radius: 12;" +
-                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);"
+                    "-fx-border-color: #E0E0E0;" +
+                    "-fx-border-radius: 12;" +
+                    "-fx-border-width: 1;" +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 3);"
                 );
             }
         });
@@ -349,8 +376,9 @@ public class EmpresasView {
         VBox btnListas = crearBotonNav("📝", "Mis Listas", false);
         VBox btnPerfil = crearBotonNav("👤", "Mi Perfil", false);
         
+        btnBuscar.setOnMouseClicked(e -> abrirBusqueda());
         btnListas.setOnMouseClicked(e -> mostrarMisListas());
-        btnPerfil.setOnMouseClicked(e -> cerrarSesion());
+        btnPerfil.setOnMouseClicked(e -> abrirPerfil());
         
         HBox.setHgrow(btnFCT, Priority.ALWAYS);
         HBox.setHgrow(btnBuscar, Priority.ALWAYS);
@@ -557,6 +585,14 @@ public class EmpresasView {
             dataService.agregarEmpresa(emp);
             actualizarListaEmpresas();
         });
+    }
+
+    private void abrirBusqueda() {
+        stage.setScene(new BusquedaView(stage, usuario).crearEscena());
+    }
+
+    private void abrirPerfil() {
+        stage.setScene(new PerfilView(stage, usuario).crearEscena());
     }
 
     private void cerrarSesion() {
