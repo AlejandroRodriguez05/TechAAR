@@ -248,16 +248,16 @@ public class BusquedaView {
         fila1.setAlignment(Pos.CENTER_LEFT);
         
         Label lblNombre = new Label(empresa.getNombre());
-        lblNombre.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        lblNombre.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         lblNombre.setTextFill(Color.BLACK);
         
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
         Label lblEstado = new Label(empresa.estaOcupada() ? "OCUPADA" : "DISPONIBLE");
-        lblEstado.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+        lblEstado.setFont(Font.font("Arial", FontWeight.BOLD, 11));
         lblEstado.setTextFill(Color.WHITE);
-        lblEstado.setPadding(new Insets(4, 8, 4, 8));
+        lblEstado.setPadding(new Insets(5, 10, 5, 10));
         lblEstado.setStyle(
             "-fx-background-color: " + (empresa.estaOcupada() ? "#FF5722" : "#4CAF50") + ";" +
             "-fx-background-radius: 4;"
@@ -266,23 +266,24 @@ public class BusquedaView {
         fila1.getChildren().addAll(lblNombre, spacer, lblEstado);
         
         // Fila 2: Ubicación y sector
-        HBox fila2 = new HBox(15);
+        HBox fila2 = new HBox(20);
         fila2.setAlignment(Pos.CENTER_LEFT);
+        fila2.setPadding(new Insets(5, 0, 0, 0));
         
-        Label lblUbicacion = new Label(empresa.getUbicacion());
-        lblUbicacion.setFont(Font.font("Arial", 12));
-        lblUbicacion.setTextFill(Color.GRAY);
+        Label lblUbicacion = new Label("Ubicacion: " + empresa.getUbicacion());
+        lblUbicacion.setFont(Font.font("Arial", 13));
+        lblUbicacion.setTextFill(Color.web("#333333"));
         
-        Label lblSector = new Label(empresa.getSector());
-        lblSector.setFont(Font.font("Arial", 12));
-        lblSector.setTextFill(Color.GRAY);
+        Label lblSector = new Label("Sector: " + empresa.getSector());
+        lblSector.setFont(Font.font("Arial", 13));
+        lblSector.setTextFill(Color.web("#333333"));
         
         fila2.getChildren().addAll(lblUbicacion, lblSector);
         
         // Fila 3: Plazas
         Label lblPlazas = new Label("Plazas: " + empresa.getEstadoPlazas());
-        lblPlazas.setFont(Font.font("Arial", 12));
-        lblPlazas.setTextFill(Color.web("#666666"));
+        lblPlazas.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+        lblPlazas.setTextFill(Color.web("#333333"));
         
         tarjeta.getChildren().addAll(fila1, fila2, lblPlazas);
         
