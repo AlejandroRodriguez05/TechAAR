@@ -36,13 +36,16 @@
                 <padding>
                     <Insets top="15" bottom="10"/>
                 </padding>
-                <VBox alignment="CENTER" style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 12 20;">
+                <VBox fx:id="filtroNuevas" alignment="CENTER" onMouseClicked="#filtrarNuevas"
+                      style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 12 20;">
                     <Label text="Nuevas" style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: white;"/>
                 </VBox>
-                <VBox alignment="CENTER" style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 12 20;">
+                <VBox fx:id="filtroTop" alignment="CENTER" onMouseClicked="#filtrarTopValoradas"
+                      style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 12 20;">
                     <Label text="Top valoradas" style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: white;"/>
                 </VBox>
-                <VBox alignment="CENTER" style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 12 20;">
+                <VBox fx:id="filtroCercanas" alignment="CENTER" onMouseClicked="#filtrarCercanas"
+                      style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 12 20;">
                     <Label text="Cercanas" style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: white;"/>
                 </VBox>
             </HBox>
@@ -59,7 +62,7 @@
                 <padding>
                     <Insets top="5" right="5" bottom="10" left="5"/>
                 </padding>
-                <Label text="Todas las empresas" style="-fx-font-family: Arial; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Label fx:id="lblTituloSeccion" text="Todas las empresas" style="-fx-font-family: Arial; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label fx:id="lblBadge" text="6" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 4 12; -fx-font-family: Arial; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #4facfe;"/>
             </HBox>

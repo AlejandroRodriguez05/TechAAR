@@ -1,37 +1,30 @@
 package com.practicas;
 
-import com.practicas.view.LoginView;
-
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Clase principal de la aplicación de Gestión de Prácticas
+ * Clase principal de la aplicacion de Gestion de Practicas
  * 
  * Sistema con dos roles:
  * - ALUMNO: Solo puede ver empresas con plazas libres (modo lectura)
- * - PROFESOR: Puede ver todo, añadir/eliminar empresas y gestionar plazas
- * 
- * @author Sistema de Prácticas
- * @version 1.0
+ * - PROFESOR: Puede ver todo, anadir/eliminar empresas y gestionar plazas
  */
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
-        // Configurar ventana principal
-        primaryStage.setTitle("Sistema de Gestión de Prácticas - Login");
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+        Parent root = loader.load();
+        
+        primaryStage.setTitle("Sistema de Gestion de Practicas - Login");
+        primaryStage.setScene(new Scene(root));
         primaryStage.setMinWidth(1000);
         primaryStage.setMinHeight(700);
-        
-        // Crear y mostrar la vista de login
-        LoginView loginView = new LoginView(primaryStage);
-        primaryStage.setScene(loginView.crearEscena());
-        
-        // Maximizar ventana
         primaryStage.setMaximized(true);
-        
-        // Mostrar
         primaryStage.show();
     }
 

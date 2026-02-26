@@ -378,7 +378,7 @@ public class BusquedaView {
         VBox btn = new VBox(3);
         btn.setAlignment(Pos.CENTER);
         btn.setPadding(new Insets(5));
-        btn.setStyle("-fx-cursor: hand;");
+        btn.setStyle("-fx-cursor: hand;");             
         
         Label lblIcono = new Label(icono);
         lblIcono.setFont(Font.font("Arial", 20));

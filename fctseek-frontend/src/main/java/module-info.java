@@ -3,10 +3,10 @@ module com.practicas {
     requires javafx.fxml;
     
     opens com.practicas to javafx.fxml;
-    opens com.practicas.view to javafx.fxml;
+    opens com.practicas.controller to javafx.fxml;
     opens com.practicas.model to javafx.fxml;
     
     exports com.practicas;
-    exports com.practicas.view;
+    exports com.practicas.controller;
     exports com.practicas.model;
 }
