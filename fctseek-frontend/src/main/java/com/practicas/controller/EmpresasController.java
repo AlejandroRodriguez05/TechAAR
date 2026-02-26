@@ -1,6 +1,7 @@
 package com.practicas.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +19,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
@@ -261,7 +264,7 @@ public class EmpresasController {
 
         VBox contenido = new VBox(12);
         contenido.setPadding(new Insets(20));
-        contenido.setPrefWidth(380);
+        contenido.setPrefWidth(420);
 
         Label lblNombre = new Label(empresa.getNombre());
         lblNombre.setFont(Font.font("Arial", FontWeight.BOLD, 18));
@@ -292,23 +295,42 @@ public class EmpresasController {
         if (usuario.esProfesor()) {
             HBox controles = new HBox(10);
             controles.setAlignment(Pos.CENTER);
+            
             Spinner<Integer> spinner = new Spinner<>(0, empresa.getPlazasTotales(), empresa.getPlazasOcupadas());
             spinner.setPrefWidth(70);
+            
             Button btnActualizar = new Button("Actualizar Plazas");
-            btnActualizar.setStyle("-fx-background-color: #4facfe; -fx-text-fill: white;");
+            btnActualizar.setStyle("-fx-background-color: #4facfe; -fx-text-fill: white; -fx-font-weight: bold;");
             btnActualizar.setOnAction(e -> {
                 dataService.actualizarPlazas(empresa, spinner.getValue());
                 cargarEmpresas();
                 dialog.close();
             });
-            Button btnEliminar = new Button("Eliminar");
-            btnEliminar.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
-            btnEliminar.setOnAction(e -> {
-                dataService.eliminarEmpresa(empresa);
-                cargarEmpresas();
+            
+            Button btnEditar = new Button("Editar");
+            btnEditar.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold;");
+            btnEditar.setOnAction(e -> {
                 dialog.close();
+                mostrarDialogoEditar(empresa);
             });
-            controles.getChildren().addAll(new Label("Plazas:"), spinner, btnActualizar, btnEliminar);
+            
+            Button btnEliminar = new Button("Eliminar");
+            btnEliminar.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
+            btnEliminar.setOnAction(e -> {
+                Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmacion.setTitle("Confirmar eliminacion");
+                confirmacion.setHeaderText("¿Eliminar " + empresa.getNombre() + "?");
+                confirmacion.setContentText("Esta accion no se puede deshacer.");
+                confirmacion.showAndWait().ifPresent(btn -> {
+                    if (btn == ButtonType.OK) {
+                        dataService.eliminarEmpresa(empresa);
+                        cargarEmpresas();
+                        dialog.close();
+                    }
+                });
+            });
+            
+            controles.getChildren().addAll(new Label("Plazas:"), spinner, btnActualizar, btnEditar, btnEliminar);
             contenido.getChildren().addAll(new Separator(), controles);
         }
 
@@ -317,38 +339,185 @@ public class EmpresasController {
         dialog.showAndWait();
     }
 
+    private void mostrarDialogoEditar(Empresa empresa) {
+        Stage ventanaEditar = new Stage();
+        ventanaEditar.setTitle("Editar Empresa - " + empresa.getNombre());
+        ventanaEditar.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+        // Campos
+        TextField txtNombre = new TextField(empresa.getNombre());
+        TextField txtSector = new TextField(empresa.getSector());
+        TextField txtUbicacion = new TextField(empresa.getUbicacion());
+        TextField txtCiclos = new TextField("");
+        
+        String desc = empresa.getDescripcion();
+        if (desc != null && desc.startsWith("Ciclos:")) {
+            int idx = desc.indexOf("\n\n");
+            if (idx > 0) {
+                txtCiclos.setText(desc.substring(8, idx).trim());
+                desc = desc.substring(idx + 2);
+            }
+        }
+        
+        TextArea txtDesc = new TextArea(desc);
+        txtDesc.setPrefRowCount(3);
+        txtDesc.setWrapText(true);
+        
+        TextArea txtResena = new TextArea(empresa.getResena() != null ? empresa.getResena() : "");
+        txtResena.setPrefRowCount(2);
+        txtResena.setWrapText(true);
+        
+        Spinner<Integer> spinTotal = new Spinner<>(1, 20, empresa.getPlazasTotales());
+        Spinner<Integer> spinOcupadas = new Spinner<>(0, 20, empresa.getPlazasOcupadas());
+
+        // Grid
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25));
+
+        int row = 0;
+        grid.add(new Label("Nombre:"), 0, row);
+        grid.add(txtNombre, 1, row++);
+        grid.add(new Label("Sector:"), 0, row);
+        grid.add(txtSector, 1, row++);
+        grid.add(new Label("Ubicacion:"), 0, row);
+        grid.add(txtUbicacion, 1, row++);
+        grid.add(new Label("Ciclos:"), 0, row);
+        grid.add(txtCiclos, 1, row++);
+        grid.add(new Label("Descripcion:"), 0, row);
+        grid.add(txtDesc, 1, row++);
+        grid.add(new Label("Resena:"), 0, row);
+        grid.add(txtResena, 1, row++);
+        grid.add(new Label("Plazas totales:"), 0, row);
+        grid.add(spinTotal, 1, row++);
+        grid.add(new Label("Plazas ocupadas:"), 0, row);
+        grid.add(spinOcupadas, 1, row++);
+
+        // Botones
+        Button btnGuardar = new Button("Guardar");
+        btnGuardar.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+        
+        Button btnCancelar = new Button("Cancelar");
+        btnCancelar.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+
+        HBox hboxBotones = new HBox(10, btnGuardar, btnCancelar);
+        hboxBotones.setAlignment(Pos.CENTER);
+        
+        grid.add(hboxBotones, 1, row);
+
+        btnGuardar.setOnAction(e -> {
+            empresa.setNombre(txtNombre.getText());
+            empresa.setSector(txtSector.getText());
+            empresa.setUbicacion(txtUbicacion.getText());
+            
+            String nuevaDesc = txtDesc.getText();
+            if (!txtCiclos.getText().isEmpty()) {
+                nuevaDesc = "Ciclos: " + txtCiclos.getText() + "\n\n" + nuevaDesc;
+            }
+            empresa.setDescripcion(nuevaDesc);
+            empresa.setResena(txtResena.getText());
+            empresa.setPlazasTotales(spinTotal.getValue());
+            empresa.setPlazasOcupadas(spinOcupadas.getValue());
+            
+            cargarEmpresas();
+            ventanaEditar.close();
+        });
+
+        btnCancelar.setOnAction(e -> ventanaEditar.close());
+
+        Scene scene = new Scene(grid, 500, 450);
+        ventanaEditar.setScene(scene);
+        ventanaEditar.show();
+    }
+
     @FXML
     private void mostrarDialogoAnadir() {
         Dialog<Empresa> dialog = new Dialog<>();
         dialog.setTitle("Anadir Empresa");
 
+        VBox contenido = new VBox(15);
+        contenido.setPadding(new Insets(20));
+        contenido.setStyle("-fx-background-color: white;");
+
+        Label titulo = new Label("Nueva Empresa");
+        titulo.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        titulo.setTextFill(Color.web("#4facfe"));
+
         GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20));
+        grid.setHgap(15);
+        grid.setVgap(12);
 
         TextField txtNombre = new TextField();
+        txtNombre.setPromptText("Nombre de la empresa");
+        txtNombre.setPrefWidth(300);
+        
         TextField txtSector = new TextField();
+        txtSector.setPromptText("Ej: Tecnologia, Consultoria IT...");
+        
         TextField txtUbicacion = new TextField();
+        txtUbicacion.setPromptText("Ciudad o direccion");
+        
         TextArea txtDesc = new TextArea();
+        txtDesc.setPromptText("Descripcion de la empresa y actividades...");
         txtDesc.setPrefRowCount(2);
+        
         TextArea txtResena = new TextArea();
+        txtResena.setPromptText("Resena o comentarios adicionales...");
         txtResena.setPrefRowCount(2);
+        
+        // Campo Ciclos
+        TextField txtCiclos = new TextField();
+        txtCiclos.setPromptText("Ej: DAM, DAW, ASIR, SMR...");
+        
         Spinner<Integer> spinPlazas = new Spinner<>(1, 10, 4);
+        spinPlazas.setPrefWidth(80);
 
-        grid.addRow(0, new Label("Nombre:"), txtNombre);
-        grid.addRow(1, new Label("Sector:"), txtSector);
-        grid.addRow(2, new Label("Ubicacion:"), txtUbicacion);
-        grid.addRow(3, new Label("Descripcion:"), txtDesc);
-        grid.addRow(4, new Label("Resena:"), txtResena);
-        grid.addRow(5, new Label("Plazas:"), spinPlazas);
+        // Labels con estilo
+        Label lblNombre = new Label("Nombre:");
+        lblNombre.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+        Label lblSector = new Label("Sector:");
+        lblSector.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+        Label lblUbicacion = new Label("Ubicacion:");
+        lblUbicacion.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+        Label lblDesc = new Label("Descripcion:");
+        lblDesc.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+        Label lblResena = new Label("Resena:");
+        lblResena.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+        Label lblCiclos = new Label("Ciclos:");
+        lblCiclos.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+        Label lblPlazas = new Label("Plazas:");
+        lblPlazas.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 
-        dialog.getDialogPane().setContent(grid);
+        grid.addRow(0, lblNombre, txtNombre);
+        grid.addRow(1, lblSector, txtSector);
+        grid.addRow(2, lblUbicacion, txtUbicacion);
+        grid.addRow(3, lblCiclos, txtCiclos);
+        grid.addRow(4, lblDesc, txtDesc);
+        grid.addRow(5, lblResena, txtResena);
+        grid.addRow(6, lblPlazas, spinPlazas);
+
+        contenido.getChildren().addAll(titulo, grid);
+        
+        dialog.getDialogPane().setContent(contenido);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        // Estilizar botones
+        Button btnOk = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        btnOk.setText("Guardar");
+        btnOk.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;");
+        
+        Button btnCancel = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        btnCancel.setText("Cancelar");
 
         dialog.setResultConverter(btn -> {
             if (btn == ButtonType.OK && !txtNombre.getText().isEmpty()) {
-                return new Empresa(txtNombre.getText(), txtDesc.getText(), txtResena.getText(),
+                // Incluir ciclos en la descripcion o crear campo separado
+                String descripcionCompleta = txtDesc.getText();
+                if (!txtCiclos.getText().trim().isEmpty()) {
+                    descripcionCompleta = "Ciclos: " + txtCiclos.getText().trim() + "\n\n" + descripcionCompleta;
+                }
+                return new Empresa(txtNombre.getText(), descripcionCompleta, txtResena.getText(),
                         txtSector.getText(), txtUbicacion.getText(), spinPlazas.getValue(), 0);
             }
             return null;
@@ -365,14 +534,29 @@ public class EmpresasController {
         });
     }
 
+    // Listas de empresas del usuario (simuladas)
+    private Map<String, List<String>> listasUsuario = new HashMap<>();
+
+    private void inicializarListasUsuario() {
+        // Simular listas del usuario con nombres de empresas
+        listasUsuario.put("Favoritos", Arrays.asList("TechSolutions S.L.", "CloudServices Inc"));
+        listasUsuario.put("Para contactar", Arrays.asList("DataAnalytics Corp"));
+        listasUsuario.put("FCT 2025", Arrays.asList("TechSolutions S.L.", "GameDev Studios", "WebDesign Studio"));
+        listasUsuario.put("Destacadas", Arrays.asList("TechSolutions S.L.", "DataAnalytics Corp", "CloudServices Inc", "CyberSecure Labs", "GameDev Studios"));
+    }
+
     @FXML
     private void mostrarMisListas() {
+        if (listasUsuario.isEmpty()) {
+            inicializarListasUsuario();
+        }
+
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Mis Listas");
 
         VBox contenido = new VBox(15);
         contenido.setPadding(new Insets(25));
-        contenido.setPrefSize(400, 350);
+        contenido.setPrefSize(400, 400);
         contenido.setStyle("-fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);");
 
         Label titulo = new Label("Mis Listas");
@@ -380,10 +564,10 @@ public class EmpresasController {
         titulo.setTextFill(Color.WHITE);
 
         contenido.getChildren().addAll(titulo,
-                crearItemLista("❤️", "Favoritos", "2 empresas", "#FF6B6B", "#FFEBEE"),
-                crearItemLista("📞", "Para contactar", "1 empresa", "#4ECDC4", "#E0F7FA"),
-                crearItemLista("📋", "FCT 2025", "3 empresas", "#45B7D1", "#E3F2FD"),
-                crearItemLista("⭐", "Destacadas", "5 empresas", "#F7DC6F", "#FFFDE7"));
+                crearItemLista("❤️", "Favoritos", listasUsuario.get("Favoritos").size() + " empresas", "#FF6B6B", "#FFEBEE", dialog),
+                crearItemLista("📞", "Para contactar", listasUsuario.get("Para contactar").size() + " empresa", "#4ECDC4", "#E0F7FA", dialog),
+                crearItemLista("📋", "FCT 2025", listasUsuario.get("FCT 2025").size() + " empresas", "#45B7D1", "#E3F2FD", dialog),
+                crearItemLista("⭐", "Destacadas", listasUsuario.get("Destacadas").size() + " empresas", "#F7DC6F", "#FFFDE7", dialog));
 
         dialog.getDialogPane().setContent(contenido);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
@@ -391,7 +575,7 @@ public class EmpresasController {
         dialog.showAndWait();
     }
 
-    private HBox crearItemLista(String emoji, String nombre, String cantidad, String colorIcono, String colorFondo) {
+    private HBox crearItemLista(String emoji, String nombre, String cantidad, String colorIcono, String colorFondo, Dialog<Void> parentDialog) {
         HBox item = new HBox(15);
         item.setAlignment(Pos.CENTER_LEFT);
         item.setPadding(new Insets(15));
@@ -427,7 +611,141 @@ public class EmpresasController {
         item.setOnMouseEntered(e -> item.setStyle("-fx-background-color: white; -fx-background-radius: 15; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);"));
         item.setOnMouseExited(e -> item.setStyle("-fx-background-color: " + colorFondo + "; -fx-background-radius: 15; -fx-cursor: hand;"));
 
+        // Click para ver empresas de la lista
+        item.setOnMouseClicked(e -> {
+            parentDialog.close();
+            mostrarEmpresasLista(nombre, emoji, colorIcono);
+        });
+
         return item;
+    }
+
+    private void mostrarEmpresasLista(String nombreLista, String emoji, String color) {
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle(nombreLista);
+
+        VBox contenido = new VBox(15);
+        contenido.setPadding(new Insets(20));
+        contenido.setPrefWidth(450);
+        contenido.setStyle("-fx-background-color: #F5F5F5;");
+
+        // Header
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+        Label lblEmoji = new Label(emoji);
+        lblEmoji.setFont(Font.font(30));
+        Label lblTitulo = new Label(nombreLista);
+        lblTitulo.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        lblTitulo.setTextFill(Color.web(color));
+        header.getChildren().addAll(lblEmoji, lblTitulo);
+
+        contenido.getChildren().add(header);
+
+        // Lista de empresas
+        List<String> nombresEmpresas = listasUsuario.get(nombreLista);
+        
+        if (nombresEmpresas == null || nombresEmpresas.isEmpty()) {
+            Label lblVacio = new Label("No hay empresas en esta lista");
+            lblVacio.setFont(Font.font("Arial", 14));
+            lblVacio.setTextFill(Color.GRAY);
+            contenido.getChildren().add(lblVacio);
+        } else {
+            ScrollPane scroll = new ScrollPane();
+            scroll.setFitToWidth(true);
+            scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+            scroll.setPrefHeight(300);
+
+            VBox listaEmpresas = new VBox(10);
+            listaEmpresas.setStyle("-fx-background-color: transparent;");
+
+            for (String nombreEmpresa : nombresEmpresas) {
+                // Buscar la empresa en el DataService
+                Empresa empresa = dataService.getEmpresas().stream()
+                        .filter(e -> e.getNombre().equals(nombreEmpresa))
+                        .findFirst()
+                        .orElse(null);
+
+                if (empresa != null) {
+                    listaEmpresas.getChildren().add(crearTarjetaEmpresaMini(empresa, color, dialog));
+                }
+            }
+
+            scroll.setContent(listaEmpresas);
+            contenido.getChildren().add(scroll);
+        }
+
+        // Botón volver
+        Button btnVolver = new Button("Volver a Mis Listas");
+        btnVolver.setStyle("-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 10 25; -fx-cursor: hand;");
+        btnVolver.setOnAction(e -> {
+            dialog.close();
+            mostrarMisListas();
+        });
+
+        HBox boxBoton = new HBox(btnVolver);
+        boxBoton.setAlignment(Pos.CENTER);
+        boxBoton.setPadding(new Insets(10, 0, 0, 0));
+        contenido.getChildren().add(boxBoton);
+
+        dialog.getDialogPane().setContent(contenido);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.showAndWait();
+    }
+
+    private VBox crearTarjetaEmpresaMini(Empresa empresa, String colorAccent, Dialog<Void> parentDialog) {
+        VBox tarjeta = new VBox(8);
+        tarjeta.setPadding(new Insets(12));
+        tarjeta.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+
+        // Fila 1: Nombre + Estado
+        HBox fila1 = new HBox();
+        fila1.setAlignment(Pos.CENTER_LEFT);
+
+        Label lblNombre = new Label(empresa.getNombre());
+        lblNombre.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+        lblNombre.setTextFill(Color.web("#333333"));
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Label lblEstado = new Label(empresa.estaOcupada() ? "OCUPADA" : "DISPONIBLE");
+        lblEstado.setFont(Font.font("Arial", FontWeight.BOLD, 9));
+        lblEstado.setTextFill(Color.WHITE);
+        lblEstado.setPadding(new Insets(3, 6, 3, 6));
+        lblEstado.setStyle("-fx-background-color: " + (empresa.estaOcupada() ? "#FF5722" : "#4CAF50") + "; -fx-background-radius: 4;");
+
+        fila1.getChildren().addAll(lblNombre, spacer, lblEstado);
+
+        // Fila 2: Info
+        HBox fila2 = new HBox(15);
+        Label lblUbicacion = new Label("📍 " + empresa.getUbicacion());
+        lblUbicacion.setFont(Font.font("Arial", 11));
+        lblUbicacion.setTextFill(Color.GRAY);
+
+        Label lblSector = new Label("💼 " + empresa.getSector());
+        lblSector.setFont(Font.font("Arial", 11));
+        lblSector.setTextFill(Color.GRAY);
+
+        fila2.getChildren().addAll(lblUbicacion, lblSector);
+
+        // Fila 3: Plazas
+        Label lblPlazas = new Label("👥 Plazas: " + empresa.getEstadoPlazas());
+        lblPlazas.setFont(Font.font("Arial", 11));
+        lblPlazas.setTextFill(Color.web("#666666"));
+
+        tarjeta.getChildren().addAll(fila1, fila2, lblPlazas);
+
+        // Hover
+        tarjeta.setOnMouseEntered(e -> tarjeta.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3); -fx-cursor: hand;"));
+        tarjeta.setOnMouseExited(e -> tarjeta.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);"));
+
+        // Click para ver detalles
+        tarjeta.setOnMouseClicked(e -> {
+            parentDialog.close();
+            mostrarDetallesEmpresa(empresa);
+        });
+
+        return tarjeta;
     }
 
     @FXML
