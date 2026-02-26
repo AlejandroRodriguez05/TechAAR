@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.practicas.controller.LoginController"
+      alignment="CENTER" spacing="20" prefWidth="1200" prefHeight="800"
+      style="-fx-background-color: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);">
+    
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+    
+    <Label text="Sistema de Gestion de Practicas" 
+           style="-fx-font-family: Arial; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+    
+    <Label text="Selecciona tu tipo de usuario" 
+           style="-fx-font-family: Arial; -fx-font-size: 16px; -fx-text-fill: white;"/>
+    
+    <HBox alignment="CENTER" spacing="30">
+        <Button fx:id="btnAlumno" text="ALUMNO" prefWidth="180" prefHeight="80" onAction="#seleccionarAlumno"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;"/>
+        <Button fx:id="btnProfesor" text="PROFESOR" prefWidth="180" prefHeight="80" onAction="#seleccionarProfesor"
+                style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;"/>
+    </HBox>
+    
+    <VBox fx:id="loginForm" alignment="CENTER" spacing="15" maxWidth="350" visible="false" managed="false"
+          style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+        
+        <Label text="Iniciar Sesion" style="-fx-font-family: Arial; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+        
+        <Label text="Usuario:" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #333333;"/>
+        <TextField fx:id="txtUsername" promptText="Ingresa tu usuario" prefHeight="40" prefWidth="280"
+                   style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #ccc;"/>
+        
+        <Label text="Contrasena:" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #333333;"/>
+        <PasswordField fx:id="txtPassword" promptText="Ingresa tu contrasena" prefHeight="40" prefWidth="280" onAction="#intentarLogin"
+                       style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #ccc;"/>
+        
+        <Label fx:id="lblError" text="" style="-fx-text-fill: red; -fx-font-family: Arial; -fx-font-size: 12px;"/>
+        
+        <HBox alignment="CENTER" spacing="15">
+            <Button text="Entrar" prefWidth="120" prefHeight="40" onAction="#intentarLogin"
+                    style="-fx-background-color: #4facfe; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;"/>
+            <Button text="Volver" prefWidth="120" prefHeight="40" onAction="#ocultarFormulario"
+                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;"/>
+        </HBox>
+        
+        <Separator/>
+        
+        <Label text="Usuarios de prueba:" style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: gray;"/>
+        <Label text="Alumno: alumno1 / 1234" style="-fx-font-family: Arial; -fx-font-size: 10px; -fx-text-fill: gray;"/>
+        <Label text="Profesor: profesor1 / admin" style="-fx-font-family: Arial; -fx-font-size: 10px; -fx-text-fill: gray;"/>
+    </VBox>
+</VBox>
