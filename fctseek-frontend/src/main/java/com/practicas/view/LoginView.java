@@ -3,11 +3,17 @@ package com.practicas.view;
 import com.practicas.model.DataService;
 import com.practicas.model.TipoUsuario;
 import com.practicas.model.Usuario;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -70,7 +76,7 @@ public class LoginView {
 
         root.getChildren().addAll(titulo, subtitulo, botonesRol, loginForm);
 
-        return new Scene(root, 600, 500);
+        return new Scene(root, 1200, 800);
     }
 
     private Button crearBotonRol(String texto, String color) {

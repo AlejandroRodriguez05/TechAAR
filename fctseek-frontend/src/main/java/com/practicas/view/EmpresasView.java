@@ -57,7 +57,7 @@ public class EmpresasView {
         // Navegación inferior
         root.setBottom(crearNavegacionInferior());
         
-        return new Scene(root, 420, 780);
+        return new Scene(root, 1200, 800);
     }
 
     private VBox crearHeader() {
@@ -72,7 +72,7 @@ public class EmpresasView {
         VBox infoUsuario = new VBox(2);
         
         String nombre = usuario.getNombreCompleto().split(" ")[0];
-        Label lblSaludo = new Label("Hola, " + nombre + " 👋");
+        Label lblSaludo = new Label("Hola, " + nombre);
         lblSaludo.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         lblSaludo.setTextFill(Color.WHITE);
         
@@ -110,16 +110,16 @@ public class EmpresasView {
         filtros.setPadding(new Insets(15, 0, 10, 0));
         
         filtros.getChildren().addAll(
-            crearBotonFiltro("☆", "Nuevas"),
-            crearBotonFiltro("🏆", "Top valoradas"),
-            crearBotonFiltro("📍", "Cercanas")
+            crearBotonFiltro("Nuevas"),
+            crearBotonFiltro("Top valoradas"),
+            crearBotonFiltro("Cercanas")
         );
         
         header.getChildren().addAll(filaSaludo, filtros);
         return header;
     }
 
-    private VBox crearBotonFiltro(String icono, String texto) {
+    private VBox crearBotonFiltro(String texto) {
         VBox filtro = new VBox(5);
         filtro.setAlignment(Pos.CENTER);
         filtro.setPadding(new Insets(12, 20, 12, 20));
@@ -129,14 +129,11 @@ public class EmpresasView {
             "-fx-cursor: hand;"
         );
         
-        Label lblIcono = new Label(icono);
-        lblIcono.setFont(Font.font("Arial", 18));
-        
         Label lblTexto = new Label(texto);
         lblTexto.setFont(Font.font("Arial", 11));
         lblTexto.setTextFill(Color.WHITE);
         
-        filtro.getChildren().addAll(lblIcono, lblTexto);
+        filtro.getChildren().add(lblTexto);
         
         filtro.setOnMouseEntered(e -> filtro.setStyle(
             "-fx-background-color: rgba(255,255,255,0.4);" +
@@ -228,7 +225,7 @@ public class EmpresasView {
         );
         
         // Ubicación
-        Label lblUbicacion = new Label("📍 " + empresa.getUbicacion());
+        Label lblUbicacion = new Label(empresa.getUbicacion());
         lblUbicacion.setStyle(
             "-fx-font-family: 'Arial';" +
             "-fx-font-size: 13px;" +
@@ -246,12 +243,11 @@ public class EmpresasView {
         valoracion.setPadding(new Insets(5, 10, 5, 10));
         valoracion.setStyle("-fx-background-color: #FFD54F; -fx-background-radius: 15;");
         
-        Label estrella = new Label("⭐");
         Label puntuacion = new Label(String.format("%.1f", 3.5 + Math.random() * 1.5));
         puntuacion.setFont(Font.font("Arial", FontWeight.BOLD, 13));
         puntuacion.setTextFill(Color.web("#5D4037"));
         
-        valoracion.getChildren().addAll(estrella, puntuacion);
+        valoracion.getChildren().add(puntuacion);
         
         fila1.getChildren().addAll(infoNombre, spacer1, valoracion);
         
@@ -273,7 +269,7 @@ public class EmpresasView {
             "-fx-background-radius: 8;"
         );
         
-        Label lblContactado = new Label("✓ Contactado por:");
+        Label lblContactado = new Label("Contactado por:");
         lblContactado.setFont(Font.font("System", FontWeight.BOLD, 12));
         lblContactado.setTextFill(Color.rgb(56, 142, 60));
         
@@ -371,10 +367,10 @@ public class EmpresasView {
             "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, -2);"
         );
         
-        VBox btnFCT = crearBotonNav("📋", "FCT-Seek", false);
-        VBox btnBuscar = crearBotonNav("🔍", "Buscar Empre...", true);
-        VBox btnListas = crearBotonNav("📝", "Mis Listas", false);
-        VBox btnPerfil = crearBotonNav("👤", "Mi Perfil", false);
+        VBox btnFCT = crearBotonNav("FCT-Seek", false);
+        VBox btnBuscar = crearBotonNav("Buscar", true);
+        VBox btnListas = crearBotonNav("Mis Listas", false);
+        VBox btnPerfil = crearBotonNav("Mi Perfil", false);
         
         btnBuscar.setOnMouseClicked(e -> abrirBusqueda());
         btnListas.setOnMouseClicked(e -> mostrarMisListas());
@@ -389,20 +385,17 @@ public class EmpresasView {
         return nav;
     }
 
-    private VBox crearBotonNav(String icono, String texto, boolean activo) {
+    private VBox crearBotonNav(String texto, boolean activo) {
         VBox btn = new VBox(3);
         btn.setAlignment(Pos.CENTER);
         btn.setPadding(new Insets(5));
         btn.setStyle("-fx-cursor: hand;");
         
-        Label lblIcono = new Label(icono);
-        lblIcono.setFont(Font.font("Arial", 20));
-        
         Label lblTexto = new Label(texto);
-        lblTexto.setFont(Font.font("Arial", 10));
+        lblTexto.setFont(Font.font("Arial", 12));
         lblTexto.setTextFill(activo ? Color.web("#4facfe") : Color.GRAY);
         
-        btn.getChildren().addAll(lblIcono, lblTexto);
+        btn.getChildren().add(lblTexto);
         
         btn.setOnMouseEntered(e -> lblTexto.setTextFill(Color.web("#4facfe")));
         btn.setOnMouseExited(e -> { if (!activo) lblTexto.setTextFill(Color.GRAY); });
@@ -414,7 +407,7 @@ public class EmpresasView {
         if (usuario.esAlumno() && empresa.estaOcupada()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Empresa no disponible");
-            alert.setHeaderText("🔒 " + empresa.getNombre());
+            alert.setHeaderText(empresa.getNombre());
             alert.setContentText("Esta empresa no tiene plazas disponibles.\nEstado: " + 
                 empresa.getEstadoPlazas() + " (OCUPADA)");
             alert.showAndWait();
@@ -432,13 +425,13 @@ public class EmpresasView {
         Label lblNombre = new Label(empresa.getNombre());
         lblNombre.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         
-        Label lblEstado = new Label(empresa.estaOcupada() ? "🔴 OCUPADA" : "🟢 LIBRE");
+        Label lblEstado = new Label(empresa.estaOcupada() ? "OCUPADA" : "LIBRE");
         lblEstado.setFont(Font.font("Arial", FontWeight.BOLD, 12));
         lblEstado.setTextFill(empresa.estaOcupada() ? Color.RED : Color.GREEN);
         
-        Label lblSector = new Label("📁 " + empresa.getSector());
-        Label lblUbicacion = new Label("📍 " + empresa.getUbicacion());
-        Label lblPlazas = new Label("👥 Plazas: " + empresa.getEstadoPlazas());
+        Label lblSector = new Label("Sector: " + empresa.getSector());
+        Label lblUbicacion = new Label("Ubicación: " + empresa.getUbicacion());
+        Label lblPlazas = new Label("Plazas: " + empresa.getEstadoPlazas());
         
         TextArea txtDesc = new TextArea(empresa.getDescripcion());
         txtDesc.setWrapText(true);
@@ -506,9 +499,9 @@ public class EmpresasView {
         
         VBox listas = new VBox(10);
         listas.getChildren().addAll(
-            crearItemLista("❤️", "Favoritos", "2 empresas"),
-            crearItemLista("📞", "Para contactar", "1 empresas"),
-            crearItemLista("📋", "FCT 2025", "3 empresas")
+            crearItemLista("Favoritos", "2 empresas"),
+            crearItemLista("Para contactar", "1 empresas"),
+            crearItemLista("FCT 2025", "3 empresas")
         );
         
         contenido.getChildren().addAll(titulo, listas);
@@ -518,14 +511,11 @@ public class EmpresasView {
         dialog.showAndWait();
     }
 
-    private HBox crearItemLista(String icono, String nombre, String cantidad) {
+    private HBox crearItemLista(String nombre, String cantidad) {
         HBox item = new HBox(12);
         item.setAlignment(Pos.CENTER_LEFT);
         item.setPadding(new Insets(15));
         item.setStyle("-fx-background-color: white; -fx-background-radius: 12;");
-        
-        Label lblIcono = new Label(icono);
-        lblIcono.setFont(Font.font(18));
         
         VBox info = new VBox(2);
         Label lblNombre = new Label(nombre);
@@ -537,11 +527,7 @@ public class EmpresasView {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
-        Label flecha = new Label("›");
-        flecha.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        flecha.setTextFill(Color.web("#4facfe"));
-        
-        item.getChildren().addAll(lblIcono, info, spacer, flecha);
+        item.getChildren().addAll(info, spacer);
         return item;
     }
 

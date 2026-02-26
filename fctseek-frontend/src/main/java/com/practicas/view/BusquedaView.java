@@ -54,7 +54,7 @@ public class BusquedaView {
         root.setCenter(crearContenido());
         root.setBottom(crearNavegacionInferior());
         
-        return new Scene(root, 420, 780);
+        return new Scene(root, 1200, 800);
     }
 
     private VBox crearHeader() {
@@ -63,7 +63,7 @@ public class BusquedaView {
         header.setStyle("-fx-background-color: transparent;");
         
         // Título
-        Label lblTitulo = new Label("🔍 Buscar Empresas");
+        Label lblTitulo = new Label("Buscar Empresas");
         lblTitulo.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         lblTitulo.setTextFill(Color.WHITE);
         
@@ -77,9 +77,6 @@ public class BusquedaView {
             "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);"
         );
         
-        Label iconoBuscar = new Label("🔍");
-        iconoBuscar.setFont(Font.font(16));
-        
         txtBusqueda = new TextField();
         txtBusqueda.setPromptText("Buscar por nombre, sector o ubicación...");
         txtBusqueda.setStyle(
@@ -90,7 +87,7 @@ public class BusquedaView {
         txtBusqueda.setPrefWidth(280);
         txtBusqueda.textProperty().addListener((obs, old, nuevo) -> buscar(nuevo));
         
-        Button btnLimpiar = new Button("✕");
+        Button btnLimpiar = new Button("X");
         btnLimpiar.setStyle(
             "-fx-background-color: #E0E0E0;" +
             "-fx-background-radius: 12;" +
@@ -102,7 +99,7 @@ public class BusquedaView {
             buscar("");
         });
         
-        barraBusqueda.getChildren().addAll(iconoBuscar, txtBusqueda, btnLimpiar);
+        barraBusqueda.getChildren().addAll(txtBusqueda, btnLimpiar);
         HBox.setHgrow(txtBusqueda, Priority.ALWAYS);
         
         // Filtros por sector
@@ -217,9 +214,6 @@ public class BusquedaView {
             vacio.setAlignment(Pos.CENTER);
             vacio.setPadding(new Insets(40));
             
-            Label iconoVacio = new Label("🔍");
-            iconoVacio.setFont(Font.font(50));
-            
             Label lblVacio = new Label("No se encontraron empresas");
             lblVacio.setFont(Font.font("Arial", FontWeight.BOLD, 16));
             lblVacio.setTextFill(Color.WHITE);
@@ -228,7 +222,7 @@ public class BusquedaView {
             lblSugerencia.setFont(Font.font("Arial", 13));
             lblSugerencia.setTextFill(Color.rgb(255, 255, 255, 0.8));
             
-            vacio.getChildren().addAll(iconoVacio, lblVacio, lblSugerencia);
+            vacio.getChildren().addAll(lblVacio, lblSugerencia);
             listaResultados.getChildren().add(vacio);
         } else {
             for (Empresa empresa : resultados) {
@@ -275,18 +269,18 @@ public class BusquedaView {
         HBox fila2 = new HBox(15);
         fila2.setAlignment(Pos.CENTER_LEFT);
         
-        Label lblUbicacion = new Label("📍 " + empresa.getUbicacion());
+        Label lblUbicacion = new Label(empresa.getUbicacion());
         lblUbicacion.setFont(Font.font("Arial", 12));
         lblUbicacion.setTextFill(Color.GRAY);
         
-        Label lblSector = new Label("📁 " + empresa.getSector());
+        Label lblSector = new Label(empresa.getSector());
         lblSector.setFont(Font.font("Arial", 12));
         lblSector.setTextFill(Color.GRAY);
         
         fila2.getChildren().addAll(lblUbicacion, lblSector);
         
         // Fila 3: Plazas
-        Label lblPlazas = new Label("👥 Plazas: " + empresa.getEstadoPlazas());
+        Label lblPlazas = new Label("Plazas: " + empresa.getEstadoPlazas());
         lblPlazas.setFont(Font.font("Arial", 12));
         lblPlazas.setTextFill(Color.web("#666666"));
         

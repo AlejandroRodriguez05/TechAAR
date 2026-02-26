@@ -1,8 +1,8 @@
 package com.practicas;
 
 import com.practicas.view.LoginView;
+
 import javafx.application.Application;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -21,15 +21,15 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // Configurar ventana principal
         primaryStage.setTitle("Sistema de Gestión de Prácticas - Login");
-        primaryStage.setMinWidth(600);
-        primaryStage.setMinHeight(500);
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(700);
         
         // Crear y mostrar la vista de login
         LoginView loginView = new LoginView(primaryStage);
         primaryStage.setScene(loginView.crearEscena());
         
-        // Centrar en pantalla
-        primaryStage.centerOnScreen();
+        // Maximizar ventana
+        primaryStage.setMaximized(true);
         
         // Mostrar
         primaryStage.show();
