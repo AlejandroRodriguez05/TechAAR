@@ -568,8 +568,6 @@ public class EmpresasController {
         // Simular listas del usuario con nombres de empresas
         listasUsuario.put("Favoritos", Arrays.asList("TechSolutions S.L.", "CloudServices Inc"));
         listasUsuario.put("Para contactar", Arrays.asList("DataAnalytics Corp"));
-        listasUsuario.put("FCT 2025", Arrays.asList("TechSolutions S.L.", "GameDev Studios", "WebDesign Studio"));
-        listasUsuario.put("Destacadas", Arrays.asList("TechSolutions S.L.", "DataAnalytics Corp", "CloudServices Inc", "CyberSecure Labs", "GameDev Studios"));
     }
 
     @FXML
@@ -583,7 +581,7 @@ public class EmpresasController {
 
         VBox contenido = new VBox(15);
         contenido.setPadding(new Insets(25));
-        contenido.setPrefSize(400, 400);
+        contenido.setPrefSize(400, 280);
         contenido.setStyle("-fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);");
 
         Label titulo = new Label("Mis Listas");
@@ -592,9 +590,7 @@ public class EmpresasController {
 
         contenido.getChildren().addAll(titulo,
                 crearItemLista("❤️", "Favoritos", listasUsuario.get("Favoritos").size() + " empresas", "#FF6B6B", "#FFEBEE", dialog),
-                crearItemLista("📞", "Para contactar", listasUsuario.get("Para contactar").size() + " empresa", "#4ECDC4", "#E0F7FA", dialog),
-                crearItemLista("📋", "FCT 2025", listasUsuario.get("FCT 2025").size() + " empresas", "#45B7D1", "#E3F2FD", dialog),
-                crearItemLista("⭐", "Destacadas", listasUsuario.get("Destacadas").size() + " empresas", "#F7DC6F", "#FFFDE7", dialog));
+                crearItemLista("📞", "Para contactar", listasUsuario.get("Para contactar").size() + " empresa", "#4ECDC4", "#E0F7FA", dialog));
 
         dialog.getDialogPane().setContent(contenido);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
