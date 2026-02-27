@@ -1,34 +1,15 @@
 package com.practicas.controller;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
-
 import com.practicas.model.DataService;
 import com.practicas.model.Empresa;
 import com.practicas.model.Usuario;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -38,6 +19,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class EmpresasController {
 
@@ -160,7 +145,7 @@ public class EmpresasController {
     }
 
     private void actualizarEstilosFiltros() {
-        String estiloActivo = "-fx-background-color: white; -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 12 20;";
+        String estiloActivo = "-fx-background-color: #E0E0E0; -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 12 20;";
         String estiloInactivo = "-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 15; -fx-cursor: hand; -fx-padding: 12 20;";
         
         filtroNuevas.setStyle(filtroActual.equals("nuevas") ? estiloActivo : estiloInactivo);
