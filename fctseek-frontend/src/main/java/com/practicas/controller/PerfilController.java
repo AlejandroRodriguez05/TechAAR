@@ -148,6 +148,25 @@ public class PerfilController {
         cambiarVista("/fxml/busqueda.fxml", controller -> ((BusquedaController) controller).setUsuario(usuario));
     }
 
+    @FXML
+    private void abrirMisListas() {
+        // Ir a empresas y abrir Mis Listas
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/empresas.fxml"));
+            Parent root = loader.load();
+            EmpresasController controller = loader.getController();
+            controller.setUsuario(usuario);
+            
+            Stage stage = (Stage) lblNombre.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            
+            // Llamar a mostrar listas después de cargar
+            controller.mostrarMisListas();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void cambiarVista(String fxmlPath, java.util.function.Consumer<Object> setupController) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

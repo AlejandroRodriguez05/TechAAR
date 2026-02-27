@@ -1,15 +1,24 @@
 package com.practicas.controller;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.practicas.model.DataService;
 import com.practicas.model.Empresa;
 import com.practicas.model.Usuario;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -18,10 +27,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class BusquedaController {
 
@@ -136,83 +141,99 @@ public class BusquedaController {
     }
 
     private VBox crearTarjetaResultado(Empresa empresa) {
-        VBox tarjeta = new VBox(8);
+        VBox tarjeta = new VBox(10);
         tarjeta.setPadding(new Insets(15));
-        tarjeta.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 3);");
+        tarjeta.setMinHeight(80);
+        tarjeta.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 12; -fx-border-width: 1;");
 
-        HBox fila1 = new HBox();
+        // Fila 1: Nombre + Estado
+        HBox fila1 = new HBox(10);
         fila1.setAlignment(Pos.CENTER_LEFT);
 
         Label lblNombre = new Label(empresa.getNombre());
-        lblNombre.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-        lblNombre.setTextFill(Color.BLACK);
+        lblNombre.setStyle("-fx-font-family: Arial; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #000000;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Label lblEstado = new Label(empresa.estaOcupada() ? "OCUPADA" : "DISPONIBLE");
-        lblEstado.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-        lblEstado.setTextFill(Color.WHITE);
-        lblEstado.setPadding(new Insets(4, 8, 4, 8));
-        lblEstado.setStyle("-fx-background-color: " + (empresa.estaOcupada() ? "#FF5722" : "#4CAF50") + "; -fx-background-radius: 4;");
+        lblEstado.setStyle("-fx-font-family: Arial; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: " + (empresa.estaOcupada() ? "#FF5722" : "#4CAF50") + "; -fx-background-radius: 4; -fx-padding: 4 8;");
 
         fila1.getChildren().addAll(lblNombre, spacer, lblEstado);
 
-        HBox fila2 = new HBox(15);
+        // Fila 2: Ubicacion + Sector
+        HBox fila2 = new HBox(20);
         fila2.setAlignment(Pos.CENTER_LEFT);
 
-        Label lblUbicacion = new Label(empresa.getUbicacion());
-        lblUbicacion.setFont(Font.font("Arial", 12));
-        lblUbicacion.setTextFill(Color.GRAY);
+        Label lblUbicacion = new Label("Ubicacion: " + empresa.getUbicacion());
+        lblUbicacion.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #666666;");
 
-        Label lblSector = new Label(empresa.getSector());
-        lblSector.setFont(Font.font("Arial", 12));
-        lblSector.setTextFill(Color.GRAY);
+        Label lblSector = new Label("Sector: " + empresa.getSector());
+        lblSector.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #666666;");
 
         fila2.getChildren().addAll(lblUbicacion, lblSector);
 
+        // Fila 3: Plazas
         Label lblPlazas = new Label("Plazas: " + empresa.getEstadoPlazas());
-        lblPlazas.setFont(Font.font("Arial", 12));
-        lblPlazas.setTextFill(Color.web("#666666"));
+        lblPlazas.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #333333; -fx-font-weight: bold;");
 
         tarjeta.getChildren().addAll(fila1, fila2, lblPlazas);
 
-        tarjeta.setOnMouseEntered(e -> tarjeta.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-color: #BDBDBD; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 15, 0, 0, 5); -fx-cursor: hand;"));
-        tarjeta.setOnMouseExited(e -> tarjeta.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 12; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 3);"));
+        tarjeta.setOnMouseEntered(e -> tarjeta.setStyle("-fx-background-color: #F5F5F5; -fx-background-radius: 12; -fx-border-color: #4facfe; -fx-border-radius: 12; -fx-border-width: 2; -fx-cursor: hand;"));
+        tarjeta.setOnMouseExited(e -> tarjeta.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-border-color: #E0E0E0; -fx-border-radius: 12; -fx-border-width: 1;"));
         tarjeta.setOnMouseClicked(e -> mostrarDetalles(empresa));
 
         return tarjeta;
     }
 
     private void mostrarDetalles(Empresa empresa) {
-        Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle(empresa.getNombre());
+        Stage ventana = new Stage();
+        ventana.setTitle(empresa.getNombre());
+        ventana.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
-        VBox contenido = new VBox(12);
+        VBox contenido = new VBox(10);
         contenido.setPadding(new Insets(20));
-        contenido.setPrefWidth(380);
+        contenido.setStyle("-fx-background-color: white;");
 
         Label lblNombre = new Label(empresa.getNombre());
-        lblNombre.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        lblNombre.setStyle("-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;");
 
         Label lblEstado = new Label(empresa.estaOcupada() ? "OCUPADA" : "DISPONIBLE");
-        lblEstado.setFont(Font.font("Arial", FontWeight.BOLD, 12));
-        lblEstado.setTextFill(empresa.estaOcupada() ? Color.RED : Color.GREEN);
+        lblEstado.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: " + (empresa.estaOcupada() ? "#FF5722" : "#4CAF50") + ";");
 
         Label lblSector = new Label("Sector: " + empresa.getSector());
+        lblSector.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #666666;");
+        
         Label lblUbicacion = new Label("Ubicacion: " + empresa.getUbicacion());
+        lblUbicacion.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #666666;");
+        
         Label lblPlazas = new Label("Plazas: " + empresa.getEstadoPlazas());
+        lblPlazas.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #666666; -fx-font-weight: bold;");
 
-        TextArea txtDesc = new TextArea(empresa.getDescripcion());
+        Separator sep = new Separator();
+        
+        Label lblDescTitulo = new Label("Descripcion:");
+        lblDescTitulo.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+        
+        TextArea txtDesc = new TextArea(empresa.getDescripcion() != null ? empresa.getDescripcion() : "Sin descripcion");
         txtDesc.setWrapText(true);
         txtDesc.setEditable(false);
         txtDesc.setPrefRowCount(3);
+        txtDesc.setPrefWidth(330);
 
-        contenido.getChildren().addAll(lblNombre, lblEstado, lblSector, lblUbicacion, lblPlazas, new Separator(), new Label("Descripcion:"), txtDesc);
+        Button btnCerrar = new Button("Cerrar");
+        btnCerrar.setStyle("-fx-background-color: #4facfe; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20;");
+        btnCerrar.setOnAction(e -> ventana.close());
+        
+        HBox boxCerrar = new HBox(btnCerrar);
+        boxCerrar.setAlignment(Pos.CENTER);
+        boxCerrar.setPadding(new Insets(15, 0, 0, 0));
 
-        dialog.getDialogPane().setContent(contenido);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.showAndWait();
+        contenido.getChildren().addAll(lblNombre, lblEstado, lblSector, lblUbicacion, lblPlazas, sep, lblDescTitulo, txtDesc, boxCerrar);
+
+        Scene scene = new Scene(contenido, 380, 380);
+        ventana.setScene(scene);
+        ventana.show();
     }
 
     @FXML

@@ -112,7 +112,7 @@
             <VBox alignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-cursor: hand;" onMouseClicked="#abrirBusqueda">
                 <Label text="Buscar" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: gray;"/>
             </VBox>
-            <VBox alignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-cursor: hand;">
+            <VBox alignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-cursor: hand;" onMouseClicked="#abrirMisListas">
                 <Label text="Mis Listas" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: gray;"/>
             </VBox>
             <VBox alignment="CENTER" HBox.hgrow="ALWAYS" style="-fx-cursor: hand;">
