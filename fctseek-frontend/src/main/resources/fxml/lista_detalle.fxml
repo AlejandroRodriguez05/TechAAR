@@ -9,79 +9,79 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #87CEEB 100%);" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="com.practicas.controller.ListaDetalleController">
-    
+<BorderPane prefHeight="751.0" prefWidth="1270.0" style="-fx-background-color: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #87CEEB 100%);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.practicas.controller.ListaDetalleController">
+
     <top>
-        <VBox spacing="10" style="-fx-background-color: transparent;">
+        <VBox alignment="CENTER" spacing="4" style="-fx-background-color: transparent;">
             <padding>
-                <Insets bottom="15" left="20" right="20" top="20" />
+                <Insets bottom="15" left="30" right="30" top="20" />
             </padding>
-            
-            <!-- Navegación -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
+
+            <!-- Botón volver (izquierda) + icono lista (centro) -->
+            <HBox alignment="CENTER_LEFT">
                 <Button onAction="#volverAListas" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand;" text="← Volver" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="btnEditarLista" onAction="#editarLista" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand;" text="✏️ Editar" />
-                <Button fx:id="btnEliminarLista" onAction="#eliminarLista" style="-fx-background-color: rgba(255,107,107,0.8); -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand;" text="🗑️ Eliminar" />
+                <Button fx:id="btnEliminarLista" onAction="#eliminarLista" style="-fx-background-color: rgba(255,80,80,0.8); -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand;" text="🗑Eliminar" />
             </HBox>
-            
-            <!-- Título de la lista -->
-            <VBox spacing="5">
-                <Label fx:id="lblNombreLista" style="-fx-font-family: Arial; -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" text="Mi Lista" />
-                <Label fx:id="lblDescripcionLista" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.8);" text="Descripción de la lista" />
+
+            <!-- Icono de la lista (dinámico según tipo) -->
+            <VBox fx:id="contenedorIconoLista" alignment="CENTER" prefHeight="72" prefWidth="72" style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 36;">
+                <Label fx:id="iconoLista" style="-fx-font-size: 34px;" text="❤️" />
             </VBox>
-            
-            <!-- Info -->
-            <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label fx:id="lblEmpresasCount" style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 12; -fx-padding: 6 12; -fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: white;" text="0 empresas" />
-                <Label fx:id="lblFechaCreacion" style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.7);" text="Creada: 01/01/2025" />
-            </HBox>
+
+            <!-- Nombre y contador -->
+            <Label fx:id="lblNombreLista" style="-fx-font-family: Arial; -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" text="Favoritos" />
+            <Label fx:id="lblEmpresasCount" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.8);" text="0 empresas" />
         </VBox>
     </top>
-    
+
     <center>
         <VBox spacing="10" style="-fx-background-color: transparent;">
             <padding>
-                <Insets bottom="10" left="15" right="15" top="10" />
+                <Insets bottom="10" left="30" right="30" top="10" />
             </padding>
-            
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-font-family: Arial; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;" text="Empresas en esta lista" />
-                <Region HBox.hgrow="ALWAYS" />
-            </HBox>
-            
+
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
-                <VBox fx:id="listaEmpresas" spacing="12" style="-fx-background-color: transparent;">
-                    <!-- Las empresas se cargan dinámicamente -->
+                <!-- controller: crearCardEmpresaEnLista(empresa) →
+                       card blanco igual que busqueda pero con botón ✕ rojo arriba-derecha
+                       (superpuesto sobre el badge de rating)
+                -->
+                <VBox fx:id="listaEmpresas" spacing="14" style="-fx-background-color: transparent;">
                 </VBox>
             </ScrollPane>
-            
+
             <!-- Estado vacío -->
-            <VBox fx:id="estadoVacio" alignment="CENTER" managed="false" spacing="15" visible="false" VBox.vgrow="ALWAYS">
-                <Label style="-fx-font-size: 48px;" text="📋" />
-                <Label style="-fx-font-family: Arial; -fx-font-size: 16px; -fx-text-fill: white;" text="Esta lista está vacía" />
-                <Label style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.7);" text="Añade empresas para empezar" />
-                <Button onAction="#mostrarDialogoAnadirEmpresa" style="-fx-background-color: white; -fx-text-fill: #4facfe; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 12 25; -fx-cursor: hand;" text="Añadir empresa" />
+            <VBox fx:id="estadoVacio" alignment="CENTER" managed="false" spacing="16" visible="false" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="60" />
+                </padding>
+                <Label style="-fx-font-size: 52px;" text="📋" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-text-fill: white;" text="Esta lista está vacía" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.75);" text="Añade empresas desde el detalle de empresa" />
             </VBox>
         </VBox>
     </center>
-    
+
     <bottom>
-        <HBox alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 20 20 0 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, -2);">
+        <HBox alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 20 20 0 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, -3);">
             <padding>
-                <Insets bottom="18" left="10" right="10" top="12" />
+                <Insets bottom="18" left="10" right="10" top="14" />
             </padding>
             <VBox alignment="CENTER" onMouseClicked="#volverAEmpresas" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: gray;" text="FCT-Seek" />
+                <Label style="-fx-font-size: 20px;" text="🏠" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="FCT-Seek" />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#abrirBusqueda" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: gray;" text="Buscar" />
+                <Label style="-fx-font-size: 20px;" text="🔍" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Buscar Empre..." />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#volverAListas" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #4facfe;" text="Mis Listas" />
+                <Label style="-fx-font-size: 20px;" text="☰" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #4facfe;" text="Mis Listas" />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#abrirPerfil" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: gray;" text="Mi Perfil" />
+                <Label style="-fx-font-size: 20px;" text="👤" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Mi Perfil" />
             </VBox>
         </HBox>
     </bottom>
