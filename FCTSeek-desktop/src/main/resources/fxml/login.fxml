@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800" prefWidth="1200" style="-fx-background-color: linear-gradient(to bottom right, #9333ea 0%, #3b82f6 50%, #22d3ee 100%);" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="com.practicas.controller.LoginController">
+<BorderPane  style="-fx-background-color: linear-gradient(to bottom right, #9333ea 0%, #3b82f6 50%, #22d3ee 100%);" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="com.practicas.controller.LoginController">
     
     <center>
         <VBox alignment="CENTER" maxWidth="400" spacing="20">

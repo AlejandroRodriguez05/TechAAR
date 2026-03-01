@@ -21,7 +21,7 @@
     7    → Acciones                 (Favorito + Valorar | Editar información [solo profesor] | Marcar contactado)
 -->
 
-<BorderPane prefHeight="1247.0" prefWidth="1197.0" style="-fx-background-color: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #87CEEB 100%);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.practicas.controller.EmpresaDetalleController">
+<BorderPane style="-fx-background-color: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #87CEEB 100%);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.practicas.controller.EmpresaDetalleController">
 
     <!-- ══════════════════════════════════════════════════════════════════
          TOP: cabecera azul con nombre, valoración y chip departamento

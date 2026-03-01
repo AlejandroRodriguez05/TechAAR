@@ -3,6 +3,7 @@ package com.practicas.util;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,6 +17,8 @@ public class ViewManager {
 
     private static Stage primaryStage;
     private static final Map<String, Object> params = new HashMap<>();
+    private static final double APP_WIDTH = 1200;
+    private static final double APP_HEIGHT = 800;
 
     public static void init(Stage stage) {
         primaryStage = stage;
@@ -35,16 +38,21 @@ public class ViewManager {
                     ViewManager.class.getResource("/fxml/" + viewName + ".fxml"));
             Parent root = loader.load();
 
+            // Envolver en ScrollPane para vistas más grandes que la ventana
+            ScrollPane scrollPane = new ScrollPane(root);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setFitToHeight(true);
+            scrollPane.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
             Scene scene = primaryStage.getScene();
             if (scene == null) {
-                scene = new Scene(root);
+                scene = new Scene(scrollPane, APP_WIDTH, APP_HEIGHT);
                 primaryStage.setScene(scene);
             } else {
-                scene.setRoot(root);
+                scene.setRoot(scrollPane);
             }
 
-            // Adaptar tamaño al contenido preferido del FXML
-            primaryStage.sizeToScene();
+            // Mantener tamaño fijo de ventana, sin sizeToScene()
         } catch (IOException e) {
             System.err.println("Error cargando vista '" + viewName + "': " + e.getMessage());
             e.printStackTrace();
