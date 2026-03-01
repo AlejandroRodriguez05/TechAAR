@@ -28,8 +28,8 @@ public class FavoritoService {
     }
 
     public static boolean isFavorito(long empresaId) throws ApiException {
-        String json = ApiClient.postRaw("/favoritos/empresa/" + empresaId + "/check", null);
         try {
+            String json = ApiClient.postRaw("/favoritos/empresa/" + empresaId + "/check", null);
             JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
             return obj.has("favorito") && obj.get("favorito").getAsBoolean();
         } catch (Exception e) {

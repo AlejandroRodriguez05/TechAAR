@@ -257,10 +257,10 @@
                     <!-- Fila: Favorito | Valorar -->
                     <HBox spacing="12">
                         <!-- Favorito -->
-                        <VBox alignment="CENTER" onMouseClicked="#toggleFavorito" prefHeight="100" spacing="10" style="-fx-background-color: #F8F8F8; -fx-background-radius: 14; -fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                        <VBox fx:id="boxFavorito" alignment="CENTER" onMouseClicked="#toggleFavorito" pickOnBounds="true" prefHeight="100" spacing="10" style="-fx-background-color: #F8F8F8; -fx-background-radius: 14; -fx-cursor: hand;" HBox.hgrow="ALWAYS">
                             <!-- controller actualiza iconFavorito.setText("🤍") o "❤️" -->
                             <Label fx:id="iconFavorito" style="-fx-font-size: 30px;" text="🤍" />
-                            <Label style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #555555;" text="Favorito" />
+                            <Label fx:id="lblFavoritoTexto" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #555555;" text="Favorito" />
                         </VBox>
                         <!-- Valorar -->
                         <VBox alignment="CENTER" onMouseClicked="#abrirValorar" prefHeight="100" spacing="10" style="-fx-background-color: #F8F8F8; -fx-background-radius: 14; -fx-cursor: hand;" HBox.hgrow="ALWAYS">
@@ -279,7 +279,7 @@
                     <Region fx:id="sepEditar" managed="false" prefHeight="12" visible="false" />
 
                     <!-- Marcar contactado -->
-                    <Button maxWidth="Infinity" onAction="#marcarContactado" style="-fx-background-color: white; -fx-text-fill: #0d9488; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #E0E0E0; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 14 0; -fx-cursor: hand;" text="✅  Marcar contactado" />
+                    <Button fx:id="btnMarcarContactado" maxWidth="Infinity" onAction="#marcarContactado" style="-fx-background-color: white; -fx-text-fill: #0d9488; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #E0E0E0; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 14 0; -fx-cursor: hand;" text="✅  Marcar contactado" />
                 </VBox>
 
             </VBox>

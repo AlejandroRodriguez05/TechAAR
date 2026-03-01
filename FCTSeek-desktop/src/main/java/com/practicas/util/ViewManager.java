@@ -3,7 +3,6 @@ package com.practicas.util;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -38,18 +37,12 @@ public class ViewManager {
                     ViewManager.class.getResource("/fxml/" + viewName + ".fxml"));
             Parent root = loader.load();
 
-            // Envolver en ScrollPane para vistas más grandes que la ventana
-            ScrollPane scrollPane = new ScrollPane(root);
-            scrollPane.setFitToWidth(true);
-            scrollPane.setFitToHeight(true);
-            scrollPane.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
-
             Scene scene = primaryStage.getScene();
             if (scene == null) {
-                scene = new Scene(scrollPane, APP_WIDTH, APP_HEIGHT);
+                scene = new Scene(root, APP_WIDTH, APP_HEIGHT);
                 primaryStage.setScene(scene);
             } else {
-                scene.setRoot(scrollPane);
+                scene.setRoot(root);
             }
 
             // Mantener tamaño fijo de ventana, sin sizeToScene()

@@ -35,10 +35,14 @@ public class EmpresaDetalleController {
     @FXML private Button btnTabProfesores;
     @FXML private VBox listaComentarios;
     @FXML private Label iconFavorito;
+    @FXML private Label lblFavoritoTexto;
+    @FXML private VBox boxFavorito;
     @FXML private Button btnEditarInfo;
+    @FXML private Button btnMarcarContactado;
     @FXML private Region sepEditar;
 
     private Empresa empresa;
+    private long empresaIdCargada;
     private List<Comentario> comentarios = new ArrayList<>();
     private List<Plaza> plazas = new ArrayList<>();
     private boolean esFavorito = false;
@@ -47,6 +51,7 @@ public class EmpresaDetalleController {
     @FXML
     public void initialize() {
         Long empresaId = ViewManager.getParam("empresaId");
+        System.out.println("[DEBUG] EmpresaDetalle.initialize() - empresaId param: " + empresaId);
         if (empresaId == null) return;
         ViewManager.clearParam("empresaId");
 
@@ -55,7 +60,10 @@ public class EmpresaDetalleController {
         btnEditarInfo.setManaged(prof);
         sepEditar.setVisible(prof);
         sepEditar.setManaged(prof);
+        btnMarcarContactado.setVisible(prof);
+        btnMarcarContactado.setManaged(prof);
 
+        empresaIdCargada = empresaId;
         cargarDatos(empresaId);
     }
 
@@ -146,7 +154,7 @@ public class EmpresaDetalleController {
         }
 
         // Favorito
-        iconFavorito.setText(esFavorito ? "❤️" : "\uD83E\uDD0D");
+        actualizarEstiloFavorito();
 
         // Comentarios
         actualizarComentarios();
@@ -325,20 +333,40 @@ public class EmpresaDetalleController {
 
     // ─── Acciones ───────────────────────────────────────────────────────
 
+    private void actualizarEstiloFavorito() {
+        iconFavorito.setText(esFavorito ? "❤️" : "\uD83E\uDD0D");
+        lblFavoritoTexto.setText(esFavorito ? "Añadido a favoritos" : "Favorito");
+        if (esFavorito) {
+            boxFavorito.setStyle("-fx-background-color: #d1fae5; -fx-background-radius: 14; -fx-cursor: hand; -fx-border-color: #10b981; -fx-border-radius: 14; -fx-border-width: 2;");
+            lblFavoritoTexto.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #065f46; -fx-font-weight: bold;");
+        } else {
+            boxFavorito.setStyle("-fx-background-color: #F8F8F8; -fx-background-radius: 14; -fx-cursor: hand;");
+            lblFavoritoTexto.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #555555;");
+        }
+    }
+
     @FXML
     private void toggleFavorito() {
+        System.out.println("[DEBUG] toggleFavorito() llamado - empresa: " + (empresa != null ? empresa.getNombre() : "NULL"));
+        if (empresa == null) {
+            mostrarAlerta("Espera", "Los datos aún se están cargando, inténtalo de nuevo en un momento.");
+            return;
+        }
+        long id = empresa.getId();
         new Thread(() -> {
             try {
-                boolean nuevoEstado = FavoritoService.toggle(empresa.getId());
+                System.out.println("[DEBUG] Llamando FavoritoService.toggle(" + id + ")");
+                boolean nuevoEstado = FavoritoService.toggle(id);
+                System.out.println("[DEBUG] Toggle resultado: " + nuevoEstado);
                 Platform.runLater(() -> {
                     esFavorito = nuevoEstado;
-                    iconFavorito.setText(esFavorito ? "❤️" : "\uD83E\uDD0D");
+                    actualizarEstiloFavorito();
                     mostrarAlerta("Favoritos", esFavorito ? "Añadido a favoritos" : "Eliminado de favoritos");
                 });
             } catch (Exception e) {
+                e.printStackTrace();
                 Platform.runLater(() -> {
-                    esFavorito = !esFavorito;
-                    iconFavorito.setText(esFavorito ? "❤️" : "\uD83E\uDD0D");
+                    mostrarAlerta("Error", "No se pudo cambiar el favorito: " + e.getMessage());
                 });
             }
         }).start();
