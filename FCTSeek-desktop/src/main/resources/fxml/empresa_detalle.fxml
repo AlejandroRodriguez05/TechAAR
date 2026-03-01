@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+    ORDEN DE TARJETAS (igual que la app móvil):
+    TOP  → Nombre empresa | ★ valoración (N valoraciones) | chip departamento ("Informática y Comunicaciones")
+    1    → Plazas disponibles      [solo visible para profesores: managed/visible desde controller]
+    2    → Contactado por
+    3    → Información de contacto (📍 dirección, 📞 teléfono verde, ✉️ email verde, 👤 contacto persona)
+    4    → Descripción
+    5    → Ciclos formativos        (filas: código teal | nombre)
+    6    → Comentarios              (tabs General / Profesores + lista dinámica + botón escribir)
+    7    → Acciones                 (Favorito + Valorar | Editar información [solo profesor] | Marcar contactado)
+-->
+
+<BorderPane prefHeight="1247.0" prefWidth="1197.0" style="-fx-background-color: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #87CEEB 100%);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.practicas.controller.EmpresaDetalleController">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         TOP: cabecera azul con nombre, valoración y chip departamento
+         ══════════════════════════════════════════════════════════════════ -->
+    <top>
+        <VBox spacing="8" style="-fx-background-color: transparent;">
+            <padding>
+                <Insets bottom="15" left="30" right="30" top="20" />
+            </padding>
+
+            <!-- Botón volver -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Button onAction="#volver" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand;" text="← Volver" />
+            </HBox>
+
+            <!-- Nombre de la empresa -->
+            <Label fx:id="lblNombreEmpresa" style="-fx-font-family: Arial; -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;" text="Nombre de la Empresa" wrapText="true" />
+
+            <!-- Estrellas + valoración numérica + número de valoraciones -->
+            <HBox alignment="CENTER_LEFT" spacing="6">
+                <!-- El controller actualiza lblEstrellas con "★★★★☆" según la nota -->
+                <Label fx:id="lblEstrellas" style="-fx-font-size: 20px; -fx-text-fill: #FFD700;" text="★★★★☆" />
+                <Label fx:id="lblValoracion" style="-fx-font-family: Arial; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: white;" text="4.5" />
+                <Label fx:id="lblNumValoraciones" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.75);" text="(12 valoraciones)" />
+            </HBox>
+
+            <!-- Chip de departamento (ej: "Informática y Comunicaciones")
+                 El controller genera los chips dinámicamente en contenedorChipsDpto -->
+            <HBox fx:id="contenedorChipsDpto" alignment="CENTER_LEFT" spacing="8">
+                <!-- Ejemplo de chip generado por controller:
+                     Label chip = new Label("Informática y Comunicaciones");
+                     chip.setStyle("..fondo oscuro semitransparente, texto blanco, radius 16, padding 6 14");
+                     contenedorChipsDpto.getChildren().add(chip);
+                -->
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         CENTER: scroll con todas las tarjetas
+         ══════════════════════════════════════════════════════════════════ -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="16" style="-fx-background-color: transparent;">
+                <padding>
+                    <Insets bottom="30" left="30" right="30" top="12" />
+                </padding>
+
+                <!-- ══ 1. PLAZAS DISPONIBLES (solo visible para profesores) ══ -->
+                <!-- controller: tarjetaPlazas.setVisible(esProfesor); tarjetaPlazas.setManaged(esProfesor); -->
+                <!-- controller: rellena contenedorPlazas con crearSubCardPlazas(departamento):
+                       Sub-card gris claro:
+                         HBox: nombre departamento (bold) | badge "X libres" (fondo #dcfce7, texto #16a34a, radius 20)
+                         HBox 3 columnas: [5 Ofertadas] [2 Reservadas] [3 Libres (verde bold)]
+                         separador
+                         Label "Reservas realizadas:"
+                         VBox items: 👤 nombre profesor | "X plazas · CICLO (grupo)"
+                         Button "⊕ Reservar plazas para mis alumnos" (teal, sin fondo, borde teal)
+                -->
+                <VBox fx:id="tarjetaPlazas" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets bottom="18" left="20" right="20" top="18" />
+                    </padding>
+
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label style="-fx-font-size: 18px;" text="📊" />
+                        <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Plazas disponibles" />
+                    </HBox>
+                    <Region prefHeight="12" />
+
+                    <!-- El controller rellena esto con crearSubCardPlazas(departamento):
+                         Sub-card fondo #f9f9f9, radius 12, padding 16:
+                           HBox: nombre departamento (bold) | badge "X libres" (fondo #dcfce7, texto #16a34a, radius 20)
+                           HBox 3 columnas centradas:
+                             VBox: "5" (bold 26px) / "Ofertadas" (gris 12px)
+                             VBox: "2" (bold 26px) / "Reservadas" (gris 12px)
+                             VBox: "3" (bold 26px verde #16a34a) / "Libres" (gris 12px)
+                           Region separador
+                           Label "Reservas realizadas:" (gris, 13px)
+                           VBox items reserva: HBox(👤 nombre profesor | "X plazas · CICLO (grupo)")
+                           Button "⊕ Reservar plazas para mis alumnos"
+                             → managed="false" visible="false" por defecto
+                             → controller: btnReservar.setVisible(esProfesor); btnReservar.setManaged(esProfesor);
+                    -->
+                    <VBox fx:id="contenedorPlazas" spacing="12" />
+                </VBox>
+
+                <!-- ══ 2. CONTACTADO POR ══════════════════════════════════════ -->
+                <!-- controller: rellena listaContactados con crearItemContactado(departamento, profesor, fecha):
+                       HBox (fondo #f0fdf4, borde-izq 3px #16a34a, radius 10, padding 12):
+                         VBox: "✅ Nombre Departamento" (verde bold) | "Profesor · Fecha"
+                         Region hgrow
+                         Button ✕ (fondo #ef4444, texto blanco, radius 12, 24x24)
+                -->
+                <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets bottom="18" left="20" right="20" top="18" />
+                    </padding>
+
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label style="-fx-font-size: 18px;" text="📞" />
+                        <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Contactado por" />
+                    </HBox>
+                    <Region prefHeight="12" />
+
+                    <VBox fx:id="listaContactados" spacing="8">
+                        <!-- Relleno dinámico desde controller -->
+                    </VBox>
+                </VBox>
+
+                <!-- ══ 3. INFORMACIÓN DE CONTACTO ════════════════════════════ -->
+                <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets bottom="18" left="20" right="20" top="18" />
+                    </padding>
+
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Información de contacto" />
+                    <Region prefHeight="14" />
+
+                    <!-- 📍 Dirección -->
+                    <HBox alignment="TOP_LEFT" spacing="12">
+                        <Label style="-fx-font-size: 16px; -fx-padding: 1 0 0 0;" text="📍" />
+                        <Label fx:id="lblDireccion" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555555;" text="C/ León y Castillo, 45, Las Palmas de Gran Canaria" wrapText="true" />
+                    </HBox>
+                    <Region prefHeight="12" />
+
+                    <!-- 📞 Teléfono (teal, clickeable) -->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label style="-fx-font-size: 16px;" text="📞" />
+                        <Label fx:id="lblTelefono" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #0d9488; -fx-cursor: hand;" text="928 123 456" />
+                    </HBox>
+                    <Region prefHeight="12" />
+
+                    <!-- ✉️ Email (teal, clickeable) -->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label style="-fx-font-size: 16px;" text="✉️" />
+                        <Label fx:id="lblEmail" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #0d9488; -fx-cursor: hand;" text="info@empresa.es" />
+                    </HBox>
+                    <Region prefHeight="12" />
+
+                    <!-- 👤 Persona de contacto -->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label style="-fx-font-size: 16px;" text="👤" />
+                        <Label fx:id="lblPersonaContacto" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555555;" text="Contacto: María Rodríguez (666 123 456)" />
+                    </HBox>
+                </VBox>
+
+                <!-- ══ 4. DESCRIPCIÓN ══════════════════════════════════════════ -->
+                <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets bottom="18" left="20" right="20" top="18" />
+                    </padding>
+
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Descripción" />
+                    <Region prefHeight="10" />
+                    <Label fx:id="lblDescripcion" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #666666;" text="Empresa dedicada al desarrollo de software y aplicaciones móviles." wrapText="true" />
+                </VBox>
+
+                <!-- ══ 5. CICLOS FORMATIVOS ══════════════════════════════════ -->
+                <!-- controller: crearFilaCiclo(codigo, nombre) →
+                       HBox spacing 16:
+                         Label código ("DAM") style: teal bold, min-width 50
+                         Label nombre ("Desarrollo de Aplicaciones Multiplataforma") gris
+                -->
+                <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets bottom="18" left="20" right="20" top="18" />
+                    </padding>
+
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Ciclos formativos" />
+                    <Region prefHeight="14" />
+
+                    <VBox fx:id="listaCiclos" spacing="14">
+                        <!-- Relleno dinámico desde controller -->
+                    </VBox>
+                </VBox>
+
+                <!-- ══ 6. COMENTARIOS ════════════════════════════════════════ -->
+                <!-- controller:
+                     - Actualiza texto de btnTabGeneral con "🌐 General (N)"
+                     - Actualiza texto de btnTabProfesores con "🎓 Profesores (N)"
+                     - crearItemComentario(inicial, nombre, rol, fecha, texto) →
+                         HBox:
+                           Label circulo-inicial (fondo teal, texto blanco, 38x38, radius 19)
+                           VBox: HBox(nombre bold + fecha gris derecha) + Label rol gris pequeño
+                         Label texto comentario
+                -->
+                <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets bottom="18" left="20" right="20" top="18" />
+                    </padding>
+
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Comentarios" />
+                    <Region prefHeight="12" />
+
+                    <!-- Tabs General / Profesores -->
+                    <HBox spacing="0" style="-fx-background-color: #F1F5F9; -fx-background-radius: 10; -fx-padding: 4;">
+                        <Button fx:id="btnTabGeneral" maxWidth="Infinity" onAction="#mostrarComentariosGenerales" prefHeight="38" style="-fx-background-color: #0d9488; -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="🌐 General (0)" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btnTabProfesores" maxWidth="Infinity" onAction="#mostrarComentariosProfesores" prefHeight="38" style="-fx-background-color: transparent; -fx-text-fill: #666666; -fx-font-family: Arial; -fx-font-size: 13px; -fx-background-radius: 8; -fx-cursor: hand;" text="🎓 Profesores (0)" HBox.hgrow="ALWAYS" />
+                    </HBox>
+
+                    <!-- Aviso visibilidad -->
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999; -fx-padding: 8 0 4 0;" text="ℹ️  Visible para todos los usuarios" />
+
+                    <Region prefHeight="8" />
+
+                    <!-- Lista dinámica de comentarios -->
+                    <VBox fx:id="listaComentarios" spacing="16">
+                        <!-- Relleno dinámico desde controller -->
+                    </VBox>
+
+                    <Region prefHeight="10" />
+
+                    <!-- Botón escribir comentario (borde punteado teal) -->
+                    <Button maxWidth="Infinity" onAction="#escribirComentario" style="-fx-background-color: transparent; -fx-text-fill: #0d9488; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #0d9488; -fx-border-width: 1.5; -fx-border-style: dashed; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 12 0; -fx-cursor: hand;" text="✏️  Escribir comentario" />
+                </VBox>
+
+                <!-- ══ 7. ACCIONES ═══════════════════════════════════════════ -->
+                <!--
+                    - Favorito y Valorar: siempre visibles
+                    - "Editar información": solo visible para profesores
+                      controller: btnEditarInfo.setVisible(esProfesor); btnEditarInfo.setManaged(esProfesor);
+                    - "Marcar contactado": siempre visible
+                -->
+                <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                    <padding>
+                        <Insets bottom="18" left="20" right="20" top="18" />
+                    </padding>
+
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Acciones" />
+                    <Region prefHeight="14" />
+
+                    <!-- Fila: Favorito | Valorar -->
+                    <HBox spacing="12">
+                        <!-- Favorito -->
+                        <VBox alignment="CENTER" onMouseClicked="#toggleFavorito" prefHeight="100" spacing="10" style="-fx-background-color: #F8F8F8; -fx-background-radius: 14; -fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                            <!-- controller actualiza iconFavorito.setText("🤍") o "❤️" -->
+                            <Label fx:id="iconFavorito" style="-fx-font-size: 30px;" text="🤍" />
+                            <Label style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #555555;" text="Favorito" />
+                        </VBox>
+                        <!-- Valorar -->
+                        <VBox alignment="CENTER" onMouseClicked="#abrirValorar" prefHeight="100" spacing="10" style="-fx-background-color: #F8F8F8; -fx-background-radius: 14; -fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                            <Label style="-fx-font-size: 30px;" text="☆" />
+                            <Label style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #555555;" text="Valorar" />
+                        </VBox>
+                    </HBox>
+
+                    <Region prefHeight="12" />
+
+                    <!-- Editar información (SOLO PROFESORES)
+                         Por defecto oculto; el controller lo muestra si el usuario es profesor -->
+                    <Button fx:id="btnEditarInfo" managed="false" maxWidth="Infinity" onAction="#editarEmpresa" style="-fx-background-color: white; -fx-text-fill: #0d9488; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #E0E0E0; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 14 0; -fx-cursor: hand;" text="✏️  Editar información" visible="false" />
+
+                    <!-- Spacer entre Editar y Marcar (solo si Editar está visible) -->
+                    <Region fx:id="sepEditar" managed="false" prefHeight="12" visible="false" />
+
+                    <!-- Marcar contactado -->
+                    <Button maxWidth="Infinity" onAction="#marcarContactado" style="-fx-background-color: white; -fx-text-fill: #0d9488; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #E0E0E0; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 14 0; -fx-cursor: hand;" text="✅  Marcar contactado" />
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>
