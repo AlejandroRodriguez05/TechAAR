@@ -347,17 +347,15 @@ public class EmpresaDetalleController {
 
     @FXML
     private void toggleFavorito() {
-        System.out.println("[DEBUG] toggleFavorito() llamado - empresa: " + (empresa != null ? empresa.getNombre() : "NULL"));
         if (empresa == null) {
             mostrarAlerta("Espera", "Los datos aún se están cargando, inténtalo de nuevo en un momento.");
             return;
         }
         long id = empresa.getId();
+        boolean nuevoEstado = !esFavorito;
         new Thread(() -> {
             try {
-                System.out.println("[DEBUG] Llamando FavoritoService.toggle(" + id + ")");
-                boolean nuevoEstado = FavoritoService.toggle(id);
-                System.out.println("[DEBUG] Toggle resultado: " + nuevoEstado);
+                FavoritoService.toggle(id);
                 Platform.runLater(() -> {
                     esFavorito = nuevoEstado;
                     actualizarEstiloFavorito();
