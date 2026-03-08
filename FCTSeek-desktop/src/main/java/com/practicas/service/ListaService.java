@@ -26,7 +26,7 @@ public class ListaService {
     }
 
     public static void addEmpresa(long listaId, long empresaId) throws ApiException {
-        ApiClient.postRaw("/listas/" + listaId + "/empresas", Map.of("empresaId", empresaId));
+        ApiClient.postRaw("/listas/" + listaId + "/empresas/" + empresaId, null);
     }
 
     public static void removeEmpresa(long listaId, long empresaId) throws ApiException {
