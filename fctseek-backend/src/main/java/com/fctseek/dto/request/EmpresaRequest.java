@@ -51,6 +51,9 @@ public class EmpresaRequest {
     // IDs de los cursos que acepta la empresa
     private List<Long> cursosIds;
 
+    // IDs de departamentos que acepta la empresa (genera las etiquetas)
+    private List<Long> departamentosIds;
+
     // Constructores
     public EmpresaRequest() {
     }
@@ -166,5 +169,13 @@ public class EmpresaRequest {
 
     public void setCursosIds(List<Long> cursosIds) {
         this.cursosIds = cursosIds;
+    }
+
+    public List<Long> getDepartamentosIds() {
+        return departamentosIds;
+    }
+
+    public void setDepartamentosIds(List<Long> departamentosIds) {
+        this.departamentosIds = departamentosIds;
     }
 }

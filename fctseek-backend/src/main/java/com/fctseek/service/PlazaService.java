@@ -39,6 +39,7 @@ public class PlazaService {
     /**
      * Lista plazas de una empresa.
      */
+    @Transactional(readOnly = true)
     public List<PlazaResponse> getByEmpresa(Long empresaId) {
         return plazaRepository.findByEmpresaId(empresaId).stream()
                 .map(PlazaResponse::fromEntity)
@@ -48,6 +49,7 @@ public class PlazaService {
     /**
      * Lista plazas de un departamento.
      */
+    @Transactional(readOnly = true)
     public List<PlazaResponse> getByDepartamento(Long departamentoId) {
         return plazaRepository.findByDepartamentoId(departamentoId).stream()
                 .map(PlazaResponse::fromEntity)
@@ -57,6 +59,7 @@ public class PlazaService {
     /**
      * Lista plazas de un departamento en un curso académico.
      */
+    @Transactional(readOnly = true)
     public List<PlazaResponse> getByDepartamentoAndCursoAcademico(Long departamentoId, String cursoAcademico) {
         return plazaRepository.findByDepartamentoIdAndCursoAcademico(departamentoId, cursoAcademico).stream()
                 .map(PlazaResponse::fromEntity)
@@ -66,6 +69,7 @@ public class PlazaService {
     /**
      * Lista plazas disponibles (con hueco) de un departamento.
      */
+    @Transactional(readOnly = true)
     public List<PlazaResponse> getDisponibles(Long departamentoId, String cursoAcademico) {
         return plazaRepository.findPlazasDisponibles(departamentoId, cursoAcademico).stream()
                 .map(PlazaResponse::fromEntity)
@@ -75,6 +79,7 @@ public class PlazaService {
     /**
      * Obtiene una plaza por ID.
      */
+    @Transactional(readOnly = true)
     public PlazaResponse getById(Long id) {
         Plaza plaza = plazaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Plaza", "id", id));

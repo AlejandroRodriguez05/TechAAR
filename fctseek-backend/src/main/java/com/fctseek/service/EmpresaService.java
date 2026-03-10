@@ -147,8 +147,14 @@ public class EmpresaService {
         empresa.setCreatedBy(currentUser);
         empresa = empresaRepository.save(empresa);
 
-        // Asignar cursos
-        if (request.getCursosIds() != null && !request.getCursosIds().isEmpty()) {
+        // Asignar cursos desde departamentos o desde cursosIds directos
+        if (request.getDepartamentosIds() != null && !request.getDepartamentosIds().isEmpty()) {
+            List<Long> cursoIds = request.getDepartamentosIds().stream()
+                .flatMap(deptoId -> cursoRepository.findByDepartamentoIdAndActivoTrue(deptoId).stream())
+                .map(Curso::getId)
+                .collect(Collectors.toList());
+            if (!cursoIds.isEmpty()) assignCursos(empresa, cursoIds);
+        } else if (request.getCursosIds() != null && !request.getCursosIds().isEmpty()) {
             assignCursos(empresa, request.getCursosIds());
         }
 
@@ -173,8 +179,15 @@ public class EmpresaService {
         mapRequestToEntity(request, empresa);
         empresa = empresaRepository.save(empresa);
 
-        // Actualizar cursos
-        if (request.getCursosIds() != null) {
+        // Actualizar cursos desde departamentos o desde cursosIds directos
+        if (request.getDepartamentosIds() != null && !request.getDepartamentosIds().isEmpty()) {
+            empresaCursoRepository.deleteByEmpresaId(id);
+            List<Long> cursoIds = request.getDepartamentosIds().stream()
+                .flatMap(deptoId -> cursoRepository.findByDepartamentoIdAndActivoTrue(deptoId).stream())
+                .map(Curso::getId)
+                .collect(Collectors.toList());
+            if (!cursoIds.isEmpty()) assignCursos(empresa, cursoIds);
+        } else if (request.getCursosIds() != null) {
             empresaCursoRepository.deleteByEmpresaId(id);
             assignCursos(empresa, request.getCursosIds());
         }

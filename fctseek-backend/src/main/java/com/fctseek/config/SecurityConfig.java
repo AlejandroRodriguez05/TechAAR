@@ -53,7 +53,9 @@ public class SecurityConfig {
             // Configurar reglas de autorización
             .authorizeHttpRequests(auth -> auth
                 // Endpoints públicos (sin autenticación)
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/register").permitAll()
+                .requestMatchers("/api/auth/verify").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/error").permitAll()
                 

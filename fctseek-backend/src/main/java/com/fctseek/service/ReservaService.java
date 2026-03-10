@@ -91,6 +91,14 @@ public class ReservaService {
         Curso curso = cursoRepository.findById(request.getCursoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Curso", "id", request.getCursoId()));
 
+        // Verificar que el ciclo coincida si la plaza es específica (no general)
+        if (!plaza.getEsGeneral() && plaza.getCurso() != null
+                && !plaza.getCurso().getId().equals(curso.getId())) {
+            throw new BadRequestException(
+                "Esta plaza solo admite reservas para el ciclo: " + plaza.getCurso().getSiglas()
+            );
+        }
+
         // Verificar disponibilidad
         int disponibles = plaza.getPlazasDisponibles();
         if (request.getCantidad() > disponibles) {
