@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EmpresaDetalleController {
 
@@ -40,6 +41,7 @@ public class EmpresaDetalleController {
     @FXML private Button btnEditarInfo;
     @FXML private Button btnMarcarContactado;
     @FXML private Region sepEditar;
+    @FXML private Button btnAnadirALista;
 
     private Empresa empresa;
     private long empresaIdCargada;
@@ -347,17 +349,15 @@ public class EmpresaDetalleController {
 
     @FXML
     private void toggleFavorito() {
-        System.out.println("[DEBUG] toggleFavorito() llamado - empresa: " + (empresa != null ? empresa.getNombre() : "NULL"));
         if (empresa == null) {
             mostrarAlerta("Espera", "Los datos aún se están cargando, inténtalo de nuevo en un momento.");
             return;
         }
         long id = empresa.getId();
+        boolean nuevoEstado = !esFavorito;
         new Thread(() -> {
             try {
-                System.out.println("[DEBUG] Llamando FavoritoService.toggle(" + id + ")");
-                boolean nuevoEstado = FavoritoService.toggle(id);
-                System.out.println("[DEBUG] Toggle resultado: " + nuevoEstado);
+                FavoritoService.toggle(id);
                 Platform.runLater(() -> {
                     esFavorito = nuevoEstado;
                     actualizarEstiloFavorito();
@@ -498,4 +498,75 @@ public class EmpresaDetalleController {
     @FXML private void irABusqueda() { ViewManager.navigateTo("busqueda"); }
     @FXML private void irAListas() { ViewManager.navigateTo("listas"); }
     @FXML private void irAPerfil() { ViewManager.navigateTo("perfil"); }
+
+    @FXML
+    private void abrirDialogoAnadirALista() {
+        if (empresa == null) {
+            mostrarAlerta("Espera", "Los datos aún se están cargando, inténtalo de nuevo.");
+            return;
+        }
+        new Thread(() -> {
+            try {
+                // getMisListas no incluye empresas anidadas, cargamos cada lista con getById
+                List<Lista> listas = ListaService.getMisListas().stream()
+                        .filter(l -> !l.isEsFavoritos())
+                        .collect(Collectors.toList());
+
+                List<Lista> listasCompletas = new ArrayList<>();
+                for (Lista l : listas) {
+                    listasCompletas.add(ListaService.getById(l.getId()));
+                }
+
+                Platform.runLater(() -> abrirVentanaDialogo(listasCompletas));
+            } catch (Exception e) {
+                Platform.runLater(() -> mostrarAlerta("Error", "No se pudieron cargar las listas: " + e.getMessage()));
+            }
+        }).start();
+    }
+
+    private void abrirVentanaDialogo(List<Lista> listas) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/fxml/anadir_a_lista_dialog.fxml"));
+            javafx.scene.Parent root = loader.load();
+            AnadirAListaDialogController dialogCtrl = loader.getController();
+            dialogCtrl.init(empresa, listas);
+
+            javafx.stage.Stage dialogStage = new javafx.stage.Stage();
+            dialogStage.initOwner(ViewManager.getStage());
+            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+            dialogStage.setTitle("Añadir a lista");
+            dialogStage.setResizable(false);
+            dialogStage.setScene(new javafx.scene.Scene(root));
+            dialogStage.showAndWait();
+
+            List<Lista> seleccionadas = dialogCtrl.getListasSeleccionadas();
+            if (seleccionadas == null) return; // cancelado
+
+            guardarCambiosEnListas(dialogCtrl.getListasOriginales(), seleccionadas);
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo abrir el diálogo: " + e.getMessage());
+        }
+    }
+
+    private void guardarCambiosEnListas(List<Lista> listasOriginales, List<Lista> seleccionadas) {
+        new Thread(() -> {
+            try {
+                for (Lista lista : listasOriginales) {
+                    boolean debeEstar  = seleccionadas.stream().anyMatch(s -> s.getId() == lista.getId());
+                    boolean estabaAntes = lista.getEmpresas().stream().anyMatch(e -> e.getId() == empresa.getId());
+
+                    if (debeEstar && !estabaAntes) {
+                        ListaService.addEmpresa(lista.getId(), empresa.getId());
+                    } else if (!debeEstar && estabaAntes) {
+                        ListaService.removeEmpresa(lista.getId(), empresa.getId());
+                    }
+                }
+                Platform.runLater(() -> mostrarAlerta("Listas", "Cambios guardados correctamente."));
+            } catch (Exception e) {
+                Platform.runLater(() -> mostrarAlerta("Error", "No se pudo actualizar las listas: " + e.getMessage()));
+            }
+        }).start();
+    }
+
 }

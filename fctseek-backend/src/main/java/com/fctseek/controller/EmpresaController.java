@@ -1,4 +1,4 @@
-package com.fctseek.controller;
+ package com.fctseek.controller;
 
 import com.fctseek.dto.request.EmpresaRequest;
 import com.fctseek.dto.response.ApiResponse;

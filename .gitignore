@@ -61,3 +61,5 @@ desktop.ini
 # Ignorar dependencias
 node_modules/
 
+/fctseek-backend/nb-configuration.xml
+
