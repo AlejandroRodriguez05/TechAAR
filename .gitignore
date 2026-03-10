@@ -52,3 +52,12 @@ desktop.ini
 *~
 # vs code 
 .vscode/
+/FCTSeek-desktop/target/
+
+# Ignorar configuraciones de IDE
+.idea/
+.expo/
+
+# Ignorar dependencias
+node_modules/
+
