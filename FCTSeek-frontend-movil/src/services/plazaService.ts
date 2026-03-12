@@ -15,6 +15,7 @@ export interface PlazaResponse {
   cursoAcademico: string;
   plazasReservadas: number;
   plazasDisponibles: number;
+  creadorId?: number;
 }
 
 export interface PlazaRequest {

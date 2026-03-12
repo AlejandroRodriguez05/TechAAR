@@ -33,7 +33,13 @@ export default function ListsScreen() {
         favoritoService.getMisFavoritos().catch(() => []),
       ]);
 
-      setListas(listasData ?? []);
+      // Obtener detalle de cada lista para tener el array de empresas actualizado
+      const nonFavListas = (listasData ?? []).filter(l => !l.esFavoritos);
+      const listasConDetalles = await Promise.all(
+        nonFavListas.map(l => listaService.getById(l.id).catch(() => l))
+      );
+
+      setListas(listasConDetalles);
       setFavoritos(favData ?? []);
       setFavoritosCount(favData?.length ?? 0);
     } catch (error) {
@@ -118,7 +124,7 @@ export default function ListsScreen() {
         </TouchableOpacity>
 
         <FlatList
-          data={listas.filter(l => !l.esFavoritos)}
+          data={listas}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.listaCard} onPress={() => handleListPress(item.id)}>
