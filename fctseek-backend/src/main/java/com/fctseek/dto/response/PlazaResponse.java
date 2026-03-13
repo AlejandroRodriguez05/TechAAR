@@ -20,6 +20,7 @@ public class PlazaResponse {
     private String cursoAcademico;
     private Integer plazasReservadas;
     private Integer plazasDisponibles;
+    private Long creadorId;
 
     // Constructores
     public PlazaResponse() {
@@ -30,6 +31,9 @@ public class PlazaResponse {
         PlazaResponse response = new PlazaResponse();
         response.setId(plaza.getId());
         response.setEmpresaId(plaza.getEmpresa().getId());
+        if (plaza.getCreatedBy() != null) {
+            response.setCreadorId(plaza.getCreatedBy().getId());
+        }
         response.setEmpresaNombre(plaza.getEmpresa().getNombre());
         response.setDepartamentoId(plaza.getDepartamento().getId());
         response.setDepartamentoNombre(plaza.getDepartamento().getNombre());
@@ -157,5 +161,13 @@ public class PlazaResponse {
 
     public void setPlazasDisponibles(Integer plazasDisponibles) {
         this.plazasDisponibles = plazasDisponibles;
+    }
+
+    public Long getCreadorId() {
+        return creadorId;
+    }
+
+    public void setCreadorId(Long creadorId) {
+        this.creadorId = creadorId;
     }
 }

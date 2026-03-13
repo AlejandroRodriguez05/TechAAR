@@ -4,6 +4,7 @@ import com.fctseek.dto.request.PlazaRequest;
 import com.fctseek.dto.response.PlazaResponse;
 import com.fctseek.exception.BadRequestException;
 import com.fctseek.exception.ResourceNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import com.fctseek.model.*;
 import com.fctseek.repository.*;
 import org.springframework.stereotype.Service;
@@ -152,17 +153,22 @@ public class PlazaService {
     }
 
     /**
-     * Elimina una plaza.
+     * Elimina una plaza (solo el creador puede borrarla).
      */
     @Transactional
     public void delete(Long id) {
         Plaza plaza = plazaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Plaza", "id", id));
-        
+
+        Usuario currentUser = usuarioService.getCurrentUser();
+        if (plaza.getCreatedBy() == null || !plaza.getCreatedBy().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("Solo puedes eliminar las plazas que tú has creado");
+        }
+
         if (plaza.getPlazasReservadas() > 0) {
             throw new BadRequestException("No se puede eliminar una plaza con reservas activas");
         }
-        
+
         plazaRepository.delete(plaza);
     }
 

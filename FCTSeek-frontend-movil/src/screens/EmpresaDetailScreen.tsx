@@ -14,12 +14,12 @@ import { empresaService } from '../services/empresaService';
 import { comentarioService } from '../services/comentarioService';
 import { valoracionService } from '../services/valoracionService';
 import { plazaService, PlazaResponse } from '../services/plazaService';
-import { contactadaService } from '../services/contactadaService';
+import { contactadaService, EmpresaContactadaResponse } from '../services/contactadaService';
 import { reservaService } from '../services/reservaService';
 import { favoritoService } from '../services/favoritoService';
 import { departamentoService } from '../services/departamentoService';
 import { listaService } from '../services/listaService';
-import { Empresa, Comentario, Curso, Departamento, Lista } from '../types';
+import { Empresa, Comentario, Curso, Departamento, Lista, ReservaPlaza } from '../types';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
 type EmpresaDetailRouteProp = RouteProp<RootStackParamList, 'EmpresaDetail'>;
@@ -42,7 +42,6 @@ export default function EmpresaDetailScreen() {
 
   // Nuevo comentario
   const [nuevoComentario, setNuevoComentario] = useState('');
-  const [comentarioPrivado, setComentarioPrivado] = useState(false);
   const [enviandoComentario, setEnviandoComentario] = useState(false);
 
   // Modals
@@ -59,6 +58,10 @@ export default function EmpresaDetailScreen() {
   const [modalContactadoVisible, setModalContactadoVisible] = useState(false);
   const [deptoContactado, setDeptoContactado] = useState<number | null>(null);
   const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
+
+  // Contactadas y reservas con ID para poder eliminar
+  const [contactadas, setContactadas] = useState<EmpresaContactadaResponse[]>([]);
+  const [reservas, setReservas] = useState<ReservaPlaza[]>([]);
 
   // Lista
   const [modalListaVisible, setModalListaVisible] = useState(false);
@@ -84,6 +87,14 @@ export default function EmpresaDetailScreen() {
         const fav = await favoritoService.isFavorito(empresaId);
         setEsFavorito(fav.esFavorita);
       } catch { /* ignore */ }
+
+      // Cargar contactadas y reservas con sus IDs para poder eliminar
+      const [ctds, rvs] = await Promise.all([
+        contactadaService.getByEmpresa(empresaId).catch(() => []),
+        reservaService.getByEmpresa(empresaId).catch(() => []),
+      ]);
+      setContactadas(ctds ?? []);
+      setReservas(rvs ?? []);
     } catch (error) {
       console.error('Error cargando empresa:', error);
     } finally {
@@ -132,10 +143,9 @@ export default function EmpresaDetailScreen() {
       await comentarioService.crear({
         empresaId,
         texto: nuevoComentario.trim(),
-        esPrivado: comentarioPrivado,
+        esPrivado: tabComentarios === 'profesores',
       });
       setNuevoComentario('');
-      setComentarioPrivado(false);
       // Recargar comentarios
       const coms = await comentarioService.getByEmpresa(empresaId).catch(() => []);
       setComentarios(coms ?? []);
@@ -144,6 +154,43 @@ export default function EmpresaDetailScreen() {
     } finally {
       setEnviandoComentario(false);
     }
+  };
+
+  // --- Eliminar comentario (solo el propio) ---
+  const handleEliminarComentario = (id: number) => {
+    Alert.alert('Eliminar comentario', '¿Deseas eliminar este comentario?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Eliminar', style: 'destructive',
+        onPress: async () => {
+          try {
+            await comentarioService.eliminar(id);
+            const coms = await comentarioService.getByEmpresa(empresaId).catch(() => []);
+            setComentarios(coms ?? []);
+          } catch {
+            Alert.alert('Error', 'No se pudo eliminar el comentario');
+          }
+        },
+      },
+    ]);
+  };
+
+  // --- Eliminar plaza ---
+  const handleEliminarPlaza = (id: number) => {
+    Alert.alert('Eliminar plaza', '¿Deseas eliminar esta plaza? Se eliminarán también sus reservas asociadas.', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Eliminar', style: 'destructive',
+        onPress: async () => {
+          try {
+            await plazaService.eliminar(id);
+            fetchData();
+          } catch {
+            Alert.alert('Error', 'No se pudo eliminar la plaza');
+          }
+        },
+      },
+    ]);
   };
 
   // --- Reservar ---
@@ -221,6 +268,42 @@ export default function EmpresaDetailScreen() {
     } catch (error) {
       Alert.alert('Error', 'No se pudo marcar como contactado');
     }
+  };
+
+  // --- Eliminar contactado (solo el propio) ---
+  const handleEliminarContactado = (id: number) => {
+    Alert.alert('Eliminar contactado', '¿Deseas eliminar este registro de contacto?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Eliminar', style: 'destructive',
+        onPress: async () => {
+          try {
+            await contactadaService.eliminar(id);
+            fetchData();
+          } catch {
+            Alert.alert('Error', 'No se pudo eliminar el contacto');
+          }
+        },
+      },
+    ]);
+  };
+
+  // --- Eliminar reserva (solo la propia) ---
+  const handleEliminarReserva = (id: number) => {
+    Alert.alert('Eliminar reserva', '¿Deseas eliminar esta reserva?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Eliminar', style: 'destructive',
+        onPress: async () => {
+          try {
+            await reservaService.eliminar(id);
+            fetchData();
+          } catch {
+            Alert.alert('Error', 'No se pudo eliminar la reserva');
+          }
+        },
+      },
+    ]);
   };
 
   // --- Valorar ---
@@ -309,7 +392,7 @@ export default function EmpresaDetailScreen() {
             {plazas.map((info, index) => (
               <View key={index} style={styles.plazasCard}>
                 <View style={styles.plazasHeader}>
-                  <View>
+                  <View style={{ flex: 1 }}>
                     <Text style={styles.plazasDepto}>{info.departamentoNombre}</Text>
                     {info.esGeneral ? (
                       <View style={styles.generalBadge}>
@@ -325,6 +408,11 @@ export default function EmpresaDetailScreen() {
                       </View>
                     )}
                   </View>
+                  {esProfesor && info.creadorId === user?.id && (
+                    <TouchableOpacity onPress={() => handleEliminarPlaza(info.id)} style={{ padding: 5 }}>
+                      <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                    </TouchableOpacity>
+                  )}
                 </View>
                 <View style={styles.plazasInfo}>
                   <View style={styles.plazasItem}><Text style={styles.plazasNumero}>{info.cantidad}</Text><Text style={styles.plazasLabel}>Ofertadas</Text></View>
@@ -344,17 +432,45 @@ export default function EmpresaDetailScreen() {
           </View>
         )}
 
+        {/* Reservas */}
+        {esProfesor && reservas.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Reservas</Text>
+            {reservas.map((r) => (
+              <View key={r.id} style={styles.reservaItem}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.reservaProfesor}>{r.profesorNombre}</Text>
+                  <Text style={styles.reservaDetalle}>
+                    {r.cursoSiglas ?? 'General'} · {r.cantidad} plaza{r.cantidad !== 1 ? 's' : ''}
+                    {r.clase ? ` · Clase ${r.clase}` : ''}
+                  </Text>
+                </View>
+                {r.profesorId === user?.id && (
+                  <TouchableOpacity onPress={() => handleEliminarReserva(r.id)} style={{ padding: 5 }}>
+                    <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                  </TouchableOpacity>
+                )}
+              </View>
+            ))}
+          </View>
+        )}
+
         {/* Contactado por */}
-        {empresa.contactadaPor && empresa.contactadaPor.length > 0 && (
+        {contactadas.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Contactado por</Text>
-            {empresa.contactadaPor.map((c, i) => (
-              <View key={i} style={styles.contactadoItem}>
+            {contactadas.map((c) => (
+              <View key={c.id} style={styles.contactadoItem}>
                 <Ionicons name="person-circle-outline" size={22} color="#059669" />
                 <View style={{ marginLeft: 10, flex: 1 }}>
                   <Text style={styles.contactadoProfesor}>{c.profesorNombre}</Text>
                   <Text style={styles.contactadoDepto}>{c.departamentoNombre} · {c.fecha}</Text>
                 </View>
+                {c.profesorId === user?.id && (
+                  <TouchableOpacity onPress={() => handleEliminarContactado(c.id)} style={{ padding: 5 }}>
+                    <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                  </TouchableOpacity>
+                )}
               </View>
             ))}
           </View>
@@ -439,6 +555,11 @@ export default function EmpresaDetailScreen() {
                 <View style={styles.comentarioHeaderRow}>
                   <Text style={styles.comentarioAutor}>{c.usuarioNombre}</Text>
                   <Text style={styles.comentarioFecha}>{c.fecha}</Text>
+                  {c.usuarioId === user?.id && (
+                    <TouchableOpacity onPress={() => handleEliminarComentario(c.id)} style={{ padding: 4 }}>
+                      <Ionicons name="trash-outline" size={16} color="#ef4444" />
+                    </TouchableOpacity>
+                  )}
                 </View>
                 <Text style={styles.comentarioTexto}>{c.texto}</Text>
               </View>
@@ -462,17 +583,6 @@ export default function EmpresaDetailScreen() {
               maxLength={500}
             />
             <View style={styles.comentarioActions}>
-              {esProfesor && (
-                <TouchableOpacity
-                  style={[styles.privadoToggle, comentarioPrivado && styles.privadoToggleActive]}
-                  onPress={() => setComentarioPrivado(!comentarioPrivado)}
-                >
-                  <Ionicons name={comentarioPrivado ? 'lock-closed' : 'lock-open-outline'} size={16} color={comentarioPrivado ? '#fff' : '#666'} />
-                  <Text style={[styles.privadoText, comentarioPrivado && styles.privadoTextActive]}>
-                    {comentarioPrivado ? 'Privado' : 'Público'}
-                  </Text>
-                </TouchableOpacity>
-              )}
               <TouchableOpacity
                 style={[styles.enviarBtn, !nuevoComentario.trim() && styles.enviarBtnDisabled]}
                 onPress={handleEnviarComentario}
@@ -705,4 +815,7 @@ const styles = StyleSheet.create({
   contactadoItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
   contactadoProfesor: { fontSize: 14, fontWeight: '600', color: '#333' },
   contactadoDepto: { fontSize: 12, color: '#666', marginTop: 2 },
+  reservaItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
+  reservaProfesor: { fontSize: 14, fontWeight: '600', color: '#333' },
+  reservaDetalle: { fontSize: 12, color: '#666', marginTop: 2 },
 });

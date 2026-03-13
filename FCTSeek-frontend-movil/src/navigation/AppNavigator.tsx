@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -109,37 +109,57 @@ export default function AppNavigator() {
           <>
             <Stack.Screen name="MainTabs" component={MainTabs} />
             <Stack.Screen name="AddEmpresa" component={AddEmpresaScreen}
-              options={{
+              options={({ navigation }) => ({
                 headerShown: true,
                 headerBackground: () => <GradientHeader />,
                 headerTintColor: '#fff',
                 headerTitleStyle: { fontWeight: 'bold', color: '#fff' },
                 title: 'Añadir Empresa',
-              }} />
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+                    <Ionicons name="chevron-back" size={28} color="#fff" />
+                  </TouchableOpacity>
+                ),
+              })} />
             <Stack.Screen name="EditEmpresa" component={AddEmpresaScreen}
-              options={{
+              options={({ navigation }) => ({
                 headerShown: true,
                 headerBackground: () => <GradientHeader />,
                 headerTintColor: '#fff',
                 headerTitleStyle: { fontWeight: 'bold', color: '#fff' },
                 title: 'Editar Empresa',
-              }} />
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+                    <Ionicons name="chevron-back" size={28} color="#fff" />
+                  </TouchableOpacity>
+                ),
+              })} />
             <Stack.Screen name="EmpresaDetail" component={EmpresaDetailScreen}
-              options={{
+              options={({ navigation }) => ({
                 headerShown: true,
                 headerBackground: () => <GradientHeader />,
                 headerTintColor: '#fff',
                 headerTitleStyle: { fontWeight: 'bold', color: '#fff' },
                 title: 'Detalle',
-              }} />
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+                    <Ionicons name="chevron-back" size={28} color="#fff" />
+                  </TouchableOpacity>
+                ),
+              })} />
             <Stack.Screen name="ListDetail" component={ListDetailScreen}
-              options={{
+              options={({ navigation }) => ({
                 headerShown: true,
                 headerBackground: () => <GradientHeader />,
                 headerTintColor: '#fff',
                 headerTitleStyle: { fontWeight: 'bold', color: '#fff' },
                 title: 'Mi Lista',
-              }} />
+                headerLeft: () => (
+                  <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+                    <Ionicons name="chevron-back" size={28} color="#fff" />
+                  </TouchableOpacity>
+                ),
+              })} />
           </>
         )}
       </Stack.Navigator>
