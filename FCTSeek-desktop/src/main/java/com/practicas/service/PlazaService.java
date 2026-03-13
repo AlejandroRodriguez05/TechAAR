@@ -21,4 +21,9 @@ public class PlazaService {
                 "esGeneral", esGeneral
         ));
     }
+
+    /** Crea plaza enviando un Map completo (empresaId, departamentoId, cursoId, cantidad, cursoAcademico). */
+    public static void crearConRequest(Map<String, Object> request) throws ApiException {
+        ApiClient.postRaw("/plazas", request);
+    }
 }

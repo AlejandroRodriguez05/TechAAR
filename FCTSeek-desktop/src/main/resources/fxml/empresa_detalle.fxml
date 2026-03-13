@@ -134,55 +134,46 @@
                     </VBox>
                 </VBox>
 
-                <!-- ══ 3. INFORMACIÓN DE CONTACTO ════════════════════════════ -->
-                <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
-                    <padding>
-                        <Insets bottom="18" left="20" right="20" top="18" />
-                    </padding>
+                        <!-- ══ 3+4. INFORMACIÓN DE CONTACTO + DESCRIPCIÓN (lado a lado) ══ -->
+                <HBox spacing="16" alignment="TOP_LEFT">
 
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Información de contacto" />
-                    <Region prefHeight="14" />
+                    <!-- Información de contacto -->
+                    <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);" HBox.hgrow="ALWAYS">
+                        <padding><Insets bottom="18" left="20" right="20" top="18" /></padding>
+                        <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Información de contacto" />
+                        <Region prefHeight="14" />
+                        <HBox alignment="TOP_LEFT" spacing="12">
+                            <Label style="-fx-font-size: 16px; -fx-padding: 1 0 0 0;" text="📍" />
+                            <Label fx:id="lblDireccion" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555555;" wrapText="true" />
+                        </HBox>
+                        <Region prefHeight="12" />
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label style="-fx-font-size: 16px;" text="📞" />
+                            <Label fx:id="lblTelefono" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #0d9488; -fx-cursor: hand;" />
+                        </HBox>
+                        <Region prefHeight="12" />
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label style="-fx-font-size: 16px;" text="✉️" />
+                            <Label fx:id="lblEmail" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #0d9488; -fx-cursor: hand;" />
+                        </HBox>
+                        <Region prefHeight="12" />
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label style="-fx-font-size: 16px;" text="👤" />
+                            <Label fx:id="lblPersonaContacto" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555555;" />
+                        </HBox>
+                    </VBox>
 
-                    <!-- 📍 Dirección -->
-                    <HBox alignment="TOP_LEFT" spacing="12">
-                        <Label style="-fx-font-size: 16px; -fx-padding: 1 0 0 0;" text="📍" />
-                        <Label fx:id="lblDireccion" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555555;" text="C/ León y Castillo, 45, Las Palmas de Gran Canaria" wrapText="true" />
-                    </HBox>
-                    <Region prefHeight="12" />
+                    <!-- Descripción -->
+                    <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);" HBox.hgrow="ALWAYS">
+                        <padding><Insets bottom="18" left="20" right="20" top="18" /></padding>
+                        <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Descripción" />
+                        <Region prefHeight="10" />
+                        <Label fx:id="lblDescripcion" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #666666;" wrapText="true" />
+                    </VBox>
 
-                    <!-- 📞 Teléfono (teal, clickeable) -->
-                    <HBox alignment="CENTER_LEFT" spacing="12">
-                        <Label style="-fx-font-size: 16px;" text="📞" />
-                        <Label fx:id="lblTelefono" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #0d9488; -fx-cursor: hand;" text="928 123 456" />
-                    </HBox>
-                    <Region prefHeight="12" />
+                </HBox>
 
-                    <!-- ✉️ Email (teal, clickeable) -->
-                    <HBox alignment="CENTER_LEFT" spacing="12">
-                        <Label style="-fx-font-size: 16px;" text="✉️" />
-                        <Label fx:id="lblEmail" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #0d9488; -fx-cursor: hand;" text="info@empresa.es" />
-                    </HBox>
-                    <Region prefHeight="12" />
-
-                    <!-- 👤 Persona de contacto -->
-                    <HBox alignment="CENTER_LEFT" spacing="12">
-                        <Label style="-fx-font-size: 16px;" text="👤" />
-                        <Label fx:id="lblPersonaContacto" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555555;" text="Contacto: María Rodríguez (666 123 456)" />
-                    </HBox>
-                </VBox>
-
-                <!-- ══ 4. DESCRIPCIÓN ══════════════════════════════════════════ -->
-                <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
-                    <padding>
-                        <Insets bottom="18" left="20" right="20" top="18" />
-                    </padding>
-
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Descripción" />
-                    <Region prefHeight="10" />
-                    <Label fx:id="lblDescripcion" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #666666;" text="Empresa dedicada al desarrollo de software y aplicaciones móviles." wrapText="true" />
-                </VBox>
-
-                <!-- ══ 5. CICLOS FORMATIVOS ══════════════════════════════════ -->
+        <!-- ══ 5. CICLOS FORMATIVOS ══════════════════════════════════ -->
                 <!-- controller: crearFilaCiclo(codigo, nombre) →
                        HBox spacing 16:
                          Label código ("DAM") style: teal bold, min-width 50

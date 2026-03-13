@@ -141,22 +141,23 @@
                     </HBox>
                 </VBox>
 
-                <!-- ══ Tarjeta: Departamentos y plazas (cargado dinámicamente) ══ -->
+                <!-- ══ Tarjeta: Ciclos formativos que acepta ══ -->
                 <VBox maxWidth="1762.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
-                    <padding>
-                        <Insets bottom="25" left="25" right="25" top="20" />
-                    </padding>
-
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="🏢 Departamentos y plazas" />
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;" text="Selecciona los departamentos y configura las plazas" />
+                    <padding><Insets bottom="25" left="25" right="25" top="20" /></padding>
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="🏫 Ciclos formativos que acepta" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;" text="Selecciona los ciclos con los que trabaja esta empresa" />
                     <Region prefHeight="15" />
+                    <VBox fx:id="contenedorCursos" spacing="6" />
+                </VBox>
 
-                    <!-- Aquí el controller inserta un card por cada departamento de la BD -->
+                <!-- ══ Tarjeta: Plazas a ofrecer ══ -->
+                <VBox maxWidth="1762.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
+                    <padding><Insets bottom="25" left="25" right="25" top="20" /></padding>
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="📋 Plazas a ofrecer" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;" text="Configura cuántas plazas ofrece por departamento" />
+                    <Region prefHeight="15" />
                     <VBox fx:id="contenedorDepartamentos" spacing="10" />
-
                     <Region prefHeight="15" />
-
-                    <!-- Total plazas -->
                     <HBox alignment="CENTER" style="-fx-background-color: #F0FDFA; -fx-background-radius: 8; -fx-border-color: #0d9488; -fx-border-radius: 8; -fx-padding: 14;">
                         <Label fx:id="lblTotalPlazas" style="-fx-font-family: Arial; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #0d9488;" text="Total plazas: 0" />
                     </HBox>

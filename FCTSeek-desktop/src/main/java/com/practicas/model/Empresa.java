@@ -58,6 +58,9 @@ public class Empresa {
     public void setDepartamentos(List<Departamento> d) { this.departamentos = d; }
     public List<Curso> getCursos() { return cursos != null ? cursos : new ArrayList<>(); }
     public void setCursos(List<Curso> c) { this.cursos = c; }
+    private List<EmpresaContactada> contactadaPor;
+    public List<EmpresaContactada> getContactadaPor() { return contactadaPor != null ? contactadaPor : new ArrayList<>(); }
+    public void setContactadaPor(List<EmpresaContactada> cp) { this.contactadaPor = cp; }
     public Double getValoracionMedia() { return valoracionMedia; }
     public void setValoracionMedia(Double v) { this.valoracionMedia = v; }
     public Integer getTotalValoraciones() { return totalValoraciones; }

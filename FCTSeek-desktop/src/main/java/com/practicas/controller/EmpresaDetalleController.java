@@ -75,8 +75,10 @@ public class EmpresaDetalleController {
                 Empresa emp = EmpresaService.getById(empresaId);
                 List<Comentario> coms = new ArrayList<>();
                 List<Plaza> plz = new ArrayList<>();
+                List<EmpresaContactada> contactados = new ArrayList<>();
                 try { coms = ComentarioService.getByEmpresa(empresaId); } catch (Exception ignored) {}
                 try { plz = PlazaService.getByEmpresa(empresaId); } catch (Exception ignored) {}
+                try { contactados = EmpresaContactadaService.getByEmpresa(empresaId); } catch (Exception ignored) {}
 
                 boolean fav = false;
                 try { fav = FavoritoService.isFavorito(empresaId); } catch (Exception ignored) {}
@@ -84,6 +86,7 @@ public class EmpresaDetalleController {
                 final Empresa fEmp = emp;
                 final List<Comentario> fComs = coms;
                 final List<Plaza> fPlz = plz;
+                final List<EmpresaContactada> fContactados = contactados;
                 final boolean fFav = fav;
 
                 Platform.runLater(() -> {
@@ -91,12 +94,49 @@ public class EmpresaDetalleController {
                     comentarios = fComs != null ? fComs : new ArrayList<>();
                     plazas = fPlz != null ? fPlz : new ArrayList<>();
                     esFavorito = fFav;
+                    rellenarContactados(fContactados != null ? fContactados : new ArrayList<>());
                     rellenarDatos();
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> lblNombreEmpresa.setText("Error cargando empresa"));
             }
         }).start();
+    }
+
+    private void rellenarContactados(List<EmpresaContactada> contactados) {
+        listaContactados.getChildren().clear();
+        if (contactados.isEmpty()) {
+            Label vacio = new Label("Ningún departamento ha contactado esta empresa aún.");
+            vacio.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #888888;");
+            listaContactados.getChildren().add(vacio);
+            return;
+        }
+        for (EmpresaContactada c : contactados) {
+            HBox fila = new HBox(10);
+            fila.setAlignment(Pos.CENTER_LEFT);
+            fila.setPadding(new Insets(6, 0, 6, 0));
+
+            Label icono = new Label("👤");
+            icono.setStyle("-fx-font-size: 16px;");
+
+            VBox textos = new VBox(2);
+            Label profesor = new Label(c.getProfesorNombre() != null ? c.getProfesorNombre() : "Profesor");
+            profesor.setStyle("-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+            Label depto = new Label((c.getDepartamentoNombre() != null ? c.getDepartamentoNombre() : "") +
+                    (c.getFecha() != null ? " · " + c.getFecha() : ""));
+            depto.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;");
+            textos.getChildren().addAll(profesor, depto);
+
+            fila.getChildren().addAll(icono, textos);
+            listaContactados.getChildren().add(fila);
+
+            // Separador entre elementos (excepto el último)
+            if (contactados.indexOf(c) < contactados.size() - 1) {
+                Separator sep = new Separator();
+                sep.setStyle("-fx-background-color: #eeeeee;");
+                listaContactados.getChildren().add(sep);
+            }
+        }
     }
 
     private void rellenarDatos() {
@@ -120,15 +160,18 @@ public class EmpresaDetalleController {
             contenedorChipsDpto.getChildren().add(chip);
         }
 
-        // Plazas
-        if (plazas.isEmpty()) {
+        // Plazas: solo mostramos las que tengan plazas ofertadas reales (> 0)
+        List<Plaza> plazasReales = plazas.stream()
+                .filter(p -> p.getPlazasOfertadas() > 0)
+                .collect(java.util.stream.Collectors.toList());
+        if (plazasReales.isEmpty()) {
             tarjetaPlazas.setVisible(false);
             tarjetaPlazas.setManaged(false);
         } else {
             tarjetaPlazas.setVisible(true);
             tarjetaPlazas.setManaged(true);
             contenedorPlazas.getChildren().clear();
-            for (Plaza p : plazas) {
+            for (Plaza p : plazasReales) {
                 contenedorPlazas.getChildren().add(crearPlazaCard(p));
             }
         }
@@ -411,16 +454,16 @@ public class EmpresaDetalleController {
                     ChoiceDialog<Departamento> dialog = new ChoiceDialog<>(
                             deps.isEmpty() ? null : deps.get(0), deps);
                     dialog.setTitle("Marcar contactado");
-                    dialog.setHeaderText("¿Por qué departamento?");
+                    dialog.setHeaderText("¿Por qué departamento contactasteis la empresa?");
                     dialog.setContentText("Departamento:");
 
                     Optional<Departamento> result = dialog.showAndWait();
                     result.ifPresent(depto -> {
                         new Thread(() -> {
                             try {
-                                PlazaService.crear(empresa.getId(), depto.getId(), 1, true);
+                                EmpresaContactadaService.crear(empresa.getId(), depto.getId());
                                 Platform.runLater(() -> {
-                                    mostrarAlerta("Contactado", "Empresa marcada como contactada por " + depto.getCodigo());
+                                    mostrarAlerta("Contactado", "Empresa marcada como contactada por " + depto.getNombre());
                                     cargarDatos(empresa.getId());
                                 });
                             } catch (Exception e2) {
