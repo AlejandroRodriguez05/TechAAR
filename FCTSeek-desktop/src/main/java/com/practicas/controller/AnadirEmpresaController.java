@@ -92,33 +92,38 @@ public class AnadirEmpresaController {
     // ─── Sección 1: Cursos que acepta ────────────────────────────────────
 
     private void construirSeccionCursos() {
-        contenedorCursos.getChildren().clear();
-        checksCursos.clear();
+    contenedorCursos.getChildren().clear();
+    checksCursos.clear();
 
-        for (Departamento depto : departamentos) {
-            List<Curso> cursos = cursosPorDepto.getOrDefault(depto.getId(), new ArrayList<>());
-            if (cursos.isEmpty()) continue;
+    for (Departamento depto : departamentos) {
+        List<Curso> cursos = cursosPorDepto.getOrDefault(depto.getId(), new ArrayList<>());
+        if (cursos.isEmpty()) continue;
 
-            // Encabezado de departamento
-            Label lblDepto = new Label(depto.getCodigo() + " — " + depto.getNombre());
-            lblDepto.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #0d9488;");
-            lblDepto.setPadding(new Insets(6, 0, 4, 0));
-            contenedorCursos.getChildren().add(lblDepto);
+        Label lblDepto = new Label(depto.getCodigo() + " — " + depto.getNombre());
+        lblDepto.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #0d9488;");
+        lblDepto.setPadding(new Insets(6, 0, 4, 0));
+        contenedorCursos.getChildren().add(lblDepto);
 
-            for (Curso curso : cursos) {
-                CheckBox cb = new CheckBox();
-                Label lbl = new Label(curso.getSiglas() + " — " + curso.getNombre());
-                lbl.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #333333;");
-                lbl.setOnMouseClicked(e -> cb.setSelected(!cb.isSelected()));
-                lbl.setStyle(lbl.getStyle() + " -fx-cursor: hand;");
-                HBox fila = new HBox(10, cb, lbl);
-                fila.setAlignment(Pos.CENTER_LEFT);
-                fila.setPadding(new Insets(4, 0, 4, 16));
-                checksCursos.put(curso.getId(), cb);
-                contenedorCursos.getChildren().add(fila);
-            }
+        for (Curso curso : cursos) {
+            CheckBox cb = new CheckBox();
+            Label lbl = new Label(curso.getSiglas() + " — " + curso.getNombre());
+            lbl.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #333333;");
+
+            HBox fila = new HBox(10, cb, lbl);
+            fila.setAlignment(Pos.CENTER_LEFT);
+            fila.setPadding(new Insets(4, 0, 4, 16));
+            fila.setStyle("-fx-cursor: hand;");
+            fila.setOnMouseClicked(e -> {
+                if (!(e.getTarget() instanceof CheckBox)) {
+                    cb.setSelected(!cb.isSelected());
+                }
+            });
+
+            checksCursos.put(curso.getId(), cb);
+            contenedorCursos.getChildren().add(fila);
         }
     }
+}
 
     // ─── Sección 2: Plazas a ofrecer ─────────────────────────────────────
 

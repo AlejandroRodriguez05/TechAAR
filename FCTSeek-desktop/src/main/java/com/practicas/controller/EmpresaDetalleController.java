@@ -47,13 +47,13 @@ public class EmpresaDetalleController {
     private long empresaIdCargada;
     private List<Comentario> comentarios = new ArrayList<>();
     private List<Plaza> plazas = new ArrayList<>();
+    private List<Reserva> reservas = new ArrayList<>();
     private boolean esFavorito = false;
     private String tabComentarios = "general";
 
     @FXML
     public void initialize() {
         Long empresaId = ViewManager.getParam("empresaId");
-        System.out.println("[DEBUG] EmpresaDetalle.initialize() - empresaId param: " + empresaId);
         if (empresaId == null) return;
         ViewManager.clearParam("empresaId");
 
@@ -75,9 +75,12 @@ public class EmpresaDetalleController {
                 Empresa emp = EmpresaService.getById(empresaId);
                 List<Comentario> coms = new ArrayList<>();
                 List<Plaza> plz = new ArrayList<>();
+                List<Reserva> rvs = new ArrayList<>();
                 List<EmpresaContactada> contactados = new ArrayList<>();
+
                 try { coms = ComentarioService.getByEmpresa(empresaId); } catch (Exception ignored) {}
                 try { plz = PlazaService.getByEmpresa(empresaId); } catch (Exception ignored) {}
+                try { rvs = ReservaService.getByEmpresa(empresaId); } catch (Exception ignored) {}
                 try { contactados = EmpresaContactadaService.getByEmpresa(empresaId); } catch (Exception ignored) {}
 
                 boolean fav = false;
@@ -86,6 +89,7 @@ public class EmpresaDetalleController {
                 final Empresa fEmp = emp;
                 final List<Comentario> fComs = coms;
                 final List<Plaza> fPlz = plz;
+                final List<Reserva> fRvs = rvs;
                 final List<EmpresaContactada> fContactados = contactados;
                 final boolean fFav = fav;
 
@@ -93,6 +97,7 @@ public class EmpresaDetalleController {
                     empresa = fEmp;
                     comentarios = fComs != null ? fComs : new ArrayList<>();
                     plazas = fPlz != null ? fPlz : new ArrayList<>();
+                    reservas = fRvs != null ? fRvs : new ArrayList<>();
                     esFavorito = fFav;
                     rellenarContactados(fContactados != null ? fContactados : new ArrayList<>());
                     rellenarDatos();
@@ -111,7 +116,8 @@ public class EmpresaDetalleController {
             listaContactados.getChildren().add(vacio);
             return;
         }
-        for (EmpresaContactada c : contactados) {
+        for (int i = 0; i < contactados.size(); i++) {
+            EmpresaContactada c = contactados.get(i);
             HBox fila = new HBox(10);
             fila.setAlignment(Pos.CENTER_LEFT);
             fila.setPadding(new Insets(6, 0, 6, 0));
@@ -122,16 +128,14 @@ public class EmpresaDetalleController {
             VBox textos = new VBox(2);
             Label profesor = new Label(c.getProfesorNombre() != null ? c.getProfesorNombre() : "Profesor");
             profesor.setStyle("-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;");
-            Label depto = new Label((c.getDepartamentoNombre() != null ? c.getDepartamentoNombre() : "") +
-                    (c.getFecha() != null ? " · " + c.getFecha() : ""));
+            Label depto = new Label((c.getDepartamentoNombre() != null ? c.getDepartamentoNombre() : "")
+                    + (c.getFecha() != null ? " · " + c.getFecha() : ""));
             depto.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;");
             textos.getChildren().addAll(profesor, depto);
-
             fila.getChildren().addAll(icono, textos);
             listaContactados.getChildren().add(fila);
 
-            // Separador entre elementos (excepto el último)
-            if (contactados.indexOf(c) < contactados.size() - 1) {
+            if (i < contactados.size() - 1) {
                 Separator sep = new Separator();
                 sep.setStyle("-fx-background-color: #eeeeee;");
                 listaContactados.getChildren().add(sep);
@@ -143,15 +147,12 @@ public class EmpresaDetalleController {
         if (empresa == null) return;
 
         lblNombreEmpresa.setText(empresa.getNombre());
-
-        // Valoración
         lblEstrellas.setText(empresa.getEstrellasTexto());
         lblValoracion.setText(empresa.getValoracionMedia() != null
                 ? String.format("%.1f", empresa.getValoracionMedia()) : "-");
         lblNumValoraciones.setText("(" + (empresa.getTotalValoraciones() != null
                 ? empresa.getTotalValoraciones() : 0) + " valoraciones)");
 
-        // Chips departamentos
         contenedorChipsDpto.getChildren().clear();
         for (Departamento d : empresa.getDepartamentos()) {
             Label chip = new Label(d.getCodigo() != null ? d.getCodigo() : d.getNombre());
@@ -160,10 +161,9 @@ public class EmpresaDetalleController {
             contenedorChipsDpto.getChildren().add(chip);
         }
 
-        // Plazas: solo mostramos las que tengan plazas ofertadas reales (> 0)
         List<Plaza> plazasReales = plazas.stream()
-                .filter(p -> p.getPlazasOfertadas() > 0)
-                .collect(java.util.stream.Collectors.toList());
+                .filter(p -> p.getCantidad() > 0)
+                .collect(Collectors.toList());
         if (plazasReales.isEmpty()) {
             tarjetaPlazas.setVisible(false);
             tarjetaPlazas.setManaged(false);
@@ -176,14 +176,12 @@ public class EmpresaDetalleController {
             }
         }
 
-        // Contacto
         lblDireccion.setText(formatDireccion());
         lblTelefono.setText(empresa.getTelefono() != null ? empresa.getTelefono() : "-");
         lblEmail.setText(empresa.getEmail() != null ? empresa.getEmail() : "-");
         lblPersonaContacto.setText(formatContacto());
         lblDescripcion.setText(empresa.getDescripcion() != null ? empresa.getDescripcion() : "Sin descripción");
 
-        // Ciclos
         listaCiclos.getChildren().clear();
         for (Curso c : empresa.getCursos()) {
             HBox row = new HBox(10);
@@ -198,10 +196,7 @@ public class EmpresaDetalleController {
             listaCiclos.getChildren().add(row);
         }
 
-        // Favorito
         actualizarEstiloFavorito();
-
-        // Comentarios
         actualizarComentarios();
     }
 
@@ -219,39 +214,92 @@ public class EmpresaDetalleController {
         return "Contacto: " + pc + (tc != null && !tc.isBlank() ? " (" + tc + ")" : "");
     }
 
-    // ─── Plazas card ────────────────────────────────────────────────────
-
     private VBox crearPlazaCard(Plaza p) {
-        VBox card = new VBox(8);
-        card.setPadding(new Insets(12));
+        VBox card = new VBox(10);
+        card.setPadding(new Insets(14));
         card.setStyle("-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10;");
 
-        HBox header = new HBox(10);
+        HBox header = new HBox(8);
         header.setAlignment(Pos.CENTER_LEFT);
+
+        VBox headerTextos = new VBox(2);
         Label depto = new Label(p.getDepartamentoNombre());
         depto.setStyle("-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
+        String tipoStr = p.isEsGeneral()
+                ? "General · " + p.getCantidad() + " plaza" + (p.getCantidad() != 1 ? "s" : "")
+                : (p.getCursoSiglas() != null ? p.getCursoSiglas() : "Ciclo específico")
+                        + " · " + p.getCantidad() + " plaza" + (p.getCantidad() != 1 ? "s" : "");
+        Label tipo = new Label(tipoStr);
+        tipo.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #0891b2;");
+        headerTextos.getChildren().addAll(depto, tipo);
+
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        Label badge = new Label(p.getLibres() > 0 ? p.getLibres() + " libres" : "Completo");
-        badge.setStyle(p.getLibres() > 0
+
+        Label badge = new Label(p.getPlazasDisponibles() > 0 ? p.getPlazasDisponibles() + " libres" : "Completo");
+        badge.setStyle(p.getPlazasDisponibles() > 0
                 ? "-fx-background-color: #d1fae5; -fx-text-fill: #065f46; -fx-background-radius: 12; -fx-padding: 3 10; -fx-font-size: 12px; -fx-font-weight: bold;"
                 : "-fx-background-color: #fee2e2; -fx-text-fill: #991b1b; -fx-background-radius: 12; -fx-padding: 3 10; -fx-font-size: 12px; -fx-font-weight: bold;");
-        header.getChildren().addAll(depto, spacer, badge);
+
+        header.getChildren().addAll(headerTextos, spacer, badge);
 
         HBox stats = new HBox(30);
         stats.setAlignment(Pos.CENTER);
+        stats.setPadding(new Insets(8, 0, 8, 0));
         stats.getChildren().addAll(
-                crearStatItem(String.valueOf(p.getPlazasOfertadas()), "Ofertadas", "#333"),
-                crearStatItem(String.valueOf(p.getReservadas()), "Reservadas", "#333"),
-                crearStatItem(String.valueOf(p.getLibres()), "Libres", p.getLibres() > 0 ? "#10b981" : "#ef4444")
+                crearStatItem(String.valueOf(p.getCantidad()), "Ofertadas", "#333"),
+                crearStatItem(String.valueOf(p.getPlazasReservadas()), "Reservadas", "#333"),
+                crearStatItem(String.valueOf(p.getPlazasDisponibles()), "Libres",
+                        p.getPlazasDisponibles() > 0 ? "#10b981" : "#ef4444")
         );
 
         card.getChildren().addAll(header, stats);
 
-        if (Session.get().esProfesor() && p.getLibres() > 0) {
-            Button btnReservar = new Button("+ Reservar plazas");
-            btnReservar.setStyle("-fx-background-color: transparent; -fx-text-fill: #0891b2; -fx-font-family: Arial; -fx-font-size: 13px; -fx-cursor: hand;");
-            btnReservar.setOnAction(e -> abrirDialogoReserva(p.getDepartamentoId()));
+        List<Reserva> reservasPlaza = reservas.stream()
+                .filter(r -> r.getPlazaId() == p.getId())
+                .collect(Collectors.toList());
+
+        if (!reservasPlaza.isEmpty()) {
+            Separator sep = new Separator();
+            sep.setStyle("-fx-background-color: #e2e8f0;");
+
+            Label lblReservas = new Label("Reservas realizadas:");
+            lblReservas.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #555;");
+
+            VBox listaRvs = new VBox(6);
+            for (Reserva r : reservasPlaza) {
+                HBox filaR = new HBox(8);
+                filaR.setAlignment(Pos.CENTER_LEFT);
+
+                Label ico = new Label("👤");
+                ico.setStyle("-fx-font-size: 14px;");
+
+                String detalle = r.getCantidad() + " plaza" + (r.getCantidad() != 1 ? "s" : "");
+                if (r.getCursoSiglas() != null) detalle += " · " + r.getCursoSiglas();
+                if (r.getClase() != null && !r.getClase().isBlank()) detalle += " (" + r.getClase() + ")";
+
+                VBox textos = new VBox(1);
+                Label nombre = new Label(r.getProfesorNombre() != null ? r.getProfesorNombre() : "Profesor");
+                nombre.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;");
+                Label info = new Label(detalle);
+                info.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888;");
+                textos.getChildren().addAll(nombre, info);
+
+                filaR.getChildren().addAll(ico, textos);
+                listaRvs.getChildren().add(filaR);
+            }
+
+            card.getChildren().addAll(sep, lblReservas, listaRvs);
+        }
+
+        if (Session.get().esProfesor() && p.getPlazasDisponibles() > 0) {
+            Button btnReservar = new Button("⊕  Reservar plazas para mis alumnos");
+            btnReservar.setStyle("-fx-background-color: transparent; -fx-text-fill: #0891b2; "
+                    + "-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; "
+                    + "-fx-border-color: #0891b2; -fx-border-radius: 8; -fx-background-radius: 8; "
+                    + "-fx-padding: 8 0; -fx-cursor: hand;");
+            btnReservar.setMaxWidth(Double.MAX_VALUE);
+            btnReservar.setOnAction(e -> abrirDialogoReserva(p));
             card.getChildren().add(btnReservar);
         }
 
@@ -268,8 +316,6 @@ public class EmpresaDetalleController {
         item.getChildren().addAll(numLabel, textLabel);
         return item;
     }
-
-    // ─── Comentarios ────────────────────────────────────────────────────
 
     @FXML
     private void mostrarComentariosGenerales() {
@@ -294,7 +340,6 @@ public class EmpresaDetalleController {
         btnTabGeneral.setText("\uD83C\uDF10 General (" + generales.size() + ")");
         btnTabProfesores.setText("\uD83C\uDF93 Profesores (" + privados.size() + ")");
 
-        // Solo mostrar tab profesores si es profesor
         boolean prof = Session.get().esProfesor();
         btnTabProfesores.setVisible(prof);
         btnTabProfesores.setManaged(prof);
@@ -355,7 +400,6 @@ public class EmpresaDetalleController {
 
         ButtonType btnEnviar = new ButtonType("Enviar", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(btnEnviar, ButtonType.CANCEL);
-
         dialog.setResultConverter(bt -> bt == btnEnviar ? txtArea.getText() : null);
 
         Optional<String> result = dialog.showAndWait();
@@ -375,8 +419,6 @@ public class EmpresaDetalleController {
             }).start();
         });
     }
-
-    // ─── Acciones ───────────────────────────────────────────────────────
 
     private void actualizarEstiloFavorito() {
         iconFavorito.setText(esFavorito ? "❤️" : "\uD83E\uDD0D");
@@ -407,10 +449,7 @@ public class EmpresaDetalleController {
                     mostrarAlerta("Favoritos", esFavorito ? "Añadido a favoritos" : "Eliminado de favoritos");
                 });
             } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> {
-                    mostrarAlerta("Error", "No se pudo cambiar el favorito: " + e.getMessage());
-                });
+                Platform.runLater(() -> mostrarAlerta("Error", "No se pudo cambiar el favorito: " + e.getMessage()));
             }
         }).start();
     }
@@ -478,34 +517,56 @@ public class EmpresaDetalleController {
         }).start();
     }
 
-    private void abrirDialogoReserva(long departamentoId) {
+    private void abrirDialogoReserva(Plaza plaza) {
         new Thread(() -> {
             try {
-                List<Curso> cursos = DepartamentoService.getCursos(departamentoId);
+                List<Curso> cursos;
+                if (plaza.isEsGeneral()) {
+                    cursos = DepartamentoService.getCursos(plaza.getDepartamentoId());
+                } else {
+                    Curso c = new Curso();
+                    c.setId(plaza.getCursoId());
+                    c.setSiglas(plaza.getCursoSiglas() != null ? plaza.getCursoSiglas() : "");
+                    c.setNombre(plaza.getCursoNombre() != null ? plaza.getCursoNombre() : plaza.getCursoSiglas());
+                    cursos = List.of(c);
+                }
+
+                final List<Curso> fCursos = (cursos != null) ? cursos : new ArrayList<>();
                 Platform.runLater(() -> {
-                    if (cursos == null || cursos.isEmpty()) {
+                    if (fCursos.isEmpty()) {
                         mostrarAlerta("Sin ciclos", "No hay ciclos disponibles para este departamento");
                         return;
                     }
-                    ChoiceDialog<Curso> dialog = new ChoiceDialog<>(cursos.get(0), cursos);
-                    dialog.setTitle("Reservar plazas");
-                    dialog.setHeaderText("Selecciona el ciclo formativo");
-                    dialog.setContentText("Ciclo:");
 
-                    Optional<Curso> result = dialog.showAndWait();
-                    result.ifPresent(curso -> {
+                    ChoiceDialog<Curso> dialogCurso = new ChoiceDialog<>(fCursos.get(0), fCursos);
+                    dialogCurso.setTitle("Reservar plazas");
+                    dialogCurso.setHeaderText("Selecciona el ciclo formativo para " + plaza.getDepartamentoNombre());
+                    dialogCurso.setContentText("Ciclo:");
+
+                    Optional<Curso> resCurso = dialogCurso.showAndWait();
+                    resCurso.ifPresent(curso -> {
                         TextInputDialog cantDialog = new TextInputDialog("1");
                         cantDialog.setTitle("Cantidad");
                         cantDialog.setHeaderText("¿Cuántas plazas reservar para " + curso.getSiglas() + "?");
                         cantDialog.setContentText("Cantidad:");
-                        Optional<String> cantResult = cantDialog.showAndWait();
-                        cantResult.ifPresent(cant -> {
+                        Optional<String> resCant = cantDialog.showAndWait();
+
+                        resCant.ifPresent(cantStr -> {
+                            TextInputDialog claseDialog = new TextInputDialog("");
+                            claseDialog.setTitle("Clase (opcional)");
+                            claseDialog.setHeaderText("Indica la clase o grupo (deja vacío si no aplica)");
+                            claseDialog.setContentText("Clase:");
+                            Optional<String> resClase = claseDialog.showAndWait();
+
                             int cantidad;
-                            try { cantidad = Integer.parseInt(cant); } catch (NumberFormatException e) { cantidad = 1; }
+                            try { cantidad = Math.max(1, Integer.parseInt(cantStr.trim())); }
+                            catch (NumberFormatException ex) { cantidad = 1; }
                             final int fCant = cantidad;
+                            final String fClase = resClase.orElse("").trim();
+
                             new Thread(() -> {
                                 try {
-                                    ReservaService.crear(empresa.getId(), departamentoId, fCant, curso.getId(), curso.getSiglas(), null);
+                                    ReservaService.crear(plaza.getId(), curso.getId(), fCant, fClase.isEmpty() ? null : fClase);
                                     Platform.runLater(() -> {
                                         mostrarAlerta("Reservado", fCant + " plaza(s) reservada(s) para " + curso.getSiglas());
                                         cargarDatos(empresa.getId());
@@ -536,7 +597,6 @@ public class EmpresaDetalleController {
         alert.showAndWait();
     }
 
-    // Navegación
     @FXML private void irAInicio() { ViewManager.navigateTo("empresas"); }
     @FXML private void irABusqueda() { ViewManager.navigateTo("busqueda"); }
     @FXML private void irAListas() { ViewManager.navigateTo("listas"); }
@@ -550,7 +610,6 @@ public class EmpresaDetalleController {
         }
         new Thread(() -> {
             try {
-                // getMisListas no incluye empresas anidadas, cargamos cada lista con getById
                 List<Lista> listas = ListaService.getMisListas().stream()
                         .filter(l -> !l.isEsFavoritos())
                         .collect(Collectors.toList());
@@ -559,7 +618,6 @@ public class EmpresaDetalleController {
                 for (Lista l : listas) {
                     listasCompletas.add(ListaService.getById(l.getId()));
                 }
-
                 Platform.runLater(() -> abrirVentanaDialogo(listasCompletas));
             } catch (Exception e) {
                 Platform.runLater(() -> mostrarAlerta("Error", "No se pudieron cargar las listas: " + e.getMessage()));
@@ -584,8 +642,7 @@ public class EmpresaDetalleController {
             dialogStage.showAndWait();
 
             List<Lista> seleccionadas = dialogCtrl.getListasSeleccionadas();
-            if (seleccionadas == null) return; // cancelado
-
+            if (seleccionadas == null) return;
             guardarCambiosEnListas(dialogCtrl.getListasOriginales(), seleccionadas);
         } catch (Exception e) {
             mostrarAlerta("Error", "No se pudo abrir el diálogo: " + e.getMessage());
@@ -596,9 +653,8 @@ public class EmpresaDetalleController {
         new Thread(() -> {
             try {
                 for (Lista lista : listasOriginales) {
-                    boolean debeEstar  = seleccionadas.stream().anyMatch(s -> s.getId() == lista.getId());
+                    boolean debeEstar = seleccionadas.stream().anyMatch(s -> s.getId() == lista.getId());
                     boolean estabaAntes = lista.getEmpresas().stream().anyMatch(e -> e.getId() == empresa.getId());
-
                     if (debeEstar && !estabaAntes) {
                         ListaService.addEmpresa(lista.getId(), empresa.getId());
                     } else if (!debeEstar && estabaAntes) {
@@ -611,5 +667,4 @@ public class EmpresaDetalleController {
             }
         }).start();
     }
-
 }
