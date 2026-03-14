@@ -2,6 +2,7 @@ package com.practicas.model;
 
 public class EmpresaContactada {
     private long id;
+    private long profesorId;
     private String profesorNombre;
     private String departamentoNombre;
     private String fecha;
@@ -9,6 +10,8 @@ public class EmpresaContactada {
 
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
+    public long getProfesorId() { return profesorId; }
+    public void setProfesorId(long v) { this.profesorId = v; }
     public String getProfesorNombre() { return profesorNombre; }
     public void setProfesorNombre(String p) { this.profesorNombre = p; }
     public String getDepartamentoNombre() { return departamentoNombre; }

@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.time.LocalDate;
@@ -33,8 +34,8 @@ public class AnadirEmpresaController {
     @FXML private TextField txtPersonaContacto;
     @FXML private TextField txtTelefonoContacto;
     @FXML private TextField txtEmailContacto;
-    @FXML private VBox contenedorCursos;       // Sección 1: cursos que acepta
-    @FXML private VBox contenedorDepartamentos; // Sección 2: plazas a ofrecer
+    @FXML private VBox contenedorCursos;
+    @FXML private VBox contenedorDepartamentos;
     @FXML private Label lblTotalPlazas;
     @FXML private Label lblError;
 
@@ -43,15 +44,13 @@ public class AnadirEmpresaController {
     private List<Departamento> departamentos = new ArrayList<>();
     private Map<Long, List<Curso>> cursosPorDepto = new HashMap<>();
 
-    // Sección 1 — cursos que acepta (checkboxes por curso)
-    private Map<Long, CheckBox> checksCursos = new HashMap<>(); // cursoId → CheckBox
+    private Map<Long, CheckBox> checksDeptos = new HashMap<>();
 
-    // Sección 2 — plazas a ofrecer (por departamento)
-    private Map<Long, CheckBox> checksDeptoPlaza = new HashMap<>();     // deptoId → CheckBox
-    private Map<Long, ToggleGroup> toggleGroups = new HashMap<>();       // deptoId → ToggleGroup
-    private Map<Long, Spinner<Integer>> spinnersGenerales = new HashMap<>(); // deptoId → Spinner
-    private Map<Long, Map<Long, CheckBox>> checksPlazaCurso = new HashMap<>();   // deptoId → cursoId → CheckBox
-    private Map<Long, Map<Long, Spinner<Integer>>> spinnersPlazaCurso = new HashMap<>(); // deptoId → cursoId → Spinner
+    private Map<Long, CheckBox> checksDeptoPlaza = new HashMap<>();
+    private Map<Long, ToggleGroup> toggleGroups = new HashMap<>();
+    private Map<Long, Spinner<Integer>> spinnersGenerales = new HashMap<>();
+    private Map<Long, Map<Long, CheckBox>> checksPlazaCurso = new HashMap<>();
+    private Map<Long, Map<Long, Spinner<Integer>>> spinnersPlazaCurso = new HashMap<>();
 
     @FXML
     public void initialize() {
@@ -62,8 +61,6 @@ public class AnadirEmpresaController {
         ocultarError();
         cargarDepartamentos();
     }
-
-    // ─── Carga de datos ──────────────────────────────────────────────────
 
     private void cargarDepartamentos() {
         new Thread(() -> {
@@ -79,7 +76,7 @@ public class AnadirEmpresaController {
                 Platform.runLater(() -> {
                     departamentos = deps;
                     cursosPorDepto = cursosMap;
-                    construirSeccionCursos();
+                    construirSeccionDepartamentos();
                     construirSeccionPlazas();
                     if (empresa != null) rellenarFormulario(empresa);
                 });
@@ -89,43 +86,29 @@ public class AnadirEmpresaController {
         }).start();
     }
 
-    // ─── Sección 1: Cursos que acepta ────────────────────────────────────
+    private void construirSeccionDepartamentos() {
+        contenedorCursos.getChildren().clear();
+        checksDeptos.clear();
 
-    private void construirSeccionCursos() {
-    contenedorCursos.getChildren().clear();
-    checksCursos.clear();
-
-    for (Departamento depto : departamentos) {
-        List<Curso> cursos = cursosPorDepto.getOrDefault(depto.getId(), new ArrayList<>());
-        if (cursos.isEmpty()) continue;
-
-        Label lblDepto = new Label(depto.getCodigo() + " — " + depto.getNombre());
-        lblDepto.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #0d9488;");
-        lblDepto.setPadding(new Insets(6, 0, 4, 0));
-        contenedorCursos.getChildren().add(lblDepto);
-
-        for (Curso curso : cursos) {
+        for (Departamento depto : departamentos) {
             CheckBox cb = new CheckBox();
-            Label lbl = new Label(curso.getSiglas() + " — " + curso.getNombre());
+            Label lbl = new Label(depto.getCodigo() + " — " + depto.getNombre());
             lbl.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #333333;");
 
             HBox fila = new HBox(10, cb, lbl);
             fila.setAlignment(Pos.CENTER_LEFT);
-            fila.setPadding(new Insets(4, 0, 4, 16));
+            fila.setPadding(new Insets(5, 0, 5, 8));
             fila.setStyle("-fx-cursor: hand;");
-            fila.setOnMouseClicked(e -> {
+            fila.setOnMouseClicked((MouseEvent e) -> {
                 if (!(e.getTarget() instanceof CheckBox)) {
                     cb.setSelected(!cb.isSelected());
                 }
             });
 
-            checksCursos.put(curso.getId(), cb);
+            checksDeptos.put(depto.getId(), cb);
             contenedorCursos.getChildren().add(fila);
         }
     }
-}
-
-    // ─── Sección 2: Plazas a ofrecer ─────────────────────────────────────
 
     private void construirSeccionPlazas() {
         contenedorDepartamentos.getChildren().clear();
@@ -139,24 +122,25 @@ public class AnadirEmpresaController {
             VBox deptoContainer = new VBox(8);
             deptoContainer.setPadding(new Insets(0, 0, 10, 0));
 
-            // Checkbox del departamento (sin texto para evitar herencia de color)
             CheckBox chk = new CheckBox();
             Label lblNombre = new Label(depto.getCodigo() + " — " + depto.getNombre());
             lblNombre.setStyle("-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #333333;");
-            lblNombre.setOnMouseClicked(e -> chk.setSelected(!chk.isSelected()));
-            lblNombre.setStyle(lblNombre.getStyle() + " -fx-cursor: hand;");
             HBox chkRow = new HBox(10, chk, lblNombre);
             chkRow.setAlignment(Pos.CENTER_LEFT);
+            chkRow.setStyle("-fx-cursor: hand;");
+            chkRow.setOnMouseClicked((MouseEvent e) -> {
+                if (!(e.getTarget() instanceof CheckBox)) {
+                    chk.setSelected(!chk.isSelected());
+                }
+            });
             checksDeptoPlaza.put(depto.getId(), chk);
 
-            // Panel expandible
             VBox panel = new VBox(10);
             panel.setPadding(new Insets(10, 0, 0, 30));
             panel.setVisible(false);
             panel.setManaged(false);
             panel.setStyle("-fx-border-color: #0d9488; -fx-border-width: 0 0 0 2; -fx-padding: 10 0 10 15;");
 
-            // Toggle General / Por ciclo
             ToggleGroup tg = new ToggleGroup();
             RadioButton rbGeneral = new RadioButton();
             rbGeneral.setToggleGroup(tg);
@@ -173,7 +157,6 @@ public class AnadirEmpresaController {
             toggleBox.setAlignment(Pos.CENTER_LEFT);
             toggleGroups.put(depto.getId(), tg);
 
-            // Spinner general
             Spinner<Integer> spinnerGen = new Spinner<>(1, 99, 1);
             spinnerGen.setEditable(true);
             spinnerGen.setPrefWidth(90);
@@ -183,7 +166,6 @@ public class AnadirEmpresaController {
             generalBox.setAlignment(Pos.CENTER_LEFT);
             spinnersGenerales.put(depto.getId(), spinnerGen);
 
-            // Cursos por ciclo
             VBox cursosBox = new VBox(6);
             cursosBox.setVisible(false);
             cursosBox.setManaged(false);
@@ -206,10 +188,16 @@ public class AnadirEmpresaController {
                     actualizarTotalPlazas();
                 });
                 cursoSpinner.valueProperty().addListener((obs, old, val) -> actualizarTotalPlazas());
-                cursoLbl.setOnMouseClicked(e -> cursoChk.setSelected(!cursoChk.isSelected()));
 
                 HBox cursoRow = new HBox(10, cursoChk, cursoLbl, cursoSpinner);
                 cursoRow.setAlignment(Pos.CENTER_LEFT);
+                cursoRow.setStyle("-fx-cursor: hand;");
+                cursoRow.setOnMouseClicked((MouseEvent e) -> {
+                    if (!(e.getTarget() instanceof CheckBox)) {
+                        cursoChk.setSelected(!cursoChk.isSelected());
+                    }
+                });
+
                 cursosBox.getChildren().add(cursoRow);
                 cursoChecks.put(curso.getId(), cursoChk);
                 cursoSpinners.put(curso.getId(), cursoSpinner);
@@ -217,7 +205,6 @@ public class AnadirEmpresaController {
             checksPlazaCurso.put(depto.getId(), cursoChecks);
             spinnersPlazaCurso.put(depto.getId(), cursoSpinners);
 
-            // Toggle cambia entre general y por ciclo
             tg.selectedToggleProperty().addListener((obs, old, newToggle) -> {
                 boolean general = newToggle == rbGeneral;
                 generalBox.setVisible(general);
@@ -228,7 +215,6 @@ public class AnadirEmpresaController {
             });
 
             spinnerGen.valueProperty().addListener((obs, old, val) -> actualizarTotalPlazas());
-
             panel.getChildren().addAll(toggleBox, generalBox, cursosBox);
 
             chk.selectedProperty().addListener((obs, old, sel) -> {
@@ -241,8 +227,6 @@ public class AnadirEmpresaController {
             contenedorDepartamentos.getChildren().add(deptoContainer);
         }
     }
-
-    // ─── Rellenar formulario al editar ────────────────────────────────────
 
     private void rellenarFormulario(Empresa e) {
         txtNombre.setText(e.getNombre() != null ? e.getNombre() : "");
@@ -257,14 +241,11 @@ public class AnadirEmpresaController {
         txtTelefonoContacto.setText(e.getTelefonoContacto() != null ? e.getTelefonoContacto() : "");
         txtEmailContacto.setText(e.getEmailContacto() != null ? e.getEmailContacto() : "");
 
-        // Marcar cursos que acepta
-        for (Curso c : e.getCursos()) {
-            CheckBox cb = checksCursos.get(c.getId());
+        for (Departamento d : e.getDepartamentos()) {
+            CheckBox cb = checksDeptos.get(d.getId());
             if (cb != null) cb.setSelected(true);
         }
     }
-
-    // ─── Total de plazas ──────────────────────────────────────────────────
 
     private void actualizarTotalPlazas() {
         int total = 0;
@@ -293,8 +274,6 @@ public class AnadirEmpresaController {
         lblTotalPlazas.setText("Total plazas: " + total);
     }
 
-    // ─── Guardar ──────────────────────────────────────────────────────────
-
     @FXML
     private void guardarEmpresa() {
         String nombre = txtNombre.getText().trim();
@@ -304,13 +283,11 @@ public class AnadirEmpresaController {
         ocultarError();
         btnGuardar.setDisable(true);
 
-        // Recopilar cursosIds seleccionados en Sección 1
-        List<Long> cursosIds = checksCursos.entrySet().stream()
+        List<Long> departamentosIds = checksDeptos.entrySet().stream()
                 .filter(e -> e.getValue().isSelected())
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        // Construir el Map del request (coincide con EmpresaRequest del backend)
         Map<String, Object> request = new HashMap<>();
         request.put("nombre", nombre);
         request.put("ciudad", ciudad);
@@ -324,14 +301,12 @@ public class AnadirEmpresaController {
         request.put("telefonoContacto", txtTelefonoContacto.getText());
         request.put("emailContacto", txtEmailContacto.getText());
         request.put("activa", true);
-        request.put("cursosIds", cursosIds);
+        request.put("departamentosIds", departamentosIds);
 
-        // Calcular curso académico actual (ej: "2024-2025")
         int year = LocalDate.now().getYear();
         int month = LocalDate.now().getMonthValue();
         String cursoAcademico = (month >= 9 ? year : year - 1) + "-" + (month >= 9 ? year + 1 : year);
 
-        // Recopilar plazas a crear desde Sección 2
         List<Map<String, Object>> plazasACrear = new ArrayList<>();
         for (Departamento depto : departamentos) {
             CheckBox chk = checksDeptoPlaza.get(depto.getId());
@@ -380,7 +355,6 @@ public class AnadirEmpresaController {
                     savedId = EmpresaService.crearConRequest(request);
                 }
 
-                // Crear plazas para la empresa recién guardada
                 final long fSavedId = savedId;
                 for (Map<String, Object> plaza : plazasACrear) {
                     plaza.put("empresaId", fSavedId);

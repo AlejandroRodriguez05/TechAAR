@@ -14,6 +14,7 @@ public class Plaza {
     private String cursoAcademico;
     private int plazasReservadas;
     private int plazasDisponibles;
+    private Long creadorId;
 
     public long getId() { return id; }
     public void setId(long v) { this.id = v; }
@@ -41,4 +42,6 @@ public class Plaza {
     public void setPlazasReservadas(int v) { this.plazasReservadas = v; }
     public int getPlazasDisponibles() { return plazasDisponibles; }
     public void setPlazasDisponibles(int v) { this.plazasDisponibles = v; }
+    public Long getCreadorId() { return creadorId; }
+    public void setCreadorId(Long v) { this.creadorId = v; }
 }

@@ -116,8 +116,10 @@ public class EmpresaDetalleController {
             listaContactados.getChildren().add(vacio);
             return;
         }
+        long miId = Session.get().getUsuario().getId();
         for (int i = 0; i < contactados.size(); i++) {
             EmpresaContactada c = contactados.get(i);
+
             HBox fila = new HBox(10);
             fila.setAlignment(Pos.CENTER_LEFT);
             fila.setPadding(new Insets(6, 0, 6, 0));
@@ -132,7 +134,30 @@ public class EmpresaDetalleController {
                     + (c.getFecha() != null ? " · " + c.getFecha() : ""));
             depto.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;");
             textos.getChildren().addAll(profesor, depto);
+
             fila.getChildren().addAll(icono, textos);
+
+            if (c.getProfesorId() == miId) {
+                Region sp = new Region();
+                HBox.setHgrow(sp, Priority.ALWAYS);
+                Button btnBorrar = new Button("✕");
+                btnBorrar.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; "
+                        + "-fx-font-size: 12px; -fx-background-radius: 12; "
+                        + "-fx-min-width: 26; -fx-min-height: 26; -fx-cursor: hand;");
+                final long cId = c.getId();
+                btnBorrar.setOnAction(e -> {
+                    new Thread(() -> {
+                        try {
+                            EmpresaContactadaService.eliminar(cId);
+                            Platform.runLater(() -> cargarDatos(empresa.getId()));
+                        } catch (Exception ex) {
+                            Platform.runLater(() -> mostrarAlerta("Error", ex.getMessage()));
+                        }
+                    }).start();
+                });
+                fila.getChildren().addAll(sp, btnBorrar);
+            }
+
             listaContactados.getChildren().add(fila);
 
             if (i < contactados.size() - 1) {
@@ -215,6 +240,8 @@ public class EmpresaDetalleController {
     }
 
     private VBox crearPlazaCard(Plaza p) {
+        long miId = Session.get().getUsuario().getId();
+
         VBox card = new VBox(10);
         card.setPadding(new Insets(14));
         card.setStyle("-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10;");
@@ -242,6 +269,14 @@ public class EmpresaDetalleController {
                 : "-fx-background-color: #fee2e2; -fx-text-fill: #991b1b; -fx-background-radius: 12; -fx-padding: 3 10; -fx-font-size: 12px; -fx-font-weight: bold;");
 
         header.getChildren().addAll(headerTextos, spacer, badge);
+
+        if (p.getCreadorId() != null && p.getCreadorId() == miId) {
+            Button btnEliminarPlaza = new Button("🗑");
+            btnEliminarPlaza.setStyle("-fx-background-color: transparent; -fx-text-fill: #ef4444; "
+                    + "-fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 0 4;");
+            btnEliminarPlaza.setOnAction(e -> confirmarEliminarPlaza(p.getId()));
+            header.getChildren().add(btnEliminarPlaza);
+        }
 
         HBox stats = new HBox(30);
         stats.setAlignment(Pos.CENTER);
@@ -286,6 +321,28 @@ public class EmpresaDetalleController {
                 textos.getChildren().addAll(nombre, info);
 
                 filaR.getChildren().addAll(ico, textos);
+
+                if (r.getProfesorId() == miId) {
+                    Region rSp = new Region();
+                    HBox.setHgrow(rSp, Priority.ALWAYS);
+                    Button btnBorrarR = new Button("✕");
+                    btnBorrarR.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; "
+                            + "-fx-font-size: 11px; -fx-background-radius: 10; "
+                            + "-fx-min-width: 24; -fx-min-height: 24; -fx-cursor: hand;");
+                    final long rId = r.getId();
+                    btnBorrarR.setOnAction(e -> {
+                        new Thread(() -> {
+                            try {
+                                ReservaService.eliminar(rId);
+                                Platform.runLater(() -> cargarDatos(empresa.getId()));
+                            } catch (Exception ex) {
+                                Platform.runLater(() -> mostrarAlerta("Error", ex.getMessage()));
+                            }
+                        }).start();
+                    });
+                    filaR.getChildren().addAll(rSp, btnBorrarR);
+                }
+
                 listaRvs.getChildren().add(filaR);
             }
 
@@ -304,6 +361,25 @@ public class EmpresaDetalleController {
         }
 
         return card;
+    }
+
+    private void confirmarEliminarPlaza(long plazaId) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Eliminar plaza");
+        confirm.setHeaderText(null);
+        confirm.setContentText("¿Seguro que quieres eliminar esta plaza? También se eliminarán sus reservas.");
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn == ButtonType.OK) {
+                new Thread(() -> {
+                    try {
+                        PlazaService.eliminar(plazaId);
+                        Platform.runLater(() -> cargarDatos(empresa.getId()));
+                    } catch (Exception ex) {
+                        Platform.runLater(() -> mostrarAlerta("Error", ex.getMessage()));
+                    }
+                }).start();
+            }
+        });
     }
 
     private VBox crearStatItem(String num, String label, String color) {

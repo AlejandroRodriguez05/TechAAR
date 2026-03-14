@@ -144,8 +144,8 @@
                 <!-- ══ Tarjeta: Ciclos formativos que acepta ══ -->
                 <VBox maxWidth="1762.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
                     <padding><Insets bottom="25" left="25" right="25" top="20" /></padding>
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="🏫 Ciclos formativos que acepta" />
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;" text="Selecciona los ciclos con los que trabaja esta empresa" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="🏫 Departamentos que acepta" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;" text="Selecciona los departamentos con los que trabaja esta empresa" />
                     <Region prefHeight="15" />
                     <VBox fx:id="contenedorCursos" spacing="6" />
                 </VBox>

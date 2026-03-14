@@ -17,4 +17,8 @@ public class EmpresaContactadaService {
     public static List<EmpresaContactada> getByEmpresa(long empresaId) throws ApiException {
         return ApiClient.getList("/empresas-contactadas/empresa/" + empresaId, EmpresaContactada.class);
     }
+
+    public static void eliminar(long id) throws ApiException {
+        ApiClient.delete("/empresas-contactadas/" + id);
+    }
 }

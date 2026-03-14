@@ -22,4 +22,8 @@ public class ReservaService {
         if (clase != null && !clase.isBlank()) body.put("clase", clase);
         ApiClient.postRaw("/reservas", body);
     }
+
+    public static void eliminar(long id) throws ApiException {
+        ApiClient.delete("/reservas/" + id);
+    }
 }

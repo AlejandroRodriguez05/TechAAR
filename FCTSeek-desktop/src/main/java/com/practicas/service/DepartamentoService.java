@@ -14,7 +14,7 @@ public class DepartamentoService {
     }
 
     public static List<Curso> getCursos(long departamentoId) throws ApiException {
-        return ApiClient.getList("/departamentos/" + departamentoId + "/cursos", Curso.class);
+        return ApiClient.getList("/cursos/departamento/" + departamentoId, Curso.class);
     }
 
     public static List<Curso> getAllCursos() throws ApiException {

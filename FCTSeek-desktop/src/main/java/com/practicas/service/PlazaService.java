@@ -13,17 +13,11 @@ public class PlazaService {
         return ApiClient.getList("/plazas/empresa/" + empresaId, Plaza.class);
     }
 
-    public static void crear(long empresaId, long departamentoId, int plazas, boolean esGeneral) throws ApiException {
-        ApiClient.postRaw("/plazas", Map.of(
-                "empresaId", empresaId,
-                "departamentoId", departamentoId,
-                "plazasOfertadas", plazas,
-                "esGeneral", esGeneral
-        ));
-    }
-
-    /** Crea plaza enviando un Map completo (empresaId, departamentoId, cursoId, cantidad, cursoAcademico). */
     public static void crearConRequest(Map<String, Object> request) throws ApiException {
         ApiClient.postRaw("/plazas", request);
+    }
+
+    public static void eliminar(long id) throws ApiException {
+        ApiClient.delete("/plazas/" + id);
     }
 }
