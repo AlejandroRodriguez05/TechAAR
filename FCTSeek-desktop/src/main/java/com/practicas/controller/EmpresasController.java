@@ -93,6 +93,7 @@ public class EmpresasController {
             listaEmpresas.getChildren().add(
                     CardFactory.crearEmpresaCard(e, this::abrirDetalle));
         }
+        scrollEmpresas.setVvalue(0);
     }
 
     @FXML
@@ -123,8 +124,8 @@ public class EmpresasController {
     }
 
     private void resetFiltroStyles() {
-        String normal = "-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 15; " +
-                "-fx-padding: 6 12; -fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: white; -fx-cursor: hand;";
+        String normal = "-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 20; " +
+                "-fx-padding: 9 18; -fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: white; -fx-cursor: hand;";
         filtroNuevas.setStyle(normal);
         filtroTop.setStyle(normal);
         filtroCercanas.setStyle(normal);

@@ -54,7 +54,7 @@ public class CardFactory {
         dptos.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888;");
 
         // Ciudad
-        String ciudadTexto = empresa.getCiudad() != null ? "📍 " + empresa.getCiudad() : "";
+        String ciudadTexto = empresa.getCiudad() != null ? empresa.getCiudad() : "";
         Label ciudad = new Label(ciudadTexto);
         ciudad.setStyle("-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #999;");
 

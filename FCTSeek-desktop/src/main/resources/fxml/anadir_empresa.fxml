@@ -23,7 +23,7 @@
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Button onAction="#cancelar" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-background-radius: 15; -fx-padding: 8 15; -fx-cursor: hand;" text="← Cancelar" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Button fx:id="btnGuardar" onAction="#guardarEmpresa" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 15; -fx-padding: 8 20; -fx-cursor: hand;" text="💾 Guardar" />
+                <Button fx:id="btnGuardar" onAction="#guardarEmpresa" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 15; -fx-padding: 8 20; -fx-cursor: hand;" text="Guardar" />
             </HBox>
 
             <!-- Título -->
@@ -45,7 +45,7 @@
                         <Insets bottom="20" left="25" right="25" top="20" />
                     </padding>
 
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="📋 Información Básica" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Información Básica" />
                     <Region prefHeight="15" />
 
                     <VBox spacing="5">
@@ -66,7 +66,7 @@
                         <Insets bottom="20" left="25" right="25" top="20" />
                     </padding>
 
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="📍 Ubicación" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Ubicación" />
                     <Region prefHeight="15" />
 
                     <VBox spacing="5">
@@ -93,7 +93,7 @@
                         <Insets bottom="20" left="25" right="25" top="20" />
                     </padding>
 
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="📞 Contacto de la Empresa" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Contacto de la Empresa" />
                     <Region prefHeight="15" />
 
                     <HBox spacing="15">
@@ -120,7 +120,7 @@
                         <Insets bottom="20" left="25" right="25" top="20" />
                     </padding>
 
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="👤 Persona de Contacto" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Persona de Contacto" />
                     <Region prefHeight="15" />
 
                     <VBox spacing="5">
@@ -144,7 +144,7 @@
                 <!-- ══ Tarjeta: Ciclos formativos que acepta ══ -->
                 <VBox maxWidth="1762.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
                     <padding><Insets bottom="25" left="25" right="25" top="20" /></padding>
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="🏫 Departamentos que acepta" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Departamentos que acepta" />
                     <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;" text="Selecciona los departamentos con los que trabaja esta empresa" />
                     <Region prefHeight="15" />
                     <VBox fx:id="contenedorCursos" spacing="6" />
@@ -153,7 +153,7 @@
                 <!-- ══ Tarjeta: Plazas a ofrecer ══ -->
                 <VBox maxWidth="1762.0" style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);">
                     <padding><Insets bottom="25" left="25" right="25" top="20" /></padding>
-                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="📋 Plazas a ofrecer" />
+                    <Label style="-fx-font-family: Arial; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Plazas a ofrecer" />
                     <Label style="-fx-font-family: Arial; -fx-font-size: 12px; -fx-text-fill: #888888;" text="Configura cuántas plazas ofrece por departamento" />
                     <Region prefHeight="15" />
                     <VBox fx:id="contenedorDepartamentos" spacing="10" />

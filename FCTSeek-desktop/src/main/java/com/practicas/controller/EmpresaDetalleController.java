@@ -124,8 +124,8 @@ public class EmpresaDetalleController {
             fila.setAlignment(Pos.CENTER_LEFT);
             fila.setPadding(new Insets(6, 0, 6, 0));
 
-            Label icono = new Label("👤");
-            icono.setStyle("-fx-font-size: 16px;");
+            Label icono = new Label("●");
+            icono.setStyle("-fx-font-size: 16px; -fx-text-fill: #0d9488;");
 
             VBox textos = new VBox(2);
             Label profesor = new Label(c.getProfesorNombre() != null ? c.getProfesorNombre() : "Profesor");
@@ -140,7 +140,7 @@ public class EmpresaDetalleController {
             if (c.getProfesorId() == miId) {
                 Region sp = new Region();
                 HBox.setHgrow(sp, Priority.ALWAYS);
-                Button btnBorrar = new Button("✕");
+                Button btnBorrar = new Button("X");
                 btnBorrar.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; "
                         + "-fx-font-size: 12px; -fx-background-radius: 12; "
                         + "-fx-min-width: 26; -fx-min-height: 26; -fx-cursor: hand;");
@@ -271,9 +271,9 @@ public class EmpresaDetalleController {
         header.getChildren().addAll(headerTextos, spacer, badge);
 
         if (p.getCreadorId() != null && p.getCreadorId() == miId) {
-            Button btnEliminarPlaza = new Button("🗑");
+            Button btnEliminarPlaza = new Button("X");
             btnEliminarPlaza.setStyle("-fx-background-color: transparent; -fx-text-fill: #ef4444; "
-                    + "-fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 0 4;");
+                    + "-fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 0 4; -fx-font-weight: bold;");
             btnEliminarPlaza.setOnAction(e -> confirmarEliminarPlaza(p.getId()));
             header.getChildren().add(btnEliminarPlaza);
         }
@@ -306,8 +306,8 @@ public class EmpresaDetalleController {
                 HBox filaR = new HBox(8);
                 filaR.setAlignment(Pos.CENTER_LEFT);
 
-                Label ico = new Label("👤");
-                ico.setStyle("-fx-font-size: 14px;");
+                Label ico = new Label("●");
+                ico.setStyle("-fx-font-size: 14px; -fx-text-fill: #0d9488;");
 
                 String detalle = r.getCantidad() + " plaza" + (r.getCantidad() != 1 ? "s" : "");
                 if (r.getCursoSiglas() != null) detalle += " · " + r.getCursoSiglas();
@@ -325,7 +325,7 @@ public class EmpresaDetalleController {
                 if (r.getProfesorId() == miId) {
                     Region rSp = new Region();
                     HBox.setHgrow(rSp, Priority.ALWAYS);
-                    Button btnBorrarR = new Button("✕");
+                    Button btnBorrarR = new Button("X");
                     btnBorrarR.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; "
                             + "-fx-font-size: 11px; -fx-background-radius: 10; "
                             + "-fx-min-width: 24; -fx-min-height: 24; -fx-cursor: hand;");
@@ -350,7 +350,7 @@ public class EmpresaDetalleController {
         }
 
         if (Session.get().esProfesor() && p.getPlazasDisponibles() > 0) {
-            Button btnReservar = new Button("⊕  Reservar plazas para mis alumnos");
+            Button btnReservar = new Button("+  Reservar plazas para mis alumnos");
             btnReservar.setStyle("-fx-background-color: transparent; -fx-text-fill: #0891b2; "
                     + "-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; "
                     + "-fx-border-color: #0891b2; -fx-border-radius: 8; -fx-background-radius: 8; "
@@ -413,8 +413,8 @@ public class EmpresaDetalleController {
         List<Comentario> generales = comentarios.stream().filter(c -> !c.isEsPrivado()).toList();
         List<Comentario> privados = comentarios.stream().filter(Comentario::isEsPrivado).toList();
 
-        btnTabGeneral.setText("\uD83C\uDF10 General (" + generales.size() + ")");
-        btnTabProfesores.setText("\uD83C\uDF93 Profesores (" + privados.size() + ")");
+        btnTabGeneral.setText("General (" + generales.size() + ")");
+        btnTabProfesores.setText("Profesores (" + privados.size() + ")");
 
         boolean prof = Session.get().esProfesor();
         btnTabProfesores.setVisible(prof);
@@ -435,11 +435,13 @@ public class EmpresaDetalleController {
     }
 
     private VBox crearComentarioCard(Comentario c) {
+        long miId = Session.get().getUsuario().getId();
         VBox card = new VBox(6);
         card.setPadding(new Insets(12));
         card.setStyle("-fx-background-color: #f8fafc; -fx-background-radius: 10;");
 
         HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
         Label autor = new Label(c.getUsuarioNombre() != null ? c.getUsuarioNombre() : "Anónimo");
         autor.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #333;");
         Region sp = new Region();
@@ -447,6 +449,28 @@ public class EmpresaDetalleController {
         Label fecha = new Label(c.getFecha() != null ? c.getFecha() : "");
         fecha.setStyle("-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999;");
         header.getChildren().addAll(autor, sp, fecha);
+
+        if (c.getUsuarioId() == miId) {
+            Button btnEliminar = new Button("X");
+            btnEliminar.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; "
+                    + "-fx-font-size: 10px; -fx-background-radius: 10; "
+                    + "-fx-min-width: 22; -fx-min-height: 22; -fx-cursor: hand; -fx-font-weight: bold;");
+            btnEliminar.setOnAction(e -> {
+                new Thread(() -> {
+                    try {
+                        ComentarioService.eliminar(c.getId());
+                        List<Comentario> coms = ComentarioService.getByEmpresa(empresa.getId());
+                        Platform.runLater(() -> {
+                            comentarios = coms != null ? coms : new ArrayList<>();
+                            actualizarComentarios();
+                        });
+                    } catch (Exception ex) {
+                        Platform.runLater(() -> mostrarAlerta("Error", "No se pudo eliminar el comentario"));
+                    }
+                }).start();
+            });
+            header.getChildren().add(btnEliminar);
+        }
 
         Label texto = new Label(c.getTexto());
         texto.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #555;");
@@ -458,19 +482,19 @@ public class EmpresaDetalleController {
 
     @FXML
     private void escribirComentario() {
+        boolean esPrivado = tabComentarios.equals("profesores");
+
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Escribir comentario");
-        dialog.setHeaderText("Comentario para " + empresa.getNombre());
+        dialog.setHeaderText("Comentario " + (esPrivado ? "para profesores" : "general")
+                + " en " + empresa.getNombre());
 
         TextArea txtArea = new TextArea();
         txtArea.setPromptText("Escribe tu comentario...");
         txtArea.setPrefRowCount(4);
         txtArea.setWrapText(true);
 
-        CheckBox chkPrivado = new CheckBox("Comentario privado (solo profesores)");
-        chkPrivado.setVisible(Session.get().esProfesor());
-
-        VBox content = new VBox(10, txtArea, chkPrivado);
+        VBox content = new VBox(10, txtArea);
         content.setPadding(new Insets(10));
         dialog.getDialogPane().setContent(content);
 
@@ -483,7 +507,7 @@ public class EmpresaDetalleController {
             if (texto.isBlank()) return;
             new Thread(() -> {
                 try {
-                    ComentarioService.crear(empresa.getId(), texto, chkPrivado.isSelected());
+                    ComentarioService.crear(empresa.getId(), texto, esPrivado);
                     List<Comentario> coms = ComentarioService.getByEmpresa(empresa.getId());
                     Platform.runLater(() -> {
                         comentarios = coms != null ? coms : new ArrayList<>();
@@ -497,7 +521,7 @@ public class EmpresaDetalleController {
     }
 
     private void actualizarEstiloFavorito() {
-        iconFavorito.setText(esFavorito ? "❤️" : "\uD83E\uDD0D");
+        iconFavorito.setText(esFavorito ? "♥" : "♡");
         lblFavoritoTexto.setText(esFavorito ? "Añadido a favoritos" : "Favorito");
         if (esFavorito) {
             boxFavorito.setStyle("-fx-background-color: #d1fae5; -fx-background-radius: 14; -fx-cursor: hand; -fx-border-color: #10b981; -fx-border-radius: 14; -fx-border-width: 2;");
@@ -634,11 +658,13 @@ public class EmpresaDetalleController {
                             claseDialog.setContentText("Clase:");
                             Optional<String> resClase = claseDialog.showAndWait();
 
+                            if (!resClase.isPresent()) return;
+
                             int cantidad;
                             try { cantidad = Math.max(1, Integer.parseInt(cantStr.trim())); }
                             catch (NumberFormatException ex) { cantidad = 1; }
                             final int fCant = cantidad;
-                            final String fClase = resClase.orElse("").trim();
+                            final String fClase = resClase.get().trim();
 
                             new Thread(() -> {
                                 try {
@@ -666,7 +692,8 @@ public class EmpresaDetalleController {
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.getButtonTypes().add(ButtonType.OK);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensaje);

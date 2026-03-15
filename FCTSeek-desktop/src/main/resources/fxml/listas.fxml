@@ -50,7 +50,7 @@
                 <padding>
                     <Insets top="60" />
                 </padding>
-                <Label style="-fx-font-size: 52px;" text="📋" />
+                <Label style="-fx-font-size: 52px; -fx-text-fill: white;" text="☰" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-text-fill: white;" text="No tienes listas todavía" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.75);" text="Crea una lista para organizar tus empresas" />
                 <Button onAction="#mostrarDialogoCrearLista" style="-fx-background-color: white; -fx-text-fill: #4facfe; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 22; -fx-padding: 12 28; -fx-cursor: hand;" text="Crear mi primera lista" />
@@ -64,11 +64,11 @@
                 <Insets bottom="18" left="10" right="10" top="14" />
             </padding>
             <VBox alignment="CENTER" onMouseClicked="#volverAEmpresas" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px;" text="🏠" />
+                <Label style="-fx-font-size: 20px; -fx-text-fill: #999;" text="⌂" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="FCT-Seek" />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#abrirBusqueda" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px;" text="🔍" />
+                <Label style="-fx-font-size: 20px; -fx-text-fill: #999;" text="⚲" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Buscar Empre..." />
             </VBox>
             <VBox alignment="CENTER" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
@@ -76,7 +76,7 @@
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #4facfe;" text="Mis Listas" />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#abrirPerfil" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px;" text="👤" />
+                <Label style="-fx-font-size: 20px; -fx-text-fill: #999;" text="●" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Mi Perfil" />
             </VBox>
         </HBox>

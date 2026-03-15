@@ -38,7 +38,18 @@ public class ListasController {
                 List<Empresa> favs = new ArrayList<>();
                 try { favs = FavoritoService.getMisFavoritos(); } catch (Exception ignored) {}
 
-                final List<Lista> fListas = ls != null ? ls : new ArrayList<>();
+                List<Lista> listasCompletas = new ArrayList<>();
+                if (ls != null) {
+                    for (Lista l : ls) {
+                        try {
+                            listasCompletas.add(ListaService.getById(l.getId()));
+                        } catch (Exception ignored) {
+                            listasCompletas.add(l);
+                        }
+                    }
+                }
+
+                final List<Lista> fListas = listasCompletas;
                 final List<Empresa> fFavs = favs;
 
                 Platform.runLater(() -> {
@@ -63,13 +74,13 @@ public class ListasController {
         estadoVacio.setManaged(!hayContenido);
 
         // Favoritos siempre primero
-        listaListas.getChildren().add(crearListaCard("❤️", "Favoritos",
+        listaListas.getChildren().add(crearListaCard("♥", "Favoritos",
                 favoritos.size() + " empresas", true, -1));
 
         // Listas del usuario
         for (Lista lista : listas) {
             if (lista.isEsFavoritos()) continue;
-            listaListas.getChildren().add(crearListaCard("📁", lista.getNombre(),
+            listaListas.getChildren().add(crearListaCard("▤", lista.getNombre(),
                     lista.getEmpresas().size() + " empresas", false, lista.getId()));
         }
     }
@@ -102,8 +113,8 @@ public class ListasController {
 
         // Eliminar (solo listas no favoritas)
         if (!isFav) {
-            Label btnDel = new Label("🗑");
-            btnDel.setStyle("-fx-font-size: 16px; -fx-cursor: hand;");
+            Label btnDel = new Label("X");
+            btnDel.setStyle("-fx-font-size: 16px; -fx-cursor: hand; -fx-text-fill: #ef4444; -fx-font-weight: bold;");
             btnDel.setCursor(Cursor.HAND);
             btnDel.setOnMouseClicked(e -> {
                 e.consume();

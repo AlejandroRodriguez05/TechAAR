@@ -21,7 +21,7 @@ public class FavoritoService {
         String json = ApiClient.postRaw("/favoritos/empresa/" + empresaId + "/toggle", null);
         try {
             JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
-            return obj.has("favorito") && obj.get("favorito").getAsBoolean();
+            return obj.has("esFavorita") && obj.get("esFavorita").getAsBoolean();
         } catch (Exception e) {
             return false;
         }
@@ -29,9 +29,8 @@ public class FavoritoService {
 
     public static boolean isFavorito(long empresaId) throws ApiException {
         try {
-            String json = ApiClient.postRaw("/favoritos/empresa/" + empresaId + "/check", null);
-            JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
-            return obj.has("favorito") && obj.get("favorito").getAsBoolean();
+            JsonObject obj = ApiClient.get("/favoritos/empresa/" + empresaId, JsonObject.class);
+            return obj.has("esFavorita") && obj.get("esFavorita").getAsBoolean();
         } catch (Exception e) {
             return false;
         }

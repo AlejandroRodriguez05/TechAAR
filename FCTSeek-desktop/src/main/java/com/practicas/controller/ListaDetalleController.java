@@ -37,7 +37,7 @@ public class ListaDetalleController {
         isFavoritos = listaId == -1;
 
         if (isFavoritos) {
-            iconoLista.setText("❤️");
+            iconoLista.setText("♥");
             lblNombreLista.setText("Favoritos");
             btnEliminarLista.setVisible(false);
             btnEliminarLista.setManaged(false);
