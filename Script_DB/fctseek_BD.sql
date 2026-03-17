@@ -247,7 +247,8 @@ INSERT INTO cursos (codigo, siglas, nombre, grado, departamento_id, activo, crea
 
 -- USUARIOS (contraseña: test123)
 INSERT INTO usuarios (nif, nombre, apellidos, email, password_hash, rol, departamento_id, activo, created_at, updated_at) VALUES
-('12345678A', 'Juan', 'García López', 'juan.garcia@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 1, true, NOW(), NOW()),
+('12345678A', 'Alejandro', 'Rodríguez Sánchez', 'alejandrorodriguezsanchez@gmail.com', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 1, true, NOW(), NOW()),
+('87654321L', 'Agustín', 'Delgado Estevez', 'agustindelgadoestevez@gmail.com', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'ALUMNO', 1, true, NOW(), NOW()),
 ('23456789B', 'María', 'Rodríguez Pérez', 'maria.rodriguez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 1, true, NOW(), NOW()),
 ('34567890C', 'Carlos', 'Martínez Sánchez', 'carlos.martinez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 1, true, NOW(), NOW()),
 ('45678901D', 'Ana', 'Hernández Díaz', 'ana.hernandez@cifpvillaaguimes.es', '$2a$10$WLBdiW7AO9jQeLP/Qwa.ce4V/3znvNmErQ8cuLpLipHkEztXn07nu', 'PROFESOR', 2, true, NOW(), NOW()),
@@ -458,7 +459,7 @@ INSERT INTO reservas (plaza_id, curso_id, profesor_id, cantidad, clase, estado, 
 -- Todos los usuarios: test123
 --
 -- Profesores:
---   juan.garcia@cifpvillaaguimes.es
+--   alejandrorodriguezsanchez@gmail.com
 --   maria.rodriguez@cifpvillaaguimes.es
 --   carlos.martinez@cifpvillaaguimes.es
 --   ana.hernandez@cifpvillaaguimes.es
@@ -468,6 +469,7 @@ INSERT INTO reservas (plaza_id, curso_id, profesor_id, cantidad, clase, estado, 
 --   elena.sanchez@cifpvillaaguimes.es
 --
 -- Alumnos:
+--   agustindelgadoestevez@gmail.com
 --   pablo.medina@cifpvillaaguimes.es
 --   lucia.vega@cifpvillaaguimes.es
 --   diego.navarro@cifpvillaaguimes.es
