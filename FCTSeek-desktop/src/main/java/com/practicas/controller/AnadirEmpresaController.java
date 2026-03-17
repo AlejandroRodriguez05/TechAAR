@@ -362,12 +362,13 @@ public class AnadirEmpresaController {
                 }
 
                 Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    Alert alert = new Alert(Alert.AlertType.NONE);
+                    alert.getButtonTypes().add(ButtonType.OK);
                     alert.setTitle("Éxito");
                     alert.setHeaderText(null);
                     alert.setContentText(editando ? "Empresa actualizada" : "Empresa creada correctamente");
                     alert.showAndWait();
-                    ViewManager.navigateTo("empresas");
+                    ViewManager.navigateTo("empresa_detalle", "empresaId", fSavedId);
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> {

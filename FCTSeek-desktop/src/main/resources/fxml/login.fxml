@@ -21,7 +21,7 @@
             <!-- Logo -->
             <VBox alignment="CENTER" spacing="10">
                 <VBox alignment="CENTER" prefHeight="90" prefWidth="90" style="-fx-background-color: rgba(255,255,255,0.15); -fx-background-radius: 45; -fx-border-color: rgba(255,255,255,0.3); -fx-border-radius: 45;">
-                    <Label style="-fx-font-size: 40px;" text="🏢" />
+                    <Label style="-fx-font-size: 40px; -fx-text-fill: white;" text="F" />
                 </VBox>
                 <Label style="-fx-font-family: Arial; -fx-font-size: 34px; -fx-font-weight: bold; -fx-text-fill: white;" text="FCT-Seek" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.7);" text="Gestión de prácticas FCT" />
@@ -36,7 +36,7 @@
                     <padding>
                         <Insets bottom="5" left="15" right="15" top="5" />
                     </padding>
-                    <Label style="-fx-font-size: 16px;" text="📧" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: rgba(255,255,255,0.7);" text="✉" />
                     <TextField fx:id="txtEmail" prefHeight="40" promptText="Correo electrónico" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-font-size: 14px; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.5);" HBox.hgrow="ALWAYS" />
                 </HBox>
                 
@@ -45,7 +45,7 @@
                     <padding>
                         <Insets bottom="5" left="15" right="15" top="5" />
                     </padding>
-                    <Label style="-fx-font-size: 16px;" text="🔒" />
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: rgba(255,255,255,0.7);" text="⚿" />
                     <PasswordField fx:id="txtPassword" prefHeight="40" promptText="Contraseña" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-font-size: 14px; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.5);" HBox.hgrow="ALWAYS" />
                 </HBox>
                 
