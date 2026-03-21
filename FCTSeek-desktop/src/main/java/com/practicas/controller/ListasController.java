@@ -4,6 +4,7 @@ import com.practicas.model.Empresa;
 import com.practicas.model.Lista;
 import com.practicas.service.FavoritoService;
 import com.practicas.service.ListaService;
+import com.practicas.util.IconHelper;
 import com.practicas.util.ViewManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.Cursor;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
@@ -22,12 +24,22 @@ public class ListasController {
     @FXML private Button btnCrearLista;
     @FXML private VBox listaListas;
     @FXML private VBox estadoVacio;
+    @FXML private Label navIconHome;
+    @FXML private Label navIconBuscar;
+    @FXML private Label navIconListas;
+    @FXML private Label navIconPerfil;
 
     private List<Lista> listas = new ArrayList<>();
     private List<Empresa> favoritos = new ArrayList<>();
 
     @FXML
     public void initialize() {
+        // Inicializar iconos de navegación
+        navIconHome.setGraphic(IconHelper.get("ic_home.png", 22));
+        navIconBuscar.setGraphic(IconHelper.get("ic_search.png", 22));
+        navIconListas.setGraphic(IconHelper.get("ic_list.png", 22));
+        navIconPerfil.setGraphic(IconHelper.get("ic_profile.png", 22));
+
         cargarDatos();
     }
 
@@ -73,19 +85,19 @@ public class ListasController {
         estadoVacio.setVisible(!hayContenido);
         estadoVacio.setManaged(!hayContenido);
 
-        // Favoritos siempre primero
-        listaListas.getChildren().add(crearListaCard("♥", "Favoritos",
+        // Favoritos siempre primero — usa icono corazón
+        listaListas.getChildren().add(crearListaCard("ic_heart_full.png", "Favoritos",
                 favoritos.size() + " empresas", true, -1));
 
-        // Listas del usuario
+        // Listas del usuario — usa icono lista
         for (Lista lista : listas) {
             if (lista.isEsFavoritos()) continue;
-            listaListas.getChildren().add(crearListaCard("▤", lista.getNombre(),
+            listaListas.getChildren().add(crearListaCard("ic_list.png", lista.getNombre(),
                     lista.getEmpresas().size() + " empresas", false, lista.getId()));
         }
     }
 
-    private HBox crearListaCard(String icono, String nombre, String count, boolean isFav, long listaId) {
+    private HBox crearListaCard(String iconoNombre, String nombre, String count, boolean isFav, long listaId) {
         HBox card = new HBox(15);
         card.setPadding(new Insets(16));
         card.setAlignment(Pos.CENTER_LEFT);
@@ -93,14 +105,13 @@ public class ListasController {
                 + "-fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 14;");
         card.setCursor(Cursor.HAND);
 
-        // Icono
+        // Icono con ImageView
         StackPane iconPane = new StackPane();
         iconPane.setMinSize(52, 52);
         iconPane.setMaxSize(52, 52);
         iconPane.setStyle("-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 14;");
-        Label iconLabel = new Label(icono);
-        iconLabel.setStyle("-fx-font-size: 24px;");
-        iconPane.getChildren().add(iconLabel);
+        ImageView iconIv = IconHelper.get(iconoNombre, 28);
+        iconPane.getChildren().add(iconIv);
 
         // Texto
         VBox textBox = new VBox(3);

@@ -5,6 +5,7 @@ import com.practicas.model.Lista;
 import com.practicas.service.FavoritoService;
 import com.practicas.service.ListaService;
 import com.practicas.util.CardFactory;
+import com.practicas.util.IconHelper;
 import com.practicas.util.ViewManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -24,6 +25,10 @@ public class ListaDetalleController {
     @FXML private VBox listaEmpresas;
     @FXML private VBox estadoVacio;
     @FXML private Button btnEliminarLista;
+    @FXML private Label navIconHome;
+    @FXML private Label navIconBuscar;
+    @FXML private Label navIconListas;
+    @FXML private Label navIconPerfil;
 
     private long listaId;
     private boolean isFavoritos;
@@ -31,16 +36,26 @@ public class ListaDetalleController {
 
     @FXML
     public void initialize() {
+        // Inicializar iconos de navegación
+        navIconHome.setGraphic(IconHelper.get("ic_home.png", 22));
+        navIconBuscar.setGraphic(IconHelper.get("ic_search.png", 22));
+        navIconListas.setGraphic(IconHelper.get("ic_list.png", 22));
+        navIconPerfil.setGraphic(IconHelper.get("ic_profile.png", 22));
+
         Long id = ViewManager.getParam("listaId");
         ViewManager.clearParam("listaId");
         listaId = id != null ? id : -1;
         isFavoritos = listaId == -1;
 
         if (isFavoritos) {
-            iconoLista.setText("♥");
+            iconoLista.setText("");
+            iconoLista.setGraphic(IconHelper.get("ic_heart_full.png", 34));
             lblNombreLista.setText("Favoritos");
             btnEliminarLista.setVisible(false);
             btnEliminarLista.setManaged(false);
+        } else {
+            iconoLista.setText("");
+            iconoLista.setGraphic(IconHelper.get("ic_list.png", 34));
         }
 
         cargarDatos();

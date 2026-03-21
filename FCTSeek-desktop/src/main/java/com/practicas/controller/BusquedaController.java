@@ -5,6 +5,7 @@ import com.practicas.model.Empresa;
 import com.practicas.service.DepartamentoService;
 import com.practicas.service.EmpresaService;
 import com.practicas.util.CardFactory;
+import com.practicas.util.IconHelper;
 import com.practicas.util.ViewManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -26,6 +27,10 @@ public class BusquedaController {
     @FXML private ComboBox<Departamento> cmbDepartamento;
     @FXML private Label lblResultados;
     @FXML private VBox listaResultados;
+    @FXML private Label navIconHome;
+    @FXML private Label navIconBuscar;
+    @FXML private Label navIconListas;
+    @FXML private Label navIconPerfil;
 
     private List<Empresa> todasEmpresas = new ArrayList<>();
     private List<Departamento> departamentos = new ArrayList<>();
@@ -33,6 +38,12 @@ public class BusquedaController {
 
     @FXML
     public void initialize() {
+        // Inicializar iconos de navegación
+        navIconHome.setGraphic(IconHelper.get("ic_home.png", 22));
+        navIconBuscar.setGraphic(IconHelper.get("ic_search.png", 22));
+        navIconListas.setGraphic(IconHelper.get("ic_list.png", 22));
+        navIconPerfil.setGraphic(IconHelper.get("ic_profile.png", 22));
+
         // Cargar datos iniciales
         new Thread(() -> {
             try {

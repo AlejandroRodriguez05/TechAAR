@@ -4,6 +4,7 @@ import com.practicas.model.Empresa;
 import com.practicas.model.Usuario;
 import com.practicas.service.EmpresaService;
 import com.practicas.util.CardFactory;
+import com.practicas.util.IconHelper;
 import com.practicas.util.Session;
 import com.practicas.util.ViewManager;
 import javafx.application.Platform;
@@ -29,6 +30,10 @@ public class EmpresasController {
     @FXML private Label lblBadge;
     @FXML private ScrollPane scrollEmpresas;
     @FXML private VBox listaEmpresas;
+    @FXML private Label navIconHome;
+    @FXML private Label navIconBuscar;
+    @FXML private Label navIconListas;
+    @FXML private Label navIconPerfil;
 
     private List<Empresa> todasEmpresas = new ArrayList<>();
     private String filtroActual = "todas";
@@ -45,6 +50,12 @@ public class EmpresasController {
         boolean prof = Session.get().esProfesor();
         btnAdd.setVisible(prof);
         btnAdd.setManaged(prof);
+
+        // Inicializar iconos de navegación
+        navIconHome.setGraphic(IconHelper.get("ic_home.png", 22));
+        navIconBuscar.setGraphic(IconHelper.get("ic_search.png", 22));
+        navIconListas.setGraphic(IconHelper.get("ic_list.png", 22));
+        navIconPerfil.setGraphic(IconHelper.get("ic_profile.png", 22));
 
         cargarEmpresas();
     }
@@ -93,7 +104,7 @@ public class EmpresasController {
             listaEmpresas.getChildren().add(
                     CardFactory.crearEmpresaCard(e, this::abrirDetalle));
         }
-        scrollEmpresas.setVvalue(0);
+        Platform.runLater(() -> Platform.runLater(() -> scrollEmpresas.setVvalue(0)));
     }
 
     @FXML
