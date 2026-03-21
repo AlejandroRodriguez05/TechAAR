@@ -362,8 +362,7 @@ public class AnadirEmpresaController {
                 }
 
                 Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.NONE);
-                    alert.getButtonTypes().add(ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Éxito");
                     alert.setHeaderText(null);
                     alert.setContentText(editando ? "Empresa actualizada" : "Empresa creada correctamente");

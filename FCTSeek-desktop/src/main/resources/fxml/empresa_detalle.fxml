@@ -64,22 +64,22 @@
                         <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Información de contacto" />
                         <Region prefHeight="14" />
                         <HBox alignment="TOP_LEFT" spacing="12">
-                            <Label style="-fx-font-size: 16px; -fx-padding: 1 0 0 0; -fx-text-fill: #0d9488;" text="◉" />
+                            <Label fx:id="iconDireccion" style="-fx-font-size: 16px; -fx-padding: 1 0 0 0; -fx-text-fill: #0d9488;" />
                             <Label fx:id="lblDireccion" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555555;" wrapText="true" />
                         </HBox>
                         <Region prefHeight="12" />
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label style="-fx-font-size: 16px; -fx-text-fill: #0d9488;" text="☎" />
+                            <Label fx:id="iconTelefono" style="-fx-font-size: 16px; -fx-text-fill: #0d9488;" />
                             <Label fx:id="lblTelefono" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #0d9488; -fx-cursor: hand;" />
                         </HBox>
                         <Region prefHeight="12" />
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label style="-fx-font-size: 16px; -fx-text-fill: #0d9488;" text="✉" />
+                            <Label fx:id="iconEmail" style="-fx-font-size: 16px; -fx-text-fill: #0d9488;" />
                             <Label fx:id="lblEmail" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #0d9488; -fx-cursor: hand;" />
                         </HBox>
                         <Region prefHeight="12" />
                         <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label style="-fx-font-size: 16px; -fx-text-fill: #0d9488;" text="●" />
+                            <Label fx:id="iconContacto" style="-fx-font-size: 16px; -fx-text-fill: #0d9488;" />
                             <Label fx:id="lblPersonaContacto" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555555;" />
                         </HBox>
                     </VBox>
@@ -119,11 +119,11 @@
                     <Region prefHeight="14" />
                     <HBox spacing="12">
                         <VBox fx:id="boxFavorito" alignment="CENTER" onMouseClicked="#toggleFavorito" pickOnBounds="true" prefHeight="100" spacing="10" style="-fx-background-color: #F8F8F8; -fx-background-radius: 14; -fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                            <Label fx:id="iconFavorito" style="-fx-font-size: 30px; -fx-text-fill: #ef4444;" text="♡" />
+                            <Label fx:id="iconFavorito" style="-fx-font-size: 30px; -fx-text-fill: #ef4444;" />
                             <Label fx:id="lblFavoritoTexto" style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #555555;" text="Favorito" />
                         </VBox>
                         <VBox alignment="CENTER" onMouseClicked="#abrirValorar" prefHeight="100" spacing="10" style="-fx-background-color: #F8F8F8; -fx-background-radius: 14; -fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                            <Label style="-fx-font-size: 30px;" text="☆" />
+                            <Label fx:id="iconValorar" style="-fx-font-size: 30px;" />
                             <Label style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #555555;" text="Valorar" />
                         </VBox>
                     </HBox>

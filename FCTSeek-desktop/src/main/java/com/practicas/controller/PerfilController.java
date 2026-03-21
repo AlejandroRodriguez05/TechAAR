@@ -2,6 +2,7 @@ package com.practicas.controller;
 
 import com.practicas.model.Usuario;
 import com.practicas.service.AuthService;
+import com.practicas.util.IconHelper;
 import com.practicas.util.Session;
 import com.practicas.util.ViewManager;
 import javafx.fxml.FXML;
@@ -19,9 +20,19 @@ public class PerfilController {
     @FXML private Label lblEmail;
     @FXML private Label lblNif;
     @FXML private Label lblCentro;
+    @FXML private Label navIconHome;
+    @FXML private Label navIconBuscar;
+    @FXML private Label navIconListas;
+    @FXML private Label navIconPerfil;
 
     @FXML
     public void initialize() {
+        // Inicializar iconos de navegación
+        navIconHome.setGraphic(IconHelper.get("ic_home.png", 22));
+        navIconBuscar.setGraphic(IconHelper.get("ic_search.png", 22));
+        navIconListas.setGraphic(IconHelper.get("ic_list.png", 22));
+        navIconPerfil.setGraphic(IconHelper.get("ic_profile.png", 22));
+
         Usuario user = Session.get().getUsuario();
         if (user == null) return;
 

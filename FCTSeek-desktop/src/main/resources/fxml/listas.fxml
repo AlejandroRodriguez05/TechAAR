@@ -64,19 +64,19 @@
                 <Insets bottom="18" left="10" right="10" top="14" />
             </padding>
             <VBox alignment="CENTER" onMouseClicked="#volverAEmpresas" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px; -fx-text-fill: #999;" text="⌂" />
+                <Label fx:id="navIconHome" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="FCT-Seek" />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#abrirBusqueda" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px; -fx-text-fill: #999;" text="⚲" />
+                <Label fx:id="navIconBuscar" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Buscar Empre..." />
             </VBox>
             <VBox alignment="CENTER" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px;" text="☰" />
+                <Label fx:id="navIconListas" style="-fx-font-size: 20px;" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #4facfe;" text="Mis Listas" />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#abrirPerfil" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px; -fx-text-fill: #999;" text="●" />
+                <Label fx:id="navIconPerfil" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Mi Perfil" />
             </VBox>
         </HBox>

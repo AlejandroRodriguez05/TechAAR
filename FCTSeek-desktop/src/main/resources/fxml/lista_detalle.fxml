@@ -26,7 +26,7 @@
 
             <!-- Icono de la lista (dinámico según tipo) -->
             <VBox fx:id="contenedorIconoLista" alignment="CENTER" prefHeight="72" prefWidth="72" style="-fx-background-color: rgba(255,255,255,0.25); -fx-background-radius: 36;">
-                <Label fx:id="iconoLista" style="-fx-font-size: 34px; -fx-text-fill: #ef4444;" text="♥" />
+                <Label fx:id="iconoLista" style="-fx-font-size: 34px; -fx-text-fill: #ef4444;" />
             </VBox>
 
             <!-- Nombre y contador -->
@@ -68,19 +68,19 @@
                 <Insets bottom="18" left="10" right="10" top="14" />
             </padding>
             <VBox alignment="CENTER" onMouseClicked="#volverAEmpresas" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px; -fx-text-fill: #999;" text="⌂" />
+                <Label fx:id="navIconHome" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="FCT-Seek" />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#abrirBusqueda" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px; -fx-text-fill: #999;" text="⚲" />
+                <Label fx:id="navIconBuscar" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Buscar Empre..." />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#volverAListas" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px;" text="☰" />
+                <Label fx:id="navIconListas" style="-fx-font-size: 20px;" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #4facfe;" text="Mis Listas" />
             </VBox>
             <VBox alignment="CENTER" onMouseClicked="#abrirPerfil" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
-                <Label style="-fx-font-size: 20px; -fx-text-fill: #999;" text="●" />
+                <Label fx:id="navIconPerfil" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
                 <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Mi Perfil" />
             </VBox>
         </HBox>

@@ -2,6 +2,7 @@ package com.practicas.controller;
 
 import com.practicas.model.*;
 import com.practicas.service.*;
+import com.practicas.util.IconHelper;
 import com.practicas.util.Session;
 import com.practicas.util.ViewManager;
 import javafx.application.Platform;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javafx.scene.image.ImageView;
 
 public class EmpresaDetalleController {
 
@@ -38,6 +40,11 @@ public class EmpresaDetalleController {
     @FXML private Label iconFavorito;
     @FXML private Label lblFavoritoTexto;
     @FXML private VBox boxFavorito;
+    @FXML private Label iconValorar;
+    @FXML private Label iconDireccion;
+    @FXML private Label iconTelefono;
+    @FXML private Label iconEmail;
+    @FXML private Label iconContacto;
     @FXML private Button btnEditarInfo;
     @FXML private Button btnMarcarContactado;
     @FXML private Region sepEditar;
@@ -49,6 +56,7 @@ public class EmpresaDetalleController {
     private List<Plaza> plazas = new ArrayList<>();
     private List<Reserva> reservas = new ArrayList<>();
     private boolean esFavorito = false;
+    private boolean yaValorado = false;
     private String tabComentarios = "general";
 
     @FXML
@@ -64,6 +72,16 @@ public class EmpresaDetalleController {
         sepEditar.setManaged(prof);
         btnMarcarContactado.setVisible(prof);
         btnMarcarContactado.setManaged(prof);
+
+        // Inicializar iconos con ImageView desde IconHelper
+        iconDireccion.setGraphic(IconHelper.get("ic_location.png", 18));
+        iconDireccion.setText("");
+        iconTelefono.setGraphic(IconHelper.get("ic_phone.png", 18));
+        iconTelefono.setText("");
+        iconEmail.setGraphic(IconHelper.get("ic_email.png", 18));
+        iconEmail.setText("");
+        iconContacto.setGraphic(IconHelper.get("ic_user.png", 18));
+        iconContacto.setText("");
 
         empresaIdCargada = empresaId;
         cargarDatos(empresaId);
@@ -222,6 +240,7 @@ public class EmpresaDetalleController {
         }
 
         actualizarEstiloFavorito();
+        actualizarEstiloValorar();
         actualizarComentarios();
     }
 
@@ -521,7 +540,12 @@ public class EmpresaDetalleController {
     }
 
     private void actualizarEstiloFavorito() {
-        iconFavorito.setText(esFavorito ? "♥" : "♡");
+        iconFavorito.setText("");
+        ImageView heartIv = IconHelper.get(esFavorito ? "ic_heart_full.png" : "ic_heart_empty.png", 28);
+        heartIv.setPreserveRatio(false);
+        iconFavorito.setGraphic(heartIv);
+        iconFavorito.setMinWidth(32);
+        iconFavorito.setMaxWidth(32);
         lblFavoritoTexto.setText(esFavorito ? "Añadido a favoritos" : "Favorito");
         if (esFavorito) {
             boxFavorito.setStyle("-fx-background-color: #d1fae5; -fx-background-radius: 14; -fx-cursor: hand; -fx-border-color: #10b981; -fx-border-radius: 14; -fx-border-width: 2;");
@@ -530,6 +554,11 @@ public class EmpresaDetalleController {
             boxFavorito.setStyle("-fx-background-color: #F8F8F8; -fx-background-radius: 14; -fx-cursor: hand;");
             lblFavoritoTexto.setStyle("-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: #555555;");
         }
+    }
+
+    private void actualizarEstiloValorar() {
+        iconValorar.setText("");
+        iconValorar.setGraphic(IconHelper.get(yaValorado ? "ic_star_full.png" : "ic_star_empty.png", 28));
     }
 
     @FXML
@@ -560,6 +589,7 @@ public class EmpresaDetalleController {
         dialog.setTitle("Valorar empresa");
         dialog.setHeaderText("¿Cuántas estrellas le das a " + empresa.getNombre() + "?");
         dialog.setContentText("Estrellas:");
+        dialog.setGraphic(IconHelper.get("ic_star_full.png", 40));
 
         Optional<Integer> result = dialog.showAndWait();
         result.ifPresent(puntuacion -> {
@@ -569,6 +599,7 @@ public class EmpresaDetalleController {
                     Empresa emp = EmpresaService.getById(empresa.getId());
                     Platform.runLater(() -> {
                         empresa = emp;
+                        yaValorado = true;
                         rellenarDatos();
                         mostrarAlerta("¡Gracias!", "Has valorado con " + puntuacion + " estrellas");
                     });
@@ -692,11 +723,18 @@ public class EmpresaDetalleController {
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.getButtonTypes().add(ButtonType.OK);
+        Alert.AlertType tipo = titulo.toLowerCase().contains("error")
+                ? Alert.AlertType.ERROR : Alert.AlertType.INFORMATION;
+        Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
+        // Añadir icono gráfico personalizado
+        if (titulo.toLowerCase().contains("error")) {
+            alert.setGraphic(IconHelper.get("ic_star_empty.png", 40));
+        } else {
+            alert.setGraphic(IconHelper.get("ic_star_full.png", 40));
+        }
         alert.showAndWait();
     }
 
