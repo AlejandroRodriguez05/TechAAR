@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane  style="-fx-background-color: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #87CEEB 100%);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.practicas.controller.ListasController">
+
+    <top>
+        <VBox spacing="6" style="-fx-background-color: transparent;">
+            <padding>
+                <Insets bottom="15" left="30" right="30" top="25" />
+            </padding>
+            <Label style="-fx-font-family: Arial; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="Mis Listas" />
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="16" style="-fx-background-color: transparent;">
+            <padding>
+                <Insets bottom="20" left="30" right="30" top="10" />
+            </padding>
+
+            <!-- Título sección + botón nueva lista -->
+            <HBox alignment="CENTER_LEFT">
+                <Label style="-fx-font-family: Arial; -fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;" text="Mis Listas" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnCrearLista" onAction="#mostrarDialogoCrearLista" style="-fx-background-color: rgba(255,255,255,0.25); -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 14; -fx-padding: 4 14; -fx-cursor: hand;" text="+" />
+            </HBox>
+
+            <!-- Lista de listas — generada dinámicamente -->
+            <!-- controller: crearFilaLista(lista) →
+                   HBox card (blanco, radius 16):
+                     VBox icono (redondeado, color propio: ❤ rojo para Favoritos, ☰ gris para otras)
+                     VBox: nombre lista (bold) + "X empresas" (gris)
+                     Label "›" (gris)
+            -->
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                <VBox fx:id="listaListas" spacing="12" style="-fx-background-color: transparent;">
+                </VBox>
+            </ScrollPane>
+
+            <!-- Estado vacío (visible si no hay listas) -->
+            <VBox fx:id="estadoVacio" alignment="CENTER" managed="false" spacing="16" visible="false" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="60" />
+                </padding>
+                <Label style="-fx-font-size: 52px; -fx-text-fill: white;" text="☰" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 17px; -fx-text-fill: white;" text="No tienes listas todavía" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.75);" text="Crea una lista para organizar tus empresas" />
+                <Button onAction="#mostrarDialogoCrearLista" style="-fx-background-color: white; -fx-text-fill: #4facfe; -fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 22; -fx-padding: 12 28; -fx-cursor: hand;" text="Crear mi primera lista" />
+            </VBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 20 20 0 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, -3);">
+            <padding>
+                <Insets bottom="18" left="10" right="10" top="14" />
+            </padding>
+            <VBox alignment="CENTER" onMouseClicked="#volverAEmpresas" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                <Label fx:id="navIconHome" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="FCT-Seek" />
+            </VBox>
+            <VBox alignment="CENTER" onMouseClicked="#abrirBusqueda" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                <Label fx:id="navIconBuscar" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Buscar Empre..." />
+            </VBox>
+            <VBox alignment="CENTER" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                <Label fx:id="navIconListas" style="-fx-font-size: 20px;" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #4facfe;" text="Mis Listas" />
+            </VBox>
+            <VBox alignment="CENTER" onMouseClicked="#abrirPerfil" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                <Label fx:id="navIconPerfil" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Mi Perfil" />
+            </VBox>
+        </HBox>
+    </bottom>
+</BorderPane>

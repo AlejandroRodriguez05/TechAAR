@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane style="-fx-background-color: linear-gradient(to bottom, #4facfe 0%, #00f2fe 50%, #87CEEB 100%);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.practicas.controller.BusquedaController">
+
+    <top>
+        <VBox spacing="15" style="-fx-background-color: transparent;">
+            <padding>
+                <Insets bottom="15" left="30" right="30" top="25" />
+            </padding>
+
+            <!-- Título -->
+            <Label style="-fx-font-family: Arial; -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;" text="Buscar Empresas" />
+
+            <!-- Barra de búsqueda -->
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: rgba(255,255,255,0.22); -fx-background-radius: 28; -fx-padding: 10 18;">
+                <Label style="-fx-font-size: 16px; -fx-text-fill: rgba(255,255,255,0.8);" text="⚲" />
+                <TextField fx:id="txtBusqueda" promptText="Buscar empresas..." style="-fx-background-color: transparent; -fx-border-width: 0; -fx-font-size: 14px; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255,255,255,0.65);" HBox.hgrow="ALWAYS" />
+                <Button onAction="#limpiarBusqueda" style="-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 15px; -fx-border-width: 0; -fx-cursor: hand;" text="✕" />
+            </HBox>
+
+            <!-- Filtro por departamento: ComboBox cargado dinámicamente desde BD -->
+            <!-- En el controller: cmbDepartamento.getItems().add("Todos");
+                                   departamentos.forEach(d -> cmbDepartamento.getItems().add(d.getCodigo()));
+                                   cmbDepartamento.setValue("Todos");
+                                   cmbDepartamento.setOnAction(e -> filtrarPorDepartamento(cmbDepartamento.getValue())); -->
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <Label style="-fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.9);" text="Filtrar por departamento:" />
+                <ComboBox fx:id="cmbDepartamento" onAction="#filtrarPorDepartamento" prefHeight="38" prefWidth="220" promptText="Todos" style="-fx-background-color: rgba(255,255,255,0.22); -fx-background-radius: 20; -fx-border-color: transparent; -fx-font-family: Arial; -fx-font-size: 13px; -fx-text-fill: white; -fx-prompt-text-fill: white; -fx-cursor: hand;" />
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" style="-fx-background-color: transparent;">
+            <padding>
+                <Insets bottom="10" left="30" right="30" top="8" />
+            </padding>
+
+            <!-- Contador de resultados -->
+            <Label fx:id="lblResultados" style="-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.85);" text="x empresas encontradas" />
+
+            <!-- Lista dinámica de resultados -->
+            <!-- controller: crearCardEmpresa(empresa) →
+                   VBox blanco, border-radius 16:
+                     HBox: nombre (bold) | badge ★ rating (fondo #FFF3CD, texto #856404)
+                     HBox: 📍 ciudad (gris)
+                     Label chip departamento (fondo #1a2f5e, texto blanco, radius 6)
+                     [Si contactado] VBox verde claro, borde-izq verde:
+                       "✅ Contactado por:"  (verde bold)
+                       nombre departamento
+                     HBox chips ciclos (texto gris, fondo #F1F5F9, radius 6)
+            -->
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                <VBox fx:id="listaResultados" spacing="14" style="-fx-background-color: transparent;" />
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- Barra de navegación inferior -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 20 20 0 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, -2);">
+            <padding>
+                <Insets bottom="18" left="10" right="10" top="12" />
+            </padding>
+            <VBox alignment="CENTER" onMouseClicked="#volverAEmpresas" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                <Label fx:id="navIconHome" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="FCT-Seek" />
+            </VBox>
+            <VBox alignment="CENTER" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                <Label fx:id="navIconBuscar" style="-fx-font-size: 20px; -fx-text-fill: #4facfe;" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #4facfe;" text="Buscar Empre..." />
+            </VBox>
+            <VBox alignment="CENTER" onMouseClicked="#abrirListas" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                <Label fx:id="navIconListas" style="-fx-font-size: 20px;" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Mis Listas" />
+            </VBox>
+            <VBox alignment="CENTER" onMouseClicked="#abrirPerfil" style="-fx-cursor: hand;" HBox.hgrow="ALWAYS">
+                <Label fx:id="navIconPerfil" style="-fx-font-size: 20px; -fx-text-fill: #999;" />
+                <Label style="-fx-font-family: Arial; -fx-font-size: 11px; -fx-text-fill: #999999;" text="Mi Perfil" />
+            </VBox>
+        </HBox>
+    </bottom>
+</BorderPane>
