@@ -13,7 +13,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.scene.image.ImageView;
@@ -58,6 +60,7 @@ public class EmpresaDetalleController {
     private boolean esFavorito = false;
     private boolean yaValorado = false;
     private String tabComentarios = "general";
+    private Map<Long, List<Curso>> ciclosPorDepto = new HashMap<>();
 
     @FXML
     public void initialize() {
@@ -104,12 +107,26 @@ public class EmpresaDetalleController {
                 boolean fav = false;
                 try { fav = FavoritoService.isFavorito(empresaId); } catch (Exception ignored) {}
 
+                // Cargar TODOS los ciclos de cada departamento que acepta la empresa
+                Map<Long, List<Curso>> ciclosMap = new HashMap<>();
+                if (emp != null && emp.getDepartamentos() != null) {
+                    for (Departamento d : emp.getDepartamentos()) {
+                        try {
+                            List<Curso> cursos = DepartamentoService.getCursos(d.getId());
+                            if (cursos != null && !cursos.isEmpty()) {
+                                ciclosMap.put(d.getId(), cursos);
+                            }
+                        } catch (Exception ignored) {}
+                    }
+                }
+
                 final Empresa fEmp = emp;
                 final List<Comentario> fComs = coms;
                 final List<Plaza> fPlz = plz;
                 final List<Reserva> fRvs = rvs;
                 final List<EmpresaContactada> fContactados = contactados;
                 final boolean fFav = fav;
+                final Map<Long, List<Curso>> fCiclosMap = ciclosMap;
 
                 Platform.runLater(() -> {
                     empresa = fEmp;
@@ -117,6 +134,7 @@ public class EmpresaDetalleController {
                     plazas = fPlz != null ? fPlz : new ArrayList<>();
                     reservas = fRvs != null ? fRvs : new ArrayList<>();
                     esFavorito = fFav;
+                    ciclosPorDepto = fCiclosMap;
                     rellenarContactados(fContactados != null ? fContactados : new ArrayList<>());
                     rellenarDatos();
                 });
@@ -226,17 +244,28 @@ public class EmpresaDetalleController {
         lblDescripcion.setText(empresa.getDescripcion() != null ? empresa.getDescripcion() : "Sin descripción");
 
         listaCiclos.getChildren().clear();
-        for (Curso c : empresa.getCursos()) {
-            HBox row = new HBox(10);
-            row.setAlignment(Pos.CENTER_LEFT);
-            row.setPadding(new Insets(8, 0, 8, 0));
-            Label siglas = new Label(c.getSiglas());
-            siglas.setStyle("-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0d9488;");
-            siglas.setMinWidth(55);
-            Label nombre = new Label(c.getNombre());
-            nombre.setStyle("-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555;");
-            row.getChildren().addAll(siglas, nombre);
-            listaCiclos.getChildren().add(row);
+        for (Departamento depto : empresa.getDepartamentos()) {
+            List<Curso> cursosDepto = ciclosPorDepto.get(depto.getId());
+            if (cursosDepto == null || cursosDepto.isEmpty()) continue;
+
+            // Cabecera del departamento
+            Label lblDepto = new Label(depto.getCodigo() != null ? depto.getCodigo() + " — " + depto.getNombre() : depto.getNombre());
+            lblDepto.setStyle("-fx-font-family: Arial; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+            lblDepto.setPadding(new Insets(4, 0, 2, 0));
+            listaCiclos.getChildren().add(lblDepto);
+
+            for (Curso c : cursosDepto) {
+                HBox row = new HBox(10);
+                row.setAlignment(Pos.CENTER_LEFT);
+                row.setPadding(new Insets(4, 0, 4, 12));
+                Label siglas = new Label(c.getSiglas());
+                siglas.setStyle("-fx-font-family: Arial; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0d9488;");
+                siglas.setMinWidth(55);
+                Label nombre = new Label(c.getNombre());
+                nombre.setStyle("-fx-font-family: Arial; -fx-font-size: 14px; -fx-text-fill: #555;");
+                row.getChildren().addAll(siglas, nombre);
+                listaCiclos.getChildren().add(row);
+            }
         }
 
         actualizarEstiloFavorito();
