@@ -3,6 +3,7 @@ package com.practicas.util;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,6 +22,12 @@ public class ViewManager {
 
     public static void init(Stage stage) {
         primaryStage = stage;
+        try {
+            primaryStage.getIcons().add(new Image(
+                    ViewManager.class.getResourceAsStream("/images/icon_FCTSeek.png")));
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar el icono de la aplicación: " + e.getMessage());
+        }
     }
 
     public static Stage getStage() {
