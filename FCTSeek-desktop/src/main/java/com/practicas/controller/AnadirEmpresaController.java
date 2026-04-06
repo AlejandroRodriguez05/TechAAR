@@ -62,29 +62,35 @@ public class AnadirEmpresaController {
         cargarDepartamentos();
     }
 
-    private void cargarDepartamentos() {
-        new Thread(() -> {
+   private void cargarDepartamentos() {
+    new Thread(() -> {
+        try {
+            List<Departamento> deps = DepartamentoService.getAll();
+            
+            // UNA sola petición para todos los cursos
+            Map<Long, List<Curso>> cursosMap = new HashMap<>();
             try {
-                List<Departamento> deps = DepartamentoService.getAll();
-                Map<Long, List<Curso>> cursosMap = new HashMap<>();
-                for (Departamento d : deps) {
-                    try { cursosMap.put(d.getId(), DepartamentoService.getCursos(d.getId())); }
-                    catch (Exception e) { cursosMap.put(d.getId(), new ArrayList<>()); }
+                List<Curso> todosLosCursos = DepartamentoService.getAllCursos();
+                for (Curso c : todosLosCursos) {
+                    cursosMap.computeIfAbsent(c.getDepartamentoId(), k -> new ArrayList<>()).add(c);
                 }
-                Empresa empresa = editando ? EmpresaService.getById(empresaId) : null;
-
-                Platform.runLater(() -> {
-                    departamentos = deps;
-                    cursosPorDepto = cursosMap;
-                    construirSeccionDepartamentos();
-                    construirSeccionPlazas();
-                    if (empresa != null) rellenarFormulario(empresa);
-                });
             } catch (Exception e) {
-                Platform.runLater(() -> mostrarError("Error cargando datos: " + e.getMessage()));
+                // fallback vacío
             }
-        }).start();
-    }
+            
+            Empresa empresa = editando ? EmpresaService.getById(empresaId) : null;
+            Platform.runLater(() -> {
+                departamentos = deps;
+                cursosPorDepto = cursosMap;
+                construirSeccionDepartamentos();
+                construirSeccionPlazas();
+                if (empresa != null) rellenarFormulario(empresa);
+            });
+        } catch (Exception e) {
+            Platform.runLater(() -> mostrarError("Error cargando datos: " + e.getMessage()));
+        }
+    }).start();
+}
 
     private void construirSeccionDepartamentos() {
         contenedorCursos.getChildren().clear();

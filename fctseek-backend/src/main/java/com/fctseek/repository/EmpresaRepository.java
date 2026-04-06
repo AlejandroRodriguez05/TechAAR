@@ -84,4 +84,14 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
      * Cuenta empresas hay activas.
      */
     long countByActivaTrue();
+    
+    /**
+     * Carga empresa con cursos, departamentos y contactos en UNA sola query.
+     */
+    @Query("SELECT DISTINCT e FROM Empresa e " +
+           "LEFT JOIN FETCH e.empresaCursos ec " +
+           "LEFT JOIN FETCH ec.curso c " +
+           "LEFT JOIN FETCH c.departamento " +
+           "WHERE e.id = :id")
+    Optional<Empresa> findByIdWithDetails(@Param("id") Long id);
 }

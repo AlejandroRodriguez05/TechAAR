@@ -51,4 +51,11 @@ public interface ValoracionRepository extends JpaRepository<Valoracion, Long> {
      */
     @Query("SELECT v.puntuacion, COUNT(v) FROM Valoracion v WHERE v.empresa.id = :empresaId GROUP BY v.puntuacion ORDER BY v.puntuacion")
     List<Object[]> getEstadisticasValoraciones(@Param("empresaId") Long empresaId);
+    
+    /**
+     * Obtiene media y total de valoraciones de TODAS las empresas en una sola query.
+     * Cada Object[] tiene: [empresaId (Long), media (Double), total (Long)]
+     */
+    @Query("SELECT v.empresa.id, AVG(v.puntuacion), COUNT(v) FROM Valoracion v GROUP BY v.empresa.id")
+    List<Object[]> getValoracionesResumenTodas();
 }

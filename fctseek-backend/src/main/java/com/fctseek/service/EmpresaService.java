@@ -8,10 +8,12 @@ import com.fctseek.exception.BadRequestException;
 import com.fctseek.exception.ResourceNotFoundException;
 import com.fctseek.model.*;
 import com.fctseek.repository.*;
+import java.util.HashMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -48,8 +50,25 @@ public class EmpresaService {
      * Lista todas las empresas activas.
      */
     public List<EmpresaResponse> getAll() {
-        return empresaRepository.findByActivaTrue().stream()
-                .map(this::toResponseWithValoracion)
+        List<Empresa> empresas = empresaRepository.findByActivaTrue();
+        
+        // UNA sola query para TODAS las valoraciones
+        Map<Long, Double> medias = new HashMap<>();
+        Map<Long, Integer> totales = new HashMap<>();
+        for (Object[] row : valoracionRepository.getValoracionesResumenTodas()) {
+            Long empresaId = (Long) row[0];
+            Double media = (Double) row[1];
+            Long total = (Long) row[2];
+            medias.put(empresaId, media != null ? Math.round(media * 10.0) / 10.0 : null);
+            totales.put(empresaId, total.intValue());
+        }
+        
+        return empresas.stream()
+                .map(e -> EmpresaResponse.fromEntityWithDetails(
+                    e,
+                    medias.get(e.getId()),
+                    totales.getOrDefault(e.getId(), 0)
+                ))
                 .collect(Collectors.toList());
     }
 
@@ -57,8 +76,8 @@ public class EmpresaService {
      * Obtiene el detalle completo de una empresa.
      */
     public EmpresaDetailResponse getById(Long id) {
-        Empresa empresa = empresaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Empresa", "id", id));
+       Empresa empresa = empresaRepository.findByIdWithDetails(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Empresa", "id", id));
         
         EmpresaDetailResponse response = EmpresaDetailResponse.fromEntity(empresa);
         
