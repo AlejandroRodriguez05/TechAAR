@@ -86,17 +86,28 @@ Ambas aplicaciones consumen la misma API REST y comparten toda la funcionalidad.
 
 ```bash
 # Clona el repositorio
-git clone https://github.com/tu-usuario/fct-seek-mobile
+git clone https://github.com/tu-usuario/FCTSeek-frontend-movil
+
+# Nos situamos en el repositorio
+cd FCTSeek-frontend-movil
 
 # Instala dependencias
 npm install
 
-# Ejecuta en Android
-npx react-native run-android
+# Inicia el servidor de desarrollo
+npx expo start
 
-# Ejecuta en iOS
-npx react-native run-ios
 ```
+Después de ejecutar npx expo start:
+
+Se abrirá una ventana de Expo en tu navegador.
+Puedes ejecutar la app de estas formas:
+
+- En un móvil real: abre la app Expo Go y escanea el QR.
+
+- En un emulador Android: pulsa la tecla a en la terminal.
+
+- En un simulador iOS (solo macOS): pulsa la tecla i en la terminal.
 
 ### Aplicación de escritorio
 
@@ -104,7 +115,10 @@ Requisitos previos: Java 21 y Maven.
 
 ```bash
 # Clona el repositorio
-git clone https://github.com/tu-usuario/fct-seek-desktop
+git clone https://github.com/tu-usuario/FCTSeek-desktop
+
+# Nos situamos en el repositorio
+cd FCTSeek-desktop
 
 # Ejecuta la aplicación
 mvn javafx:run
