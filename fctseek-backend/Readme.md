@@ -19,7 +19,6 @@ El backend permite a profesores y alumnos consultar, valorar y gestionar empresa
 | Seguridad | Spring Security + JWT (jjwt 0.12.6) | — |
 | Validación | Jakarta Bean Validation | — |
 | Build | Maven | — |
-| Utilidades | Lombok | — |
 | IDE de referencia | Apache NetBeans | — |
 
 ---
@@ -179,7 +178,7 @@ El sistema utiliza **JWT (JSON Web Tokens)** con el flujo siguiente:
 5. `JwtAuthenticationFilter` valida el token, extrae el email y establece el `SecurityContext`.
 
 **Autorización basada en roles**:
-- `PROFESOR`: Puede crear, editar y eliminar empresas, gestionar plazas y reservas.
+- `PROFESOR`: Puede crear, editar, eliminar y gestionar plazas y  sus reservas.
 - `ALUMNO`: Acceso de lectura, puede comentar, valorar y crear listas.
 - Los endpoints protegidos usan `@PreAuthorize("hasRole('PROFESOR')")`.
 

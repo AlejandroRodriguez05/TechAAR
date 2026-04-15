@@ -62,7 +62,7 @@ Ambas aplicaciones consumen la misma API REST y comparten toda la funcionalidad.
 ### Gestión de plazas y reservas
 - Los profesores pueden reservar plazas para sus alumnos especificando el ciclo formativo, la cantidad y el grupo/clase.
 - Cada profesor puede eliminar sus propias reservas.
-- Los administradores pueden añadir y eliminar plazas de empresas.
+- Los Profesores pueden añadir y eliminar plazas de empresas.
 
 ### Listas personalizadas
 - Cada profesor tiene una lista de Favoritos automática.
